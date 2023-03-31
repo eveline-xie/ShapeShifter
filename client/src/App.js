@@ -5,7 +5,7 @@ const api = axios.create({
   baseURL: 'https://shapeshifter-api.onrender.com/api'
 })
 export default function App() {
-  const [text, setText] = useState("ttttttt");
+  const [text, setText] = useState("");
   const onSubmit = async () => {
     await api.post("/post", {text});
   }
