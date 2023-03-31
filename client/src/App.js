@@ -1,9 +1,13 @@
 import React, {useState} from 'react';
 import axios from "axios";
+
+const api = axios.create({
+  baseURL: 'https://shapeshifter-api.onrender.com/api'
+})
 export default function App() {
   const [text, setText] = useState("");
   const onSubmit = async () => {
-    await axios.post("/api/post", {text});
+    await api.post("/post", {text});
   }
   return (
     <div>
