@@ -6,20 +6,37 @@ async function signup(firstName, lastName, username, email, passwordHash, res) {
         {username:username},
         {email: email}
     ]}).then( async (user) => {
- 
+        if(user){
+            res.send(JSON.stringify({error: true, message: "user exists"}));
+        }else{
             await User.create({
                 firstName: firstName,
                 lastName: lastName,
                 username: username,
                 email: email,
-                passwordHash: passwordHash,
-               
-                
+                passwordHash: passwordHash, 
             })
-           
-       
-        
+            res.send(JSON.stringify({ message: "Success"}));
+        }
     })
 }
 
-module.exports = { signup}
+async function login(email, password,req, res){
+    await User.findOne({$and: [
+        {email: email},
+        {passwordHash: password},
+    ]}).then( (user) => {
+        // Incorrect login
+        console.log("login user: "+user);
+        if (!user) {
+            res.send(JSON.stringify({error: true, message: "Can not find user"}));
+        }
+        else {
+            console.log("logged in!!!")
+            res.send(JSON.stringify({ message: "Success"}));
+            
+        }
+    })
+}
+
+module.exports = { signup, login}
