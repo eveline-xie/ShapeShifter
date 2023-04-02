@@ -1,1 +1,15 @@
-test
+name: Unit Tests
+on: [push]
+
+jobs:
+  backend-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Build and test
+        working-directory: server
+      - name: Install dependencies
+        run: npm install
+      - name: Run backend tests
+        run: npm test
