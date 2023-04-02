@@ -3,7 +3,7 @@ import axios from "axios";
 
 const api = axios.create({
   baseURL: 'https://shapeshifter-api.onrender.com'
-  // baseURL: "http://localhost:5000"
+   //baseURL: "http://10.245.200.126:3000"
 })
 export default function App() {
   const [firstName, setFirstName] = useState("");
@@ -41,7 +41,9 @@ export default function App() {
 
   return (
     <div>
+      
       <p>Sign Up!</p>
+      <form>
             <div>
                 <label>First Name:</label>
                 <input type="text" id="sign-up-firstname" value = {firstName} onChange = {(e) => setFirstName(e.target.value)}/>
@@ -51,7 +53,7 @@ export default function App() {
                 <input type="text" id="sign-up-lastname" value = {lastName} onChange = {(e) => setLastName(e.target.value)} />
             </div>
             <div>
-                <label>Userame:</label>
+                <label>Username:</label>
                 <input type="text" id="sign-up-username" value = {username} onChange = {(e) => setUsername(e.target.value)}/>
             </div>
             <div>
@@ -64,9 +66,10 @@ export default function App() {
             </div>
             <input type="button" id="sign-up-submit" value="Signup" onClick={onSignup}/>
             {signupMsg}
-
+     </form>
 
         <p>Login!</p>
+        <form>
             <div>
                 <label>Email:</label>
                 <input type="text" id="login-email" value = {loginEmail} onChange = {(e) => setLoginEmail(e.target.value)}/>
@@ -77,6 +80,7 @@ export default function App() {
             </div>
             <input type="button" id="sign-up-submit" value="Login" onClick={onLogin}/>
             {loginMsg}
+      </form>
             
     </div>
   )
