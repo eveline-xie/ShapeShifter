@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: 'https://shapeshifter-api.onrender.com'
-  // baseURL: "http://localhost:5000"
+  // baseURL: 'https://shapeshifter-api.onrender.com'
+  baseURL: "http://localhost:5000"
 })
 export default function App() {
   const [firstName, setFirstName] = useState("");
@@ -20,12 +20,17 @@ export default function App() {
   const [rememberPassEmail, setRememberPassEmail] = useState("");
   const [rememberPass, setRememberPass] = useState("");
 
+  const [changePassUsername, setChangePassUsername] = useState("");
+  const [changePassPassword, setChangePassPassword] = useState("");
+  const [changePassNewPassword, setChangePassNewPassword] = useState("");
+  const [changePass, setChangePass] = useState("");
+
   const onSignup = async () => {
     await api.post("/auth/signup", { firstName: firstName, lastName: lastName, username: username, email: email, password: password })
       .then(function (res) {
         console.log(res);
         if (res.data.error) {
-          setSignupMsg("Sign up error")
+          setSignupMsg(res.data.message)
         } else {
           setSignupMsg("Sign up success")
         }
@@ -44,13 +49,31 @@ export default function App() {
   }
 
   const onRememberPassword = async () => {
-    await api.post("/auth/remember-password", { email: rememberPassEmail, username: rememberPassUsername })
+    console.log(rememberPassEmail);
+    console.log(rememberPassUsername);
+    await api.get(`/auth/remember-password?email=${rememberPassEmail}&username=${rememberPassUsername}`)
     .then(function (res) {
       console.log(res);
       if (res.data.error) {
         setRememberPass("remember password error")
       } else {
-        setRememberPass(res.data.password)
+        setRememberPass("pass: " + res.data.password)
+      }
+    });
+  }
+
+  const onChangePassword = async () => {
+    console.log(changePassUsername);
+    console.log(changePassPassword);
+    console.log(changePassNewPassword);
+    await api.put("/auth/change-password", 
+    { username: changePassUsername, password: changePassPassword, newPassword: changePassNewPassword })
+    .then(function (res) {
+      console.log(res);
+      if (res.data.error) {
+        setChangePass("change password error")
+      } else {
+        setChangePass("Password Changed!")
       }
     });
   }
@@ -105,6 +128,22 @@ export default function App() {
       </div>
       <input type="button" id="remember-pass-submit" value="Remember Password" onClick={onRememberPassword} />
       {rememberPass}
+
+      <p>Change Password</p>
+      <div>
+        <label>Username:</label>
+        <input type="text" id="change-username" value={changePassUsername} onChange={(e) => setChangePassUsername(e.target.value)} />
+      </div>
+      <div>
+        <label>Password:</label>
+        <input type="text" id="change-password" value={changePassPassword} onChange={(e) => setChangePassPassword(e.target.value)} />
+      </div>
+      <div>
+        <label>New Password:</label>
+        <input type="text" id="change-new-password" value={changePassNewPassword} onChange={(e) => setChangePassNewPassword(e.target.value)} />
+      </div>
+      <input type="button" id="change-pass-submit" value="Change Password" onClick={onChangePassword} />
+      {changePass}
 
     </div>
   )

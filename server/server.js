@@ -32,11 +32,18 @@ app.post('/auth/login', (req, res) => {
     
 })
 
-app.post('/auth/remember-password', (req, res) => {
+app.get('/auth/remember-password', (req, res) => {
     console.log("remember pass");
-    console.log(req.body)
+    const {email, username} = req.query;
+    auth.rememberPassword(email, username, req, res);
+})
 
-    auth.rememberPassword(req.body.email, req.body.username, req, res);
+app.put('/auth/change-password', (req, res) => {
+    console.log("change pass");
+    let username = req.body.username;
+    let password = req.body.password;
+    let newPassword = req.body.newPassword;
+    auth.changePassword(username, password, newPassword, req, res);
 })
 
 let server = app.listen(port, () => {

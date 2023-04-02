@@ -1,11 +1,16 @@
 // run npm test
 const request = require("supertest"); // Import supertest
 const server = require("./server") // Import the server object
+const mongoose = require('mongoose')
 
-// afterEach(done => { // afterEach function is provided by Jest and executes once all tests are finished
-//     server.close() // We close the server connection once all tests have finished
-//     done()
-// })
+beforeAll(done => {
+    done()
+  })
+
+afterEach(done => { // afterEach function is provided by Jest and executes once all tests are finished
+    server.close() // We close the server connection once all tests have finished
+    done()
+})
 
 describe("Auth Tests", () => {
     test("POST /auth/signup", (done) => {
@@ -52,4 +57,51 @@ describe("Auth Tests", () => {
       
           // Even more logic goes here
       });
+
+      test("GET /auth/remember-password", (done) => {
+        request(server)
+          .get("/auth/remember-password")
+          // .expect("Content-Type", /json/)
+          .send({
+            email: "stormy@stormy",
+            username: "stormyiscute",
+          })
+          .expect(200)
+          // .expect((res) => {
+          //     res.data.message = "Success"
+          // })
+          .end((err, res) => {
+              if (err) return done(err);
+             
+              return done();
+            });
+      
+          // Even more logic goes here
+      });
+
+      test("PUT /auth/change-password", (done) => {
+        request(server)
+          .put("/auth/change-password")
+          // .expect("Content-Type", /json/)
+          .send({
+            username: "stormyiscute",
+            password: "password",
+            newpassword: "newpassword"
+          })
+          .expect(200)
+          // .expect((res) => {
+          //     res.data.message = "Success"
+          // })
+          .end((err, res) => {
+              if (err) return done(err);
+             
+              return done();
+            });
+      
+          // Even more logic goes here
+      });
+
+      afterAll( async () =>{
+        await mongoose.connection.close()
+    })
   });
