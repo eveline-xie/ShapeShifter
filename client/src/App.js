@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: 'https://shapeshifter-api.onrender.com'
-  // baseURL: "http://localhost:5000"
+  // baseURL: 'https://shapeshifter-api.onrender.com'
+  baseURL: "http://localhost:5000"
 })
 export default function App() {
   const [firstName, setFirstName] = useState("");
@@ -44,13 +44,13 @@ export default function App() {
   }
 
   const onRememberPassword = async () => {
-    await api.get("/auth/remember-password", { email: rememberPassEmail, username: rememberPassUsername })
+    await api.post("/auth/remember-password", { email: rememberPassEmail, username: rememberPassUsername })
     .then(function (res) {
       console.log(res);
       if (res.data.error) {
         setRememberPass("remember password error")
       } else {
-        setRememberPass(response.data.password)
+        setRememberPass(res.data.password)
       }
     });
   }
@@ -97,11 +97,11 @@ export default function App() {
       <p>Forgot Password?</p>
       <div>
         <label>Email:</label>
-        <input type="text" id="remember-email" onChange={(e) => setRememberPassEmail(e.target.value)} />
+        <input type="text" id="remember-email" value={rememberPassEmail} onChange={(e) => setRememberPassEmail(e.target.value)} />
       </div>
       <div>
         <label>Username:</label>
-        <input type="text" id="remember-username" onChange={(e) => setRememberPassUsername(e.target.value)} />
+        <input type="text" id="remember-username" value={rememberPassUsername} onChange={(e) => setRememberPassUsername(e.target.value)} />
       </div>
       <input type="button" id="remember-pass-submit" value="Remember Password" onClick={onRememberPassword} />
       {rememberPass}

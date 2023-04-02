@@ -1,3 +1,4 @@
+// run npm test
 const request = require("supertest"); // Import supertest
 const server = require("./server") // Import the server object
 

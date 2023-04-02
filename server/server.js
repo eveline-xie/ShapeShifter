@@ -32,8 +32,10 @@ app.post('/auth/login', (req, res) => {
     
 })
 
-app.get('/auth/remember-password', (req, res) => {
+app.post('/auth/remember-password', (req, res) => {
     console.log("remember pass");
+    console.log(req.body)
+
     auth.rememberPassword(req.body.email, req.body.username, req, res);
 })
 
