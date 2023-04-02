@@ -31,6 +31,9 @@ app.post('/auth/login', (req, res) => {
     auth.login(req.body.email, req.body.password, req, res);
     
 })
-app.listen(port, () => {
+
+let server = app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
 });
+
+module.exports = server
