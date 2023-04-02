@@ -39,4 +39,22 @@ async function login(email, password,req, res){
     })
 }
 
-module.exports = { signup, login}
+async function rememberPassword(email, username, req, res) {
+    await User.findOne({$and: [
+        {email: email},
+        {username: username},
+    ]}).then( (user) => {
+        // no user
+        console.log("login user: "+user);
+        if (!user) {
+            res.send(JSON.stringify({error: true, message: "Can not find user"}));
+        }
+        else {
+            console.log("found user")
+            res.send(JSON.stringify({ password: user.passwordHash}));
+            
+        }
+    })
+}
+
+module.exports = { signup, login, rememberPassword}

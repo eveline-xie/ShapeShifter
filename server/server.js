@@ -32,6 +32,11 @@ app.post('/auth/login', (req, res) => {
     
 })
 
+app.get('/auth/remember-password', (req, res) => {
+    console.log("remember pass");
+    auth.rememberPassword(req.body.email, req.body.username, req, res);
+})
+
 let server = app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
 });
