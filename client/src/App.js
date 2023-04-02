@@ -51,10 +51,7 @@ export default function App() {
   const onRememberPassword = async () => {
     console.log(rememberPassEmail);
     console.log(rememberPassUsername);
-    await api.get("/auth/remember-password", 
-    {params:
-    { email: rememberPassEmail, username: rememberPassUsername }
-    })
+    await api.get(`/auth/remember-password?email=${rememberPassEmail}&username=${rememberPassUsername}`)
     .then(function (res) {
       console.log(res);
       if (res.data.error) {
