@@ -34,7 +34,16 @@ app.post('/auth/login', (req, res) => {
 
 app.get('/auth/remember-password', (req, res) => {
     console.log("remember pass");
-    auth.rememberPassword(req.body.email, req.body.username, req, res);
+    const {email, username} = req.query;
+    auth.rememberPassword(email, username, req, res);
+})
+
+app.put('/auth/change-password', (req, res) => {
+    console.log("change pass");
+    let username = req.body.username;
+    let password = req.body.password;
+    let newPassword = req.body.newPassword;
+    auth.changePassword(username, password, newPassword, req, res);
 })
 
 let server = app.listen(port, () => {
