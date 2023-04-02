@@ -42,10 +42,10 @@ async function login(email, password,req, res){
 async function rememberPassword(email, username, req, res) {
     await User.findOne({$and: [
         {email: email},
-        {username: username},
+
     ]}).then( (user) => {
         // no user
-        console.log("login user: "+user);
+        console.log("forgotten user: "+user);
         if (!user) {
             res.send(JSON.stringify({error: true, message: "Can not find user"}));
         }

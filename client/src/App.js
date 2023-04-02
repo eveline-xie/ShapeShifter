@@ -44,13 +44,13 @@ export default function App() {
   }
 
   const onRememberPassword = async () => {
-    let response = await api.get("/auth/remember-password", { email: rememberPassEmail, username: rememberPassUsername })
+    await api.get("/auth/remember-password", { email: rememberPassEmail, username: rememberPassUsername })
     .then(function (res) {
       console.log(res);
       if (res.data.error) {
         setRememberPass("remember password error")
       } else {
-        setRememberPass("login success")
+        setRememberPass(response.data.password)
       }
     });
   }
