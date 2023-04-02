@@ -86,7 +86,7 @@ describe("Auth Tests", () => {
           .send({
             username: "stormyiscute",
             password: "password",
-            newpassword: "newpassword"
+            newPassword: "newpassword",
           })
           .expect(200)
           // .expect((res) => {
