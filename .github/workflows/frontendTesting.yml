@@ -8,9 +8,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: install
-        uses: cypress-io/github-action@v4
-        with: 
-          command: npm cypress install
+        run:
+          npm install
+      - name: npm install
+        run:
+          npm install cypress
+      - name: npx install
+        run: 
+          npx cypress install
       - name: test
         run: 
           npx cypress run
