@@ -82,7 +82,7 @@ export default function App() {
     <div>
       <p>Sign Up!</p>
       <div>
-        <label>First Name:</label>
+        <label>First Name-----:</label>
         <input type="text" id="sign-up-firstname" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
       </div>
       <div>
