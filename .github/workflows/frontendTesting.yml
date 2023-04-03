@@ -1,18 +1,17 @@
-name: Unit Tests
+name: Cpress Tests
 on: [push]
 
 jobs:
-  backend-tests:
+  frontend-tests:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: install
-        working-directory: server
+        working-directory: shapeshifter
         run: 
-          npm install
+          npm cypress install
       - name: test
-        working-directory: server
+        working-directory: shapeshifter
         run: 
-          npm test
-          
+          npx cypress run
