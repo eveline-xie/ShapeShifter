@@ -8,10 +8,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: install
-        # working-directory: ShapeShifter
-        run: 
-          npm cypress install
+        uses: cypress-io/github-action@v4
+        with: 
+          command: npm cypress install
       - name: test
-        # working-directory: ShapeShifter
         run: 
           npx cypress run
