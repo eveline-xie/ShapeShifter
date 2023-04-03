@@ -5,11 +5,11 @@ describe('welcome page', () => {
     // ...
   })
   it('successfully loads', () => {
-    cy.visit('/') 
+    cy.visit('https://shapershifter.onrender.com') 
   })
   
   it('the user does an incomplete signup', () => {
-    cy.visit('/')
+    cy.visit('https://shapershifter.onrender.com')
     cy.get('form')
       cy.get('[id=sign-up-firstname]').type('John')
       cy.get('[id=sign-up-lastname]').type('Smith')
@@ -24,7 +24,7 @@ describe('welcome page', () => {
   })
 
   it('the user signs up for an account', () => {
-    cy.visit('/')
+    cy.visit('https://shapershifter.onrender.com')
     cy.get('form')
       cy.get('[id=sign-up-firstname]').type('John')
       cy.get('[id=sign-up-lastname]').type('Smith')
@@ -38,7 +38,7 @@ describe('welcome page', () => {
 
 
   it('the user logs in to an account', () => {
-    cy.visit('/')
+    cy.visit('https://shapershifter.onrender.com')
     cy.get('form')
       cy.get('[id=login-email]').type('john.smith@gmail.com')
       cy.get('[id=login-password]').type('thisisapassword123')
@@ -46,7 +46,6 @@ describe('welcome page', () => {
 
     cy.get('[value="Login"]').click()
     cy.contains('div', 'login success')
-    cy.resetDb()
   })
   
 })
