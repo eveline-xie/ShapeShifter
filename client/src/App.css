@@ -28,8 +28,29 @@ html {background-color: #145374}
 
 #home-screen {
   margin: auto;
-  width: 50%;
+  width: 80%;
   text-align: center;
-  padding: 15%;
+  padding: 2% 10% 0 10%;
 }
+
+#home-dropdown{
+  /* width: 35%; */
+  display: flex;
+}
+
+#search-bar{
+ padding-left: 10%;
+}
+
+#mapcard{
+  margin: 2%;
+}
+
+#mapcards{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  flex-direction: row;
+}
+
 
