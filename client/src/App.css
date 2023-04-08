@@ -54,3 +54,13 @@ html {background-color: #145374}
 }
 
 
+#login-text{
+  font-size: 64px;
+  color: #FFE484;
+}
+
+
+
+.MuiOutlinedInput-notchedOutline {
+  border-color: 1px solid white ;
+}

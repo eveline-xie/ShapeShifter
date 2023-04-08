@@ -21,7 +21,7 @@ import Lock from '@mui/icons-material/Lock'
 // import { createTheme } from '@mui/material/styles';
 // import { GlobalStoreContext } from '../store'
 
-export default function LoginScreen() {
+export default function SignupScreen() {
     // const { auth } = useContext(AuthContext);
     // const { store } = useContext(GlobalStoreContext);
 

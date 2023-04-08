@@ -7,7 +7,8 @@ import {
   WelcomeScreen,
   LoginScreen,
   HomeScreen,
-  NavBar
+  NavBar,
+  SignupScreen
 } from './components'
 /*
     This is our application's top-level component.
@@ -30,6 +31,7 @@ const Router = () => {
                     <Routes>
                         <Route path="/" element={<WelcomeScreen />} />
                         <Route path="/login" element={<LoginScreen/>} />
+                        <Route path="/signup" element={<SignupScreen/>} />
                         <Route path="/home" element={<HomeScreen/>} />
 
                     </Routes>

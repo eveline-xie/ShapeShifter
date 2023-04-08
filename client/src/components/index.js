@@ -5,6 +5,7 @@ import LoginScreen from "./LoginScreen"
 import MapCard from "./MapCard"
 import DeleteModal from "./DeleteModal"
 import ExportModal from "./ExportModal"
+import SignupScreen from "./SignupScreen"
 
 export{
     WelcomeScreen,
@@ -13,5 +14,6 @@ export{
     LoginScreen,
     MapCard,
     DeleteModal,
-    ExportModal
+    ExportModal,
+    SignupScreen,
 }
