@@ -21,15 +21,15 @@ import ForkModal from "./ForkModal";
 export default function CommunityScreen() {
     //   const theme = useTheme();
     //   const [dropdown, setDropdown] = React.useState("");
-    //   const [searchTerm, setSearchTerm] = useState("");
+      const [searchTerm, setSearchTerm] = useState("");
       const [openDelete, setOpenDelete] = useState(false);
       const [openExport, setOpenExport] = useState(false);
       const [openFork, setOpenFork] = useState(false);
 
 
-    //   const handleSearch = (event) => {
-    //     setSearchTerm(event.target.value);
-    //   };
+      const handleSearch = (event) => {
+        setSearchTerm(event.target.value);
+      };
 
     //   const handleDropdown = (event) => {
     //     setDropdown(event.target.value);
@@ -60,50 +60,101 @@ export default function CommunityScreen() {
 
             <Grid container spacing={1}>
 
-                <Grid item xs={1}>
-                    {/* <Button
+                <Grid item xs={2}>
+                    <Button
                         variant="contained"
                         style={{
-                            borderRadius: 50,
-                            backgroundColor: "#AEAFFF",
+                            borderRadius: 40,
+                            backgroundColor: "rgba(255, 255, 255, .4)",
                             padding: "13px 34px",
                             margin: "10px 10px",
-                            fontSize: "13px",
+                            fontSize: "10px",
                             color: "#000000",
                         }}
                     >
-                        SHP/DBF
-                    </Button> */}
+                        View All
+                    </Button>
+                </Grid>
+
+                <Grid item xs={2}>
+                    <Button
+                        variant="contained"
+                        style={{
+                            borderRadius: 40,
+                            backgroundColor: "rgba(255, 255, 255, .4)",
+                            padding: "13px 34px",
+                            margin: "10px 10px",
+                            fontSize: "10px",
+                            color: "#000000",
+                        }}
+                    >
+                        Key Waord
+                    </Button>
+                </Grid>
+
+                <Grid item xs={2}>
+                    <Button
+                        variant="contained"
+                        style={{
+                            borderRadius: 40,
+                            backgroundColor: "rgba(255, 255, 255, .4)",
+                            padding: "13px 34px",
+                            margin: "10px 10px",
+                            fontSize: "10px",
+                            color: "#000000",
+                        }}
+                    >
+                        Key Waord
+                    </Button>
+                </Grid>
+
+                <Grid item xs={6}>
+                    <TextField
+                        id="search-bar"
+                        type="search"
+                        label="Search"
+                        value={searchTerm}
+                        onChange={handleSearch}
+                        sx={{ width: 400 }}
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <SearchIcon />
+                                </InputAdornment>
+                            ),
+                        }}
+                        InputLabelProps={{
+                            style: { color: '#ffffff' },
+                        }}
+                    />
                 </Grid>
 
             </Grid>
 
-            
-            <Button
-                variant="contained"
-                style={{
-                    borderRadius: 50,
-                    backgroundColor: "#FFE484",
-                    padding: "13px 34px",
-                    margin: "10px 10px",
-                    fontSize: "13px",
-                    color: "#000000",
-                }}
-            >
-                GeoJson
-            </Button>
-
-
-
-
-
             <br></br>
-            {/* mapcards */}
-            {mapcards}
 
-            <DeleteModal open={openDelete} setOpen={setOpenDelete} />
-            <ExportModal open={openExport} setOpen={setOpenExport} />
-            <ForkModal open={openFork} setOpen={setOpenFork} />
+            <Grid container spacing={1}>
+
+                <Grid item xs={4}>
+                    {mapcards}
+
+                    <DeleteModal open={openDelete} setOpen={setOpenDelete} />
+                    <ExportModal open={openExport} setOpen={setOpenExport} />
+                    <ForkModal open={openFork} setOpen={setOpenFork} />
+
+                </Grid>
+
+                <Grid item xs={4}>
+                    {mapcards}
+
+                    <DeleteModal open={openDelete} setOpen={setOpenDelete} />
+                    <ExportModal open={openExport} setOpen={setOpenExport} />
+                    <ForkModal open={openFork} setOpen={setOpenFork} />
+
+                </Grid>
+
+            </Grid>
+
         </div>
     );
 }
