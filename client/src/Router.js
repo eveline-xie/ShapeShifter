@@ -8,7 +8,9 @@ import {
   LoginScreen,
   HomeScreen,
   NavBar,
-  SignupScreen
+  SignupScreen,
+  CreateMap,
+  EditMap
 } from './components'
 /*
     This is our application's top-level component.
@@ -23,23 +25,24 @@ import {
 */
 const Router = () => {
     return (
-        <BrowserRouter>
-            {/* <AuthContextProvider>
+      <BrowserRouter>
+        {/* <AuthContextProvider>
                 <GlobalStoreContextProvider>               */}
-                    {/* <AppBanner /> */}
-                    <NavBar/>
-                    <Routes>
-                        <Route path="/" element={<WelcomeScreen />} />
-                        <Route path="/login" element={<LoginScreen/>} />
-                        <Route path="/signup" element={<SignupScreen/>} />
-                        <Route path="/home" element={<HomeScreen/>} />
-
-                    </Routes>
-                    {/* <Statusbar /> */}
-                {/* </GlobalStoreContextProvider>
+        {/* <AppBanner /> */}
+        <NavBar />
+        <Routes>
+          <Route path="/" element={<WelcomeScreen />} />
+          <Route path="/login" element={<LoginScreen />} />
+          <Route path="/signup" element={<SignupScreen />} />
+          <Route path="/home" element={<HomeScreen />} />
+          <Route path="/createmap" element={<CreateMap />} />
+          <Route path="/editmap" element={<EditMap />} />
+        </Routes>
+        {/* <Statusbar /> */}
+        {/* </GlobalStoreContextProvider>
             </AuthContextProvider> */}
-        </BrowserRouter>
-    )
+      </BrowserRouter>
+    );
 }
 
 export default Router

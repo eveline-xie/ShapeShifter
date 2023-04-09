@@ -1,8 +1,6 @@
 import { useContext } from 'react';
 // import AuthContext from '../auth'
-
 // import Copyright from './Copyright'
-
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -18,16 +16,20 @@ import Typography from '@mui/material/Typography';
 import InputAdornment from '@mui/material/InputAdornment';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import Lock from '@mui/icons-material/Lock'
+import { useNavigate } from "react-router-dom";
+
 // import { createTheme } from '@mui/material/styles';
 // import { GlobalStoreContext } from '../store'
 
 export default function LoginScreen() {
     // const { auth } = useContext(AuthContext);
     // const { store } = useContext(GlobalStoreContext);
+  let navigate = useNavigate(); 
 
     const handleSubmit = (event) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
+        navigate("/home");
         // auth.loginUser(
         //     formData.get('email'),
         //     formData.get('password')

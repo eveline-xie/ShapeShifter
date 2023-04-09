@@ -17,15 +17,16 @@ import SearchIcon from "@mui/icons-material/Search";
 import DeleteModal from "./DeleteModal";
 import ExportModal from "./ExportModal";
 import ForkModal from "./ForkModal";
+import { useNavigate } from "react-router-dom";
 
 export default function HomeScreen() {
   const theme = useTheme();
-  const [dropdown, setDropdown] = React.useState("");
+  const [dropdown, setDropdown] = React.useState(10);
   const [searchTerm, setSearchTerm] = useState("");
   const [openDelete, setOpenDelete] = useState(false);
   const [openExport, setOpenExport] = useState(false);
   const [openFork, setOpenFork] = useState(false);
-
+  let navigate = useNavigate();
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
@@ -44,6 +45,13 @@ export default function HomeScreen() {
     setOpenFork(show);
   };
 
+  const handleUploadDBF = () => {
+    navigate("/createmap");
+  };
+  const handleUploadGeoJson = () => {
+    navigate("/createmap");
+  };
+
   let mapcards = "";
   // if(store)
   mapcards = (
@@ -56,7 +64,7 @@ export default function HomeScreen() {
     </List>
   );
   return (
-    <div id="home-screen">
+    <div id="main-screen">
       {/* create map */}
       <div id="create-map">
         <Card
@@ -86,6 +94,7 @@ export default function HomeScreen() {
                   fontSize: "13px",
                   color: "#000000",
                 }}
+                onClick={handleUploadDBF}
               >
                 SHP/DBF
               </Button>
@@ -99,6 +108,7 @@ export default function HomeScreen() {
                   fontSize: "13px",
                   color: "#000000",
                 }}
+                onClick={handleUploadGeoJson}
               >
                 GeoJson
               </Button>
@@ -117,20 +127,21 @@ export default function HomeScreen() {
 
       <div id="home-dropdown">
         {/* dropdown */}
-        <Box sx={{ minWidth: 320 }}>
-          <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Map I Own</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={dropdown}
-              label="dropdown"
-              onChange={handleDropdown}
-            >
-              <MenuItem value={10}>Shared With Me</MenuItem>
-            </Select>
-          </FormControl>
-        </Box>
+        <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }}>
+          <Select
+            labelId="demo-simple-select-filled-label"
+            id="demo-simple-select-filled"
+            value={dropdown}
+            onChange={handleDropdown}
+            defaultValue={dropdown}
+          >
+            {/* <MenuItem value="">
+              <em>Maps I Own</em>
+            </MenuItem> */}
+            <MenuItem value={10}>Maps I Own</MenuItem>
+            <MenuItem value={20}>Shared With Me</MenuItem>
+          </Select>
+        </FormControl>
 
         {/* search bar */}
         <TextField

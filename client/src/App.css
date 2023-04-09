@@ -1,8 +1,10 @@
-html {background-color: #145374}
+html {
+  background-color: #145374
+}
 
 
 
- 
+
 #splash-screen {
   margin: auto;
   width: 50%;
@@ -10,43 +12,43 @@ html {background-color: #145374}
   padding: 15%;
 }
 
-#welcome-text{
+#welcome-text {
   font-size: 50px;
   color: #FFE484;
 }
 
-#welcome-subtext{
+#welcome-subtext {
   font-size: 22px;
   color: white;
 }
 
-#welcome-intro{
+#welcome-intro {
   font-size: 17px;
   color: white;
 
-} 
+}
 
-#home-screen {
+#main-screen {
   margin: auto;
   width: 80%;
   text-align: center;
   padding: 2% 10% 0 10%;
 }
 
-#home-dropdown{
+#home-dropdown {
   /* width: 35%; */
   display: flex;
 }
 
-#search-bar{
- padding-left: 10%;
+#search-bar {
+  padding-left: 10%;
 }
 
-#mapcard{
+#mapcard {
   margin: 2%;
 }
 
-#mapcards{
+#mapcards {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -54,7 +56,7 @@ html {background-color: #145374}
 }
 
 
-#login-text{
+#login-text {
   font-size: 64px;
   color: #FFE484;
 }
@@ -62,5 +64,12 @@ html {background-color: #145374}
 
 
 .MuiOutlinedInput-notchedOutline {
-  border-color: 1px solid white ;
+  border-color: 1px solid white;
+}
+
+#create-map-screen {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  flex-direction: row;
 }

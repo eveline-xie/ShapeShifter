@@ -40,12 +40,10 @@ export default function MapCard(props) {
      async function handleExport(event, id) {
         event.stopPropagation();
         props.setOpenExport(true);
-        // store.markListForDeletion(id);
     }
      async function handleFork(event, id) {
        event.stopPropagation();
        props.setOpenFork(true);
-       // store.markListForDeletion(id);
      }
   var deleteButton=   <Button variant="contained" sx={{ maxWidth: 100 }} style={{
         borderRadius: 50,

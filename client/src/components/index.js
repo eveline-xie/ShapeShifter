@@ -6,7 +6,8 @@ import MapCard from "./MapCard"
 import DeleteModal from "./DeleteModal"
 import ExportModal from "./ExportModal"
 import SignupScreen from "./SignupScreen"
-
+import CreateMap from "./CreateMap"
+import EditMap from "./EditMap"
 export{
     WelcomeScreen,
     NavBar,
@@ -16,4 +17,6 @@ export{
     DeleteModal,
     ExportModal,
     SignupScreen,
+    CreateMap,
+    EditMap
 }
