@@ -8,7 +8,10 @@ import {
   LoginScreen,
   HomeScreen,
   NavBar,
-  SignupScreen
+  SignupScreen,
+  ForgotPassword,
+  ResetPassword,
+  CommunityScreen
 } from './components'
 /*
     This is our application's top-level component.
@@ -33,7 +36,9 @@ const Router = () => {
                         <Route path="/login" element={<LoginScreen/>} />
                         <Route path="/signup" element={<SignupScreen/>} />
                         <Route path="/home" element={<HomeScreen/>} />
-
+                        <Route path="/forgotpassword" element={<ForgotPassword/>} />
+                        <Route path="/resetpassword" element={<ResetPassword/>} />
+                        <Route path="/community" element={<CommunityScreen/>} />
                     </Routes>
                     {/* <Statusbar /> */}
                 {/* </GlobalStoreContextProvider>

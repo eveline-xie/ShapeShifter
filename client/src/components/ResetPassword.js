@@ -19,7 +19,7 @@ import Email from '@mui/icons-material/Email'
 // import { createTheme } from '@mui/material/styles';
 // import { GlobalStoreContext } from '../store'
 
-export default function SignupScreen() {
+export default function ResetPassword() {
     // const { auth } = useContext(AuthContext);
     // const { store } = useContext(GlobalStoreContext);
 
@@ -50,102 +50,11 @@ export default function SignupScreen() {
         <div >
             <div id="splash-screen">
 
-                <div id="signup-text">
-                    Sign Up
+                <div id="resetpassword-text">
+                    Reset your password here
                 </div>
 
-                <div id="login-link">
-                    <Link href="/login/" variant="body2" color="#ffffff" >
-                        Already have an account?  Login here!
-                    </Link>
-                </div>
-
-                <Grid container component="main" rowSpacing={2} spacing={4} >
-
-                    <Grid item xs={6}>
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="firstname"
-                            label="First Name"
-                            name="firstname"
-                            autoComplete="firstname"
-                            autoFocus
-                            variant="outlined"
-                            // color="primary"
-                            InputLabelProps={{
-                                style: { color: '#ffffff' },
-                            }}
-                        />
-                    </Grid>
-
-                    <Grid item xs={6}>
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="lastname"
-                            label="Last Name"
-                            name="lastname"
-                            autoComplete="lastname"
-                            autoFocus
-                            variant="outlined"
-                            // color="primary"
-                            InputLabelProps={{
-                                style: { color: '#ffffff' },
-                            }}
-                        />
-                    </Grid>
-
-                    <Grid item xs={12}>
-                        <TextField
-                            required
-                            fullWidth
-                            id="email"
-                            label="Email"
-                            name="email"
-                            autoComplete="email"
-                            autoFocus
-                            variant="outlined"
-                            // color="primary"
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <Email />
-                                    </InputAdornment>
-                                ),
-                            }}
-                            InputLabelProps={{
-                                style: { color: '#ffffff' },
-                            }}
-                        />
-                    </Grid>
-
-                    <Grid item xs={12}>
-                        <TextField
-                            // margin="normal"
-                            required
-                            fullWidth
-                            id="username"
-                            label="Username"
-                            name="username"
-                            autoComplete="username"
-                            autoFocus
-                            variant="outlined"
-                            // color="primary"
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <AccountCircle />
-                                    </InputAdornment>
-                                ),
-                            }}
-                            InputLabelProps={{
-                                style: { color: '#ffffff' },
-                            }}
-                        />
-                    </Grid>
+                <Grid container component="main" rowSpacing={4}>
 
                     <Grid item xs={12}>
                         <TextField
@@ -210,9 +119,10 @@ export default function SignupScreen() {
                                 fontSize: "15px",
                                 color: "rgba(255, 228, 132, 1)"
                             }}
-                        >Create an Account
+                        >Submit
                         </Button>
                     </Grid>
+
 
                 </Grid>
             </div>
