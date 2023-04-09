@@ -9,9 +9,8 @@ import DeleteModal from './DeleteModal';
 import { useNavigate } from 'react-router-dom';
 
 export default function MapCard(props) {
-
   let navigate = useNavigate();
-  var owner = ""
+  let owner = "";
   // if(published){
   //   owner = <Typography variant="body2" color="text.secondary">
   //         owner name
@@ -43,11 +42,13 @@ export default function MapCard(props) {
     props.setOpenFork(true);
   }
 
-  async function handleEditMap() {
-    console.log("Test");
+  async function handleEditMap() {;
     navigate('/createmap');
   }
-  var leftButton = <Button variant="contained" sx={{ maxWidth: 100 }} style={{
+
+  async function handleViewMap() {
+  }
+  var editButton = <Button variant="contained" sx={{ maxWidth: 100 }} style={{
     borderRadius: 50,
     backgroundColor: "rgba(255,228,132, 0.4)",
     padding: "7px 34px",
@@ -69,6 +70,22 @@ export default function MapCard(props) {
   // if(published){
   //   deleteButton=""
   // }
+
+  if (window.location.pathname == '/community') {
+    owner = <div style={{ color: 'white' }}> JoeShmo</div>;
+    editButton = "";
+    deleteButton = <Button variant="contained" sx={{ maxWidth: 100 }} style={{
+      borderRadius: 50,
+      backgroundColor: "rgba(255,228,132, 0.4)",
+      padding: "7px 34px",
+      margin: "10px 10px",
+      fontSize: "13px",
+      color: "#FFE484"
+    }} onClick={(event) => {
+      handleViewMap(event)
+    }}>View</Button>
+  }
+
   return (
     <Card sx={{
       maxWidth: 325, borderRadius: "30px",
@@ -94,7 +111,7 @@ export default function MapCard(props) {
       </CardContent>
       <CardActions>
         <div>
-          {leftButton}
+          {editButton}
           {deleteButton}
         </div>
         <div>
