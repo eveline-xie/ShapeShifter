@@ -21,12 +21,24 @@ export default function ForgotPassword() {
     // const { auth } = useContext(AuthContext);
     // const { store } = useContext(GlobalStoreContext);
   const [input, setInput] = useState(false);
+  const [email, setEmail] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
+  let exampleEmail = "email";
 
     const handleSubmit = (event) => {
+        setErrorMessage("");
         event.preventDefault();
         // const formData = new FormData(event.currentTarget);
-        setInput(true)
+        if (email == "") {
+          setErrorMessage(<div style={{ color: 'red' }}>Provide an Email!</div>);
+        }
+        else if (email !== exampleEmail) {
+          setErrorMessage(<div style={{ color: 'red' }}>We Couldn't Find Your Email :(</div>);
+        }
+        else {
+          setInput(true);
+        }
         // auth.loginUser(
         //     formData.get('email'),
         //     formData.get('password')
@@ -69,6 +81,7 @@ export default function ForgotPassword() {
             InputLabelProps={{
               style: { color: "#ffffff" },
             }}
+            onChange={(e) => setEmail(e.target.value)}
           />
         </Grid>
 
@@ -107,8 +120,8 @@ export default function ForgotPassword() {
                 <div id="forgotpassword-subtext">
                     Don’t worry, happens to the best of us :)
                 </div>
-
                 {form}
+                {errorMessage}
             </div>
         </div>
     );

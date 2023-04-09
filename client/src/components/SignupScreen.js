@@ -16,6 +16,7 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import Lock from '@mui/icons-material/Lock'
 import Email from '@mui/icons-material/Email'
 import { useNavigate } from "react-router-dom";
+import { useState } from 'react';
 
 // import { createTheme } from '@mui/material/styles';
 // import { GlobalStoreContext } from '../store'
@@ -23,31 +24,42 @@ import { useNavigate } from "react-router-dom";
 export default function SignupScreen() {
     // const { auth } = useContext(AuthContext);
     // const { store } = useContext(GlobalStoreContext);
-  let navigate = useNavigate(); 
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+    const [email, setEmail] = useState("");
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [verifiedPassword, setVerifiedPassword] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
+
+    let navigate = useNavigate();
+
+    let exampleUser = {email: "email", username: "username", password: "password", verifiedPassword: "password"}
 
     const handleSubmit = (event) => {
         event.preventDefault();
         // const formData = new FormData(event.currentTarget);
-        navigate("/login");
+        if (email == exampleUser.email) {
+            setErrorMessage(<div style={{color:'red'}}>Email Already in Use!</div>);
+        }
+        else if (username == exampleUser.username) {
+            setErrorMessage(<div style={{color:'red'}}>Username Already in Use!</div>);
+        }
+        else if (password != verifiedPassword) {
+            setErrorMessage(<div style={{color:'red'}}>Passwords do not match!</div>);
+        }
+        else if (email == "" || username == "" || password == "" || verifiedPassword == "") {
+            setErrorMessage(<div style={{color:'red'}}>Fill Out Everything!</div>);
+        }
+        else {
+            navigate("/login");
+        }
         // auth.loginUser(
         //     formData.get('email'),
         //     formData.get('password')
         // );
         // store.resetStore();
     };
-
-    // const theme = createTheme({
-    //     palette: {
-    //       primary: {
-    //         main: '#FFE484',
-    //       },
-    //       secondary: {
-    //         main: '#ffffff',
-    //       },
-    //     },
-    //   });
-
-
 
     return (
         <div >
@@ -80,6 +92,7 @@ export default function SignupScreen() {
                             InputLabelProps={{
                                 style: { color: '#ffffff' },
                             }}
+                            onChange={(e) => setFirstName(e.target.value)}
                         />
                     </Grid>
 
@@ -98,6 +111,7 @@ export default function SignupScreen() {
                             InputLabelProps={{
                                 style: { color: '#ffffff' },
                             }}
+                            onChange={(e) => setLastName(e.target.value)}
                         />
                     </Grid>
 
@@ -122,6 +136,7 @@ export default function SignupScreen() {
                             InputLabelProps={{
                                 style: { color: '#ffffff' },
                             }}
+                            onChange={(e) => setEmail(e.target.value)}
                         />
                     </Grid>
 
@@ -147,6 +162,7 @@ export default function SignupScreen() {
                             InputLabelProps={{
                                 style: { color: '#ffffff' },
                             }}
+                            onChange={(e) => setUsername(e.target.value)}
                         />
                     </Grid>
 
@@ -172,6 +188,7 @@ export default function SignupScreen() {
                             InputLabelProps={{
                                 style: { color: '#ffffff' },
                             }}
+                            onChange={(e) => setPassword(e.target.value)}
                         />
                     </Grid>
 
@@ -197,6 +214,8 @@ export default function SignupScreen() {
                             InputLabelProps={{
                                 style: { color: '#ffffff' },
                             }}
+                            onChange={(e) => setVerifiedPassword(e.target.value)}
+
                         />
                     </Grid>
 
@@ -219,6 +238,7 @@ export default function SignupScreen() {
                     </Grid>
 
                 </Grid>
+                {errorMessage}
             </div>
         </div>
     );

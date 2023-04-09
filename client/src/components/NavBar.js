@@ -49,6 +49,12 @@ function NavBar() {
     else if (page == "Splash") {
       navigate('');
     }
+    else if (page == "Community") {
+      navigate('/community');
+    }
+    else if (page == "Home") {
+      navigate('/home');
+    }
   }
 
   let buttons =
@@ -69,6 +75,32 @@ function NavBar() {
     buttons = ''
   }
 
+  let homeCommunity = ""
+  if (window.location.pathname == "/home") {
+    homeCommunity =
+    <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+        <Button
+          key={"Community"}
+          onClick={(event) => handleSwitchPage(event, "Community")}
+          sx={{ my: 2, color: 'white', display: 'block' }}
+        >
+          Community
+        </Button>
+    </Box>
+  }
+  else if (window.location.pathname == "/community") {
+    homeCommunity =
+    <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+        <Button
+          key={"Home"}
+          onClick={(event) => handleSwitchPage(event, "Home")}
+          sx={{ my: 2, color: 'white', display: 'block' }}
+        >
+          Home
+        </Button>
+    </Box>
+  }
+
   return (
     <AppBar position="static" style={{ background: '#145374' }}>
       <Container maxWidth="xl">
@@ -84,95 +116,9 @@ function NavBar() {
               <img src='logo.png' width="150px" height="64.5px" />
             </Typography>
           </div>
-          {/* <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="/"
-            sx={{
-              mr: 2,
-              display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
-          >
-            LOGO
-          </Typography> */}
-
-          {/* <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: 'block', md: 'none' },
-              }}
-            >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box> */}
-          {/* <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} /> */}
-          {/* <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href=""
-            sx={{
-              mr: 2,
-              display: { xs: 'flex', md: 'none' },
-              flexGrow: 1,
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
-          >
-            LOGO
-          </Typography> */}
-
-
-          {/* <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={(event) => handleSwitchPage(event, page)}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-                {page}
-              </Button>
-            ))}
-          </Box> */}
           <div style={{ flexGrow: 1, textAlign: 'right' }}>{buttons}</div>
-          <div style={{ width: '15%', marginLeft: 'auto' }}>
+          {homeCommunity}
+          <div>
             <Box sx={{ flexGrow: 0 }} >
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
