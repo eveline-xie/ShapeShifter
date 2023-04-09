@@ -12,6 +12,7 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
+import { useNavigate } from 'react-router-dom'
 
 const pages = ["Login", "Join"];
 const settings = ['Logout'];
@@ -19,6 +20,8 @@ const settings = ['Logout'];
 function NavBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+
+  const navigate = useNavigate();
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -35,18 +38,52 @@ function NavBar() {
     setAnchorElUser(null);
   };
 
+  const handleSwitchPage = (event, page) => {
+    console.log(window.location.pathname);
+    if (page == "Login") {
+      navigate('/login');
+    }
+    else if (page == "Join") {
+      navigate('/signup');
+    }
+    else if (page == "Splash") {
+      navigate('');
+    }
+  }
+
+  let buttons =
+    <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+      {pages.map((page) => (
+        <Button
+          key={page}
+          onClick={(event) => handleSwitchPage(event, page)}
+          sx={{ my: 2, color: 'white', display: 'block' }}
+        >
+          {page}
+        </Button>
+      ))}
+    </Box>
+
+  let notLoggedInPaths = ['/', '/login', '/signup']
+  if (!notLoggedInPaths.includes(window.location.pathname)) {
+    buttons = ''
+  }
+
   return (
     <AppBar position="static" style={{ background: '#145374' }}>
       <Container maxWidth="xl">
-        <Toolbar disableGutters>
-        <Typography                        
-                        variant="h4"
-                        noWrap
-                        component="div"
-                        sx={{ display: { xs: 'none', sm: 'block' } }}                        
-                    >
-                        <img src = 'logo.png' width = "150px" height = "64.5px"  />
-                    </Typography>
+        <Box display="flex" alignItems="center" p={2}>
+          <div style={{ width: '15%' }}>
+            <Typography
+              variant="h4"
+              noWrap
+              component="div"
+              sx={{ display: { xs: 'none', sm: 'block' } }}
+              onClick={(event) => handleSwitchPage(event, "Splash")}
+            >
+              <img src='logo.png' width="150px" height="64.5px" />
+            </Typography>
+          </div>
           {/* <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
           <Typography
             variant="h6"
@@ -65,11 +102,8 @@ function NavBar() {
           >
             LOGO
           </Typography> */}
-          <AppBar color="inherit">
- 
-</AppBar>
 
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+          {/* <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -104,7 +138,7 @@ function NavBar() {
                 </MenuItem>
               ))}
             </Menu>
-          </Box>
+          </Box> */}
           {/* <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} /> */}
           {/* <Typography
             variant="h5"
@@ -124,48 +158,52 @@ function NavBar() {
           >
             LOGO
           </Typography> */}
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+
+
+          {/* <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <Button
                 key={page}
-                onClick={handleCloseNavMenu}
+                onClick={(event) => handleSwitchPage(event, page)}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
                 {page}
               </Button>
             ))}
-          </Box>
-
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
-        </Toolbar>
+          </Box> */}
+          <div style={{ flexGrow: 1, textAlign: 'right' }}>{buttons}</div>
+          <div style={{ width: '15%', marginLeft: 'auto' }}>
+            <Box sx={{ flexGrow: 0 }} >
+              <Tooltip title="Open settings">
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                </IconButton>
+              </Tooltip>
+              <Menu
+                sx={{ mt: '45px' }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                {settings.map((setting) => (
+                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                    <Typography textAlign="center">{setting}</Typography>
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Box>
+          </div>
+        </Box>
       </Container>
     </AppBar>
   );

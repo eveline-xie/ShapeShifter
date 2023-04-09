@@ -69,57 +69,64 @@ export default function HomeScreen() {
       <div id="create-map">
         <Card
           sx={{ display: "flex", width: "100%", borderRadius: "30px" }}
-          style={{ backgroundColor: "rgba(20,83,116, 0.6)" }}
+          style={{ backgroundColor: "rgba(0,0,0, 0.6)" }}
+        // 20,83,116
         >
-          <Box sx={{ display: "flex", flexDirection: "column" }}>
-            <CardContent sx={{ flex: "1 0 auto", mt: 6 }}>
-              <Typography
-                component="div"
-                variant="h5"
-                style={{
-                  color: "#FFE484",
-                }}
-              >
-                Create New Map
-              </Typography>
-            </CardContent>
-            <Box sx={{ display: "flex", alignItems: "center", pl: 1, pb: 1 }}>
-              <Button
-                variant="contained"
-                style={{
-                  borderRadius: 50,
-                  backgroundColor: "#AEAFFF",
-                  padding: "13px 34px",
-                  margin: "10px 10px",
-                  fontSize: "13px",
-                  color: "#000000",
-                }}
-                onClick={handleUploadDBF}
-              >
-                SHP/DBF
-              </Button>
-              <Button
-                variant="contained"
-                style={{
-                  borderRadius: 50,
-                  backgroundColor: "#FFE484",
-                  padding: "13px 34px",
-                  margin: "10px 10px",
-                  fontSize: "13px",
-                  color: "#000000",
-                }}
-                onClick={handleUploadGeoJson}
-              >
-                GeoJson
-              </Button>
-            </Box>
+          <Box display="flex">
+            <div style={{ width: '80%' }}>
+              <Box sx={{ display: "flex", flexDirection: "column" }}>
+                <CardContent sx={{ flex: "1 0 auto", mt: 6 }}>
+                  <Typography
+                    component="div"
+                    variant="h5"
+                    style={{
+                      color: "#FFE484",
+                    }}
+                  >
+                    Create New Map
+                  </Typography>
+                </CardContent>
+                <Box sx={{ display: "flex", alignItems: "center", pl: 1, pb: 1 }}>
+                  <Button
+                    variant="contained"
+                    style={{
+                      borderRadius: 50,
+                      backgroundColor: "#AEAFFF",
+                      padding: "13px 34px",
+                      margin: "10px 10px",
+                      fontSize: "13px",
+                      color: "#000000",
+                    }}
+                    onClick={handleUploadDBF}
+                  >
+                    SHP/DBF
+                  </Button>
+                  <Button
+                    variant="contained"
+                    style={{
+                      borderRadius: 50,
+                      backgroundColor: "#FFE484",
+                      padding: "13px 34px",
+                      margin: "10px 10px",
+                      fontSize: "13px",
+                      color: "#000000",
+                    }}
+                    onClick={handleUploadGeoJson}
+                  >
+                    GeoJson
+                  </Button>
+                </Box>
+              </Box>
+            </div>
+            <div style={{ textAlign: 'right' }}>
+              <CardMedia
+                component="img"
+                sx={{ width: 400, m: 4, pl: "10%", float: 'right' }}
+                image="logo.png"
+                alt="Live from space album cover"
+              />
+            </div>
           </Box>
-          <CardMedia
-            component="img"
-            sx={{ width: 400, m: 4, pl: "10%" }}
-            image="logo.png"
-            alt="Live from space album cover"
-          />
         </Card>
       </div>
 
