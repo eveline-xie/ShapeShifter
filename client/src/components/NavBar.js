@@ -63,7 +63,7 @@ function NavBar() {
         </Button>
       ))}
     </Box>
-
+  // maybe include community page
   let notLoggedInPaths = ['/', '/login', '/signup']
   if (!notLoggedInPaths.includes(window.location.pathname)) {
     buttons = ''
