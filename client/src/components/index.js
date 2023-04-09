@@ -8,6 +8,10 @@ import ExportModal from "./ExportModal"
 import SignupScreen from "./SignupScreen"
 import CreateMap from "./CreateMap"
 import EditMap from "./EditMap"
+import ForgotPassword from "./ForgotPassword"
+import ResetPassword from "./ResetPassword"
+import CommunityScreen from "./CommunityScreen"
+
 export{
     WelcomeScreen,
     NavBar,
@@ -18,5 +22,8 @@ export{
     ExportModal,
     SignupScreen,
     CreateMap,
-    EditMap
+    EditMap,
+    ForgotPassword,
+    ResetPassword,
+    CommunityScreen,
 }

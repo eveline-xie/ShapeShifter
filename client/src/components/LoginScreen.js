@@ -48,114 +48,119 @@ export default function LoginScreen() {
     //     },
     //   });
 
-    
+
 
     return (
-        <div >
-            <div id="splash-screen">
-                <div id="login-text">
-                    Log In
-                </div>
-                
-                <Grid container component="main" sx={{ height: '100vh' }}>
+      <div>
+        <div id="splash-screen">
+          <div id="login-text">Log In</div>
 
-                    {/* <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+          <Grid container component="main" sx={{ height: "100vh" }}>
+            {/* <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
                         <LockOutlinedIcon />
                     </Avatar> */}
-                    {/* <Typography align="center" display="flex">
+            {/* <Typography align="center" display="flex">
                         Log in
                     </Typography> */}
-                    <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="email"
-                            label="Email/Username"
-                            name="email"
-                            autoComplete="email"
-                            autoFocus
-                            variant="outlined"
-                            // color="primary"
-                            InputProps={{
-                                startAdornment: (
-                                  <InputAdornment position="start">
-                                    <AccountCircle />
-                                  </InputAdornment>
-                                ),
-                              }}
-                            InputLabelProps={{
-                                style: { color: '#ffffff' },
-                              }}            
-                        />
+            <Box
+              component="form"
+              noValidate
+              onSubmit={handleSubmit}
+              sx={{ mt: 1 }}
+            >
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="Email/Username"
+                name="email"
+                autoComplete="email"
+                autoFocus
+                variant="outlined"
+                // color="primary"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <AccountCircle />
+                    </InputAdornment>
+                  ),
+                }}
+                InputLabelProps={{
+                  style: { color: "#ffffff" },
+                }}
+              />
 
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            name="password"
-                            label="Password"
-                            type="password"
-                            id="password"
-                            autoComplete="current-password"
-                            variant="outlined"
-                            // color="secondary"
-                            focused
-                            InputProps={{
-                                startAdornment: (
-                                  <InputAdornment position="start">
-                                    <Lock />
-                                  </InputAdornment>
-                                ),
-                              }}
-                            InputLabelProps={{
-                                style: { color: '#ffffff' },
-                            }}
-
-                        />
-                        <FormControlLabel
-                            control={<Checkbox 
-                                        value="remember" 
-                                    //     checked={cryon}
-                                    //     onChange={this.handleChange('cryon')}
-                                    //     style ={{
-                                    //       color: "#00e676",
-                                    //     }}
-                                       />}
-                            label="Remember me"
-                            sx={{
-                                color: "white"
-                              }}
-                        />
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
-                            style={{backgroundColor: "rgba(255, 228, 132, .4)", 
-                                    borderRadius: 40, 
-                                    padding: "13px 34px", 
-                                    fontSize: "15px",
-                                    color: "rgba(255, 228, 132, 1)"}}
-                        >Log In
-                        </Button>
-                        <Grid container>
-                            <Grid item>
-                                <Link href="/register/" variant="body2" color="#ffffff">
-                                    {"Need an account? Sign up now!"}
-                                </Link>
-                            </Grid>
-                            <Grid item md >
-                                <Link href="#" variant="body2" color="#ffffff">
-                                    Forgot password?
-                                </Link>
-                            </Grid>
-                        </Grid>
-                        {/* <Copyright sx={{ mt: 5 }} /> */}
-                    </Box>
-                    
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+                variant="outlined"
+                // color="secondary"
+                focused
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Lock />
+                    </InputAdornment>
+                  ),
+                }}
+                InputLabelProps={{
+                  style: { color: "#ffffff" },
+                }}
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    value="remember"
+                    //     checked={cryon}
+                    //     onChange={this.handleChange('cryon')}
+                    //     style ={{
+                    //       color: "#00e676",
+                    //     }}
+                  />
+                }
+                label="Remember me"
+                sx={{
+                  color: "white",
+                }}
+              />
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+                style={{
+                  backgroundColor: "rgba(255, 228, 132, .4)",
+                  borderRadius: 40,
+                  padding: "13px 34px",
+                  fontSize: "15px",
+                  color: "rgba(255, 228, 132, 1)",
+                }}
+              >
+                Log In
+              </Button>
+              <Grid container justifyContent="space-between">
+                <Grid item xs={4}>
+                  <Link href="/signup" variant="body2" color="#ffffff">
+                    Need an account? Sign up now!
+                  </Link>
                 </Grid>
-            </div>
+                <Grid item xs={8}>
+                  <Link href="/forgotpassword" variant="body2" color="#ffffff">
+                    Forgot password?
+                  </Link>
+                </Grid>
+              </Grid>
+              {/* <Copyright sx={{ mt: 5 }} /> */}
+            </Box>
+          </Grid>
         </div>
+      </div>
     );
 }

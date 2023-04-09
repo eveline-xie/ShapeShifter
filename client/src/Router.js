@@ -1,6 +1,6 @@
-import './App.css';
-import { React } from 'react'
-import { BrowserRouter, Route, Routes} from 'react-router-dom'
+import "./App.css";
+import { React } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 // import { AuthContextProvider } from './auth';
 // import { GlobalStoreContextProvider } from './store'
 import {
@@ -9,9 +9,12 @@ import {
   HomeScreen,
   NavBar,
   SignupScreen,
+  ForgotPassword,
+  ResetPassword,
+  CommunityScreen,
   CreateMap,
-  EditMap
-} from './components'
+  EditMap,
+} from "./components";
 /*
     This is our application's top-level component.
     
@@ -24,25 +27,28 @@ import {
   @author McKilla Gorilla
 */
 const Router = () => {
-    return (
-      <BrowserRouter>
-        {/* <AuthContextProvider>
+  return (
+    <BrowserRouter>
+      {/* <AuthContextProvider>
                 <GlobalStoreContextProvider>               */}
-        {/* <AppBanner /> */}
-        <NavBar />
-        <Routes>
-          <Route path="/" element={<WelcomeScreen />} />
-          <Route path="/login" element={<LoginScreen />} />
-          <Route path="/signup" element={<SignupScreen />} />
-          <Route path="/home" element={<HomeScreen />} />
-          <Route path="/createmap" element={<CreateMap />} />
-          <Route path="/editmap" element={<EditMap />} />
-        </Routes>
-        {/* <Statusbar /> */}
-        {/* </GlobalStoreContextProvider>
+      {/* <AppBanner /> */}
+      <NavBar />
+      <Routes>
+        <Route path="/" element={<WelcomeScreen />} />
+        <Route path="/login" element={<LoginScreen />} />
+        <Route path="/signup" element={<SignupScreen />} />
+        <Route path="/home" element={<HomeScreen />} />
+        <Route path="/createmap" element={<CreateMap />} />
+        <Route path="/editmap" element={<EditMap />} />
+        <Route path="/forgotpassword" element={<ForgotPassword />} />
+        <Route path="/resetpassword" element={<ResetPassword />} />
+        <Route path="/community" element={<CommunityScreen />} />{" "}
+      </Routes>
+      {/* <Statusbar /> */}
+      {/* </GlobalStoreContextProvider>
             </AuthContextProvider> */}
-      </BrowserRouter>
-    );
-}
+    </BrowserRouter>
+  );
+};
 
-export default Router
+export default Router;

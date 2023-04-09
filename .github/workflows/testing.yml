@@ -15,4 +15,17 @@ jobs:
         working-directory: server
         run: 
           npm test
-          
+  frontend-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: install
+        run: 
+          npm install
+      - name: install cypress
+        run: 
+          npm install cypress
+      - name: test
+        run: 
+          npx cypress run
