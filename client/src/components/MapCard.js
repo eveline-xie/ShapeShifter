@@ -59,7 +59,7 @@ export default function MapCard(props) {
   //   deleteButton=""
   // }
   return (
-    <Card sx={{ maxWidth: 325 }} id="mapcard">
+    <Card sx={{ maxWidth: 325, borderRadius: "30px", backgroundColor: 'grey'}} id="mapcard">
       <CardMedia
         component="img"
         alt="green iguana"
@@ -67,7 +67,8 @@ export default function MapCard(props) {
         image="logo.png"
       />
       <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
+        <Typography gutterBottom variant="h5" component="div"
+        color="white" fontFamily="Kadwa" sx={{fontSize: 30, fontWeight: 'bold'}}>
           North America
         </Typography>
         {/* if published, add owner */}
@@ -84,11 +85,11 @@ export default function MapCard(props) {
             sx={{ maxWidth: 100 }}
             style={{
               borderRadius: 50,
-              backgroundColor: "#FFE484",
+              backgroundColor: "rgba(255,228,132, 0.4)",
               padding: "7px 34px",
               margin: "10px 10px",
               fontSize: "13px",
-              color: "#000000",
+              color: "#FFE484",
             }}
             onClick={(event) => {
               handleFork(event);
