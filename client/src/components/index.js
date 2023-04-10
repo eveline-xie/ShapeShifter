@@ -11,6 +11,7 @@ import EditMap from "./EditMap"
 import ForgotPassword from "./ForgotPassword"
 import ResetPassword from "./ResetPassword"
 import CommunityScreen from "./CommunityScreen"
+import ExpandedMapcard from "./ExpandedMapcard"
 
 export{
     WelcomeScreen,
@@ -26,4 +27,5 @@ export{
     ForgotPassword,
     ResetPassword,
     CommunityScreen,
+    ExpandedMapcard
 }

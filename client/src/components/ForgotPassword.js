@@ -13,6 +13,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import Lock from '@mui/icons-material/Lock'
 import Email from '@mui/icons-material/Email'
+import { useNavigate } from "react-router-dom";
 
 // import { createTheme } from '@mui/material/styles';
 // import { GlobalStoreContext } from '../store'
@@ -24,6 +25,7 @@ export default function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
+  let navigate = useNavigate();
   let exampleEmail = "email";
 
     const handleSubmit = (event) => {
@@ -56,7 +58,9 @@ export default function ForgotPassword() {
     //       },
     //     },
     //   });
-
+    function handleReset(){
+      navigate('/resetpassword');
+    }
     let form = (
       <Grid container component="main" rowSpacing={4}>
         <Grid item xs={12}>
@@ -106,7 +110,11 @@ export default function ForgotPassword() {
       </Grid>
     );
     if(input){
-        form = <div id="emailsent-text">Email sent! Check your mailbox :)</div>;
+        form = (
+          <div id="emailsent-text">
+            <a onClick={handleReset}>Email sent! Check your mailbox :)</a>
+          </div>
+        );
     }
 
     return (
