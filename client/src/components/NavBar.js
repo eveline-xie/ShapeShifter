@@ -58,6 +58,7 @@ function NavBar() {
   }
 
   const handleLogout = () =>{
+    handleCloseUserMenu();
     navigate("/");
   }
 
@@ -77,7 +78,7 @@ function NavBar() {
   let pfp = ''
 
   // maybe include community page
-  let notLoggedInPaths = ['/', '/login', '/signup']
+  let notLoggedInPaths = ['/', '/login', '/signup', '/forgotpassword']
   if (!notLoggedInPaths.includes(window.location.pathname)) {
     buttons = '';
     pfp = <div>
@@ -104,7 +105,7 @@ function NavBar() {
         onClose={handleCloseUserMenu}
       >
         {settings.map((setting) => (
-          <MenuItem key={setting} onClick={handleCloseUserMenu}>
+          <MenuItem key={setting} onClick={handleLogout}>
             <Typography textAlign="center">{setting}</Typography>
           </MenuItem>
         ))}
