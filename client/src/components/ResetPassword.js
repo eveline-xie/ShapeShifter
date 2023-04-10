@@ -14,6 +14,7 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import Lock from "@mui/icons-material/Lock";
 import Email from "@mui/icons-material/Email";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 // import { createTheme } from '@mui/material/styles';
 // import { GlobalStoreContext } from '../store'
@@ -25,6 +26,12 @@ export default function ResetPassword() {
   const [password, setPassword] = useState("");
   const [verifiedPassword, setVerifiedPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+
+  let navigate = useNavigate();
+
+  const handleLogin = () => {
+    navigate('/login');
+  }
 
   const handleSubmit = (event) => {
     setErrorMessage("");
@@ -137,7 +144,8 @@ export default function ResetPassword() {
   if (input) {
     form = (
       <div id="emailsent-text">
-        Password set. <a href="/login">Login</a> here!
+        Password set.  
+        <a onClick = {handleLogin}> <u> Login</u></a> here!
       </div>
     );
   }

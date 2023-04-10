@@ -36,6 +36,10 @@ export default function SignupScreen() {
 
     let exampleUser = { email: "email", username: "username", password: "password", verifiedPassword: "password" }
 
+    const handleLogin = () => {
+        navigate('/login');
+    }
+
     const handleSubmit = (event) => {
         event.preventDefault();
         // const formData = new FormData(event.currentTarget);
@@ -70,7 +74,7 @@ export default function SignupScreen() {
                 </div>
 
                 <div id="login-link">
-                    <Link href="/login/" variant="body2" color="#ffffff" >
+                    <Link onClick = {handleLogin} variant="body2" color="#ffffff" >
                         Already have an account?  Login here!
                     </Link>
                 </div>

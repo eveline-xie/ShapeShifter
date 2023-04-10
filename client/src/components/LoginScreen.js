@@ -34,6 +34,14 @@ export default function LoginScreen() {
 
   let exampleUser = { email: "email", username: "username", pass: "password" }
 
+  const handleSignUp = () => {
+    navigate('/signup')
+  }
+
+  const handleForgotPassword = () => {
+    navigate('/forgotpassword')
+  }
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
@@ -165,12 +173,14 @@ export default function LoginScreen() {
 
             <Grid container justifyContent="space-between">
               <Grid item xs={4}>
-                <Link href="/signup" variant="body2" color="#ffffff">
+                <Link  variant="body2" color="#ffffff"
+                onClick={handleSignUp}>
                   Need an account? Sign up now!
                 </Link>
               </Grid>
               <Grid item xs={8}>
-                <Link href="/forgotpassword" variant="body2" color="#ffffff">
+                <Link variant="body2" color="#ffffff"
+                onClick={handleForgotPassword}>
                   Forgot password?
                 </Link>
               </Grid>
