@@ -88,7 +88,7 @@ export default function CommunityScreen() {
                             color: "#000000",
                         }}
                     >
-                        Key Waord
+                        Key Word
                     </Button>
                 </Grid>
 
@@ -104,7 +104,7 @@ export default function CommunityScreen() {
                             color: "#000000",
                         }}
                     >
-                        Key Waord
+                        Key Word
                     </Button>
                 </Grid>
 

@@ -7,7 +7,7 @@ import ExportModal from "./ExportModal";
 import ForkModal from "./ForkModal";
 import { useNavigate } from "react-router-dom";
 import { FormControl, FormLabel, TextField, Box } from "@mui/material";
-import Lock from "@mui/icons-material/Lock";
+
 import InputAdornment from "@mui/material/InputAdornment";
 
 export default function CreateMap() {
