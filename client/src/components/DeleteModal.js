@@ -20,6 +20,10 @@ const style = {
     
 };
 
+/*
+    This component serves as a popup modal. It only shows up when the user clicks the delete button on the map
+*/
+
 export default function DeleteModal(props) {
     // const { store } = useContext(GlobalStoreContext);
 

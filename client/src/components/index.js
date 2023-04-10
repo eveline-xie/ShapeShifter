@@ -14,6 +14,11 @@ import CommunityScreen from "./CommunityScreen"
 import ExpandedMapcard from "./ExpandedMapcard"
 import CommunityGuestScreen from "./CommunityGuestScreen"
 
+/*
+    This serves as a module so that we can import
+    all the other components as we wish.
+*/
+
 export{
     WelcomeScreen,
     NavBar,

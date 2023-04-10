@@ -21,6 +21,11 @@ import { useState } from 'react';
 // import { createTheme } from '@mui/material/styles';
 // import { GlobalStoreContext } from '../store'
 
+/*
+    This React component lets user sign up, which only
+    happens when we are on the proper route.  
+*/
+
 export default function SignupScreen() {
     // const { auth } = useContext(AuthContext);
     // const { store } = useContext(GlobalStoreContext);

@@ -19,6 +19,10 @@ import ExportModal from "./ExportModal";
 import ForkModal from "./ForkModal";
 import { useNavigate } from "react-router-dom";
 
+/*
+This screen lists all the maps that the logged in user owned and shared with.
+*/
+
 export default function HomeScreen() {
   const theme = useTheme();
   const [dropdown, setDropdown] = React.useState(10);
