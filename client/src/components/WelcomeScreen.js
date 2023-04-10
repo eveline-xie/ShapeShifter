@@ -42,7 +42,7 @@ export default function SplashScreen() {
                             padding: "13px 34px",
                             fontSize: "15px",
                             color: "#000000"
-                        }} onClick = {() => navigate("/community")}>Explore Our Community</Button>
+                        }} onClick = {() => navigate("/communityguest")}>Explore Our Community</Button>
                     </Box>
 
 

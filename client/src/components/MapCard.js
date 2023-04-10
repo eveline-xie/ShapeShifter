@@ -75,7 +75,7 @@ export default function MapCard(props) {
   //   deleteButton=""
   // }
 
-  if (window.location.pathname == '/community') {
+  if (window.location.pathname == '/community' || window.location.pathname == '/communityguest') {
     owner = <div style={{ color: 'white' }}> JoeShmo</div>;
     editButton = "";
     deleteButton = <Button variant="contained" sx={{ maxWidth: 100 }} style={{
@@ -89,9 +89,32 @@ export default function MapCard(props) {
       handleViewMap(event)
     }}>View</Button>
   }
-  if(props.dropdown === 20){
+
+  let forkButton = <Button
+    variant="contained"
+    sx={{ maxWidth: 100 }}
+    style={{
+      borderRadius: 50,
+      backgroundColor: "rgba(255,228,132, 0.4)",
+      padding: "7px 34px",
+      margin: "10px 10px",
+      fontSize: "13px",
+      color: "#FFE484",
+    }}
+    onClick={(event) => {
+      handleFork(event);
+    }}
+  >
+    Fork
+  </Button>
+
+  if (window.location.pathname == '/communityguest') {
+    forkButton = '';
+  }
+
+  if (props.dropdown === 20) {
     // console.log(props.dropdown)
-    deleteButton=""
+    deleteButton = ""
   }
 
   return (
@@ -122,23 +145,7 @@ export default function MapCard(props) {
           {deleteButton}
         </div>
         <div>
-          <Button
-            variant="contained"
-            sx={{ maxWidth: 100 }}
-            style={{
-              borderRadius: 50,
-              backgroundColor: "rgba(255,228,132, 0.4)",
-              padding: "7px 34px",
-              margin: "10px 10px",
-              fontSize: "13px",
-              color: "#FFE484",
-            }}
-            onClick={(event) => {
-              handleFork(event);
-            }}
-          >
-            Fork
-          </Button>
+          {forkButton}
           <Button
             variant="contained"
             sx={{ maxWidth: 100 }}

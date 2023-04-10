@@ -12,6 +12,7 @@ import ForgotPassword from "./ForgotPassword"
 import ResetPassword from "./ResetPassword"
 import CommunityScreen from "./CommunityScreen"
 import ExpandedMapcard from "./ExpandedMapcard"
+import CommunityGuestScreen from "./CommunityGuestScreen"
 
 export{
     WelcomeScreen,
@@ -27,5 +28,6 @@ export{
     ForgotPassword,
     ResetPassword,
     CommunityScreen,
-    ExpandedMapcard
+    ExpandedMapcard,
+    CommunityGuestScreen
 }

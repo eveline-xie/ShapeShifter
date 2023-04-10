@@ -78,7 +78,7 @@ function NavBar() {
   let pfp = ''
 
   // maybe include community page
-  let notLoggedInPaths = ['/', '/login', '/signup', '/forgotpassword']
+  let notLoggedInPaths = ['/', '/login', '/signup', '/forgotpassword', '/communityguest']
   if (!notLoggedInPaths.includes(window.location.pathname)) {
     buttons = '';
     pfp = <div>
