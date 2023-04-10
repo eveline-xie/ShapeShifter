@@ -19,6 +19,10 @@ import ExportModal from "./ExportModal";
 import ForkModal from "./ForkModal";
 import ExpandedMapcard from "./ExpandedMapcard";
 
+/*
+This screen lists all the maps that are published and actions allowed by a guest.
+*/
+
 export default function CommunityGuestScreen() {
     //   const theme = useTheme();
     //   const [dropdown, setDropdown] = React.useState("");

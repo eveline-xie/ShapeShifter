@@ -20,7 +20,7 @@ import { useNavigate } from "react-router-dom";
 // import { GlobalStoreContext } from '../store'
 
 /*
-    This React component lets user reset their password, which only
+    This React component lets users reset their password, which only
     happens when the user clicks on the link from their email.
     
 */

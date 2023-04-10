@@ -20,7 +20,7 @@ import ForkModal from "./ForkModal";
 import ExpandedMapcard from "./ExpandedMapcard";
 
 /*
-This screen lists all the maps that are published.
+This screen lists all the maps that are published and actions allowed by a logged in user.
 */
 
 export default function CommunityScreen() {

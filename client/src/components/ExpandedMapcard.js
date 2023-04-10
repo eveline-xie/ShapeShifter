@@ -18,7 +18,8 @@ import ExportModal from "./ExportModal";
 import { useState } from "react";
 
 /*
-    This React component represents the expanded mapcard, after the user clicked on the "view" button in the community screen.
+    This React component represents the expanded mapcard, after the user clicks on the "view" button of a map card,
+    where the user can comment on the map depending on if they are logged in or are a guest.
     
 */
 

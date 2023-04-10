@@ -16,7 +16,7 @@ import { useNavigate } from 'react-router-dom'
 
 /*
    This navbar is a functional React component that
-    manages the login, signup, home, community buttons that stays at the top of the UI
+    manages the login, signup, home, community, and profile buttons that stay at the top of the UI.
 */
 const pages = ["Login", "Join"];
 const settings = ['Logout'];

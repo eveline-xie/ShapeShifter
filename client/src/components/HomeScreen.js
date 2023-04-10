@@ -20,7 +20,7 @@ import ForkModal from "./ForkModal";
 import { useNavigate } from "react-router-dom";
 
 /*
-This screen lists all the maps that the logged in user owned and shared with.
+This screen lists all the maps that the logged in user owns and all the maps that have been shared with the user.
 */
 
 export default function HomeScreen() {

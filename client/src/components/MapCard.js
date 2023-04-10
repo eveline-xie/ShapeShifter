@@ -10,7 +10,8 @@ import { useNavigate } from 'react-router-dom';
 
 /*
     This React component represents a single map item in our
-    home screen or community screen, which can be edited, forked, exported, or deleted.
+    home screen, community screen, or guest community screen which can be edited, forked, exported, viewed, or deleted
+    depending on the screen.
     
 */
 

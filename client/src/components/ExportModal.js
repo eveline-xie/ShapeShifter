@@ -20,7 +20,7 @@ const style = {
 };
 
 /*
-    This component serves as a popup modal. It only shows up when the user clicks the export button on the map
+    This component serves as a popup modal. It only shows up when the user clicks the export button on the map.
 */
 
 export default function ExportModal(props) {
