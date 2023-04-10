@@ -315,7 +315,8 @@ export default function ExportModal(props) {
                                         component="img"
                                         alt="green iguana"
                                         height="410"
-                                        image="logo.png"
+                                        image="cardBackground.png"
+                                        style={{ objectFit: "cover" }}
                                     />
                                 </Card>
                             </Box>
