@@ -8,40 +8,40 @@ describe('welcome page', () => {
   })
   
 
-  it('existing user signs up for an account', () => {
+  it('user signs up for an account', () => {
     cy.visit('https://shapershifter.onrender.com')
     //cy.get('form')
-      cy.get('[id=sign-up-firstname]').type('John')
-      cy.get('[id=sign-up-lastname]').type('Smith')
-      cy.get('[id=sign-up-username]').type('smithy')
-      cy.get('[id=sign-up-email]').type('john.smith@gmail.com')
-      cy.get('[id=sign-up-password]').type('thisisapassword123')
+    cy.contains('Join').click()
+      cy.get('[id=firstname]').type('John')
+      cy.get('[id=lastname]').type('Smith')
+      cy.get('[id=username]').type('smithy')
+      cy.get('[id=email]').type('john.smith@gmail.com')
+      cy.get('[id=password]').type('thisisapassword123')
+      cy.get('[id=verified-password]').type('thisisapassword123')
 
-    cy.get('[value="Signup"]').click()
-    cy.contains('div', 'user exists')
+    cy.get('button').contains('Create an Account').click()
+    cy.url().should('include', '/login')
   })
 
 
-  it('the user logs in to an account', () => {
+  it('the user logs in to an account that does not exist', () => {
     cy.visit('https://shapershifter.onrender.com')
     //cy.get('form')
-      cy.get('[id=login-email]').type('john.smith@gmail.com')
-      cy.get('[id=login-password]').type('thisisapassword123')
+    cy.contains('Login').click()
+      cy.get('[id=email]').type('john.smith@gmail.com')
+      cy.get('[id=password]').type('thisisapassword123')
 
 
-    cy.get('[value="Login"]').click()
-    cy.contains('div', 'login success')
+    cy.get('button').contains('Log In').click()
+    //cy.get('button').contains('Login').click()
+    cy.get('div').contains('Incorrect email/username or password!')
   })
 
-  it('the user wants to remember password', () => {
+  it('the user wants to view community', () => {
     cy.visit('https://shapershifter.onrender.com')
     //cy.get('form')
-      cy.get('[id=remember-email]').type('john.smith@gmail.com')
-      cy.get('[id=remember-username]').type('smithy')
-
-
-    cy.get('[value="Remember Password"]').click()
-    cy.contains('div', 'pass: thisisapassword123')
+    cy.get('button').contains('Explore Our Community').click()
+    cy.url().should('include', '/community')
   })
 
 
