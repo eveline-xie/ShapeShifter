@@ -34,22 +34,22 @@ export default function SignupScreen() {
 
     let navigate = useNavigate();
 
-    let exampleUser = {email: "email", username: "username", password: "password", verifiedPassword: "password"}
+    let exampleUser = { email: "email", username: "username", password: "password", verifiedPassword: "password" }
 
     const handleSubmit = (event) => {
         event.preventDefault();
         // const formData = new FormData(event.currentTarget);
         if (email == exampleUser.email) {
-            setErrorMessage(<div style={{color:'red'}}>Email Already in Use!</div>);
+            setErrorMessage(<div style={{ color: 'red' }}>Email Already in Use!</div>);
         }
         else if (username == exampleUser.username) {
-            setErrorMessage(<div style={{color:'red'}}>Username Already in Use!</div>);
+            setErrorMessage(<div style={{ color: 'red' }}>Username Already in Use!</div>);
         }
         else if (password != verifiedPassword) {
-            setErrorMessage(<div style={{color:'red'}}>Passwords do not match!</div>);
+            setErrorMessage(<div style={{ color: 'red' }}>Passwords do not match!</div>);
         }
         else if (email == "" || username == "" || password == "" || verifiedPassword == "") {
-            setErrorMessage(<div style={{color:'red'}}>Fill Out Everything!</div>);
+            setErrorMessage(<div style={{ color: 'red' }}>Fill Out Everything!</div>);
         }
         else {
             navigate("/login");
@@ -70,7 +70,7 @@ export default function SignupScreen() {
                 </div>
 
                 <div id="login-link">
-                    <Link href="/login" variant="body2" color="#ffffff" >
+                    <Link href="/login/" variant="body2" color="#ffffff" >
                         Already have an account?  Login here!
                     </Link>
                 </div>
