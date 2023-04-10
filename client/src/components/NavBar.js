@@ -57,6 +57,10 @@ function NavBar() {
     }
   }
 
+  const handleLogout = () =>{
+    navigate("/");
+  }
+
   let buttons =
     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
       {pages.map((page) => (
@@ -142,7 +146,7 @@ function NavBar() {
                 onClose={handleCloseUserMenu}
               >
                 {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                  <MenuItem key={setting} onClick={handleLogout}>
                     <Typography textAlign="center">{setting}</Typography>
                   </MenuItem>
                 ))}

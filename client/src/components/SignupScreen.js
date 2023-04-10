@@ -70,7 +70,7 @@ export default function SignupScreen() {
                 </div>
 
                 <div id="login-link">
-                    <Link to="/login" variant="body2" color="#ffffff" >
+                    <Link href="/login" variant="body2" color="#ffffff" >
                         Already have an account?  Login here!
                     </Link>
                 </div>
