@@ -1,5 +1,5 @@
 html {
-  background-color: #145374
+  background-color: #145374;
 }
 
 
@@ -13,8 +13,10 @@ html {
 }
 
 #welcome-text {
-  font-size: 50px;
+  font-size: 70px;
   color: #FFE484;
+  font-family: Marker Felt,
+    fantasy;
 }
 
 #welcome-subtext {
@@ -42,6 +44,13 @@ html {
 
 #search-bar {
   padding-left: 10%;
+}
+
+#create-map-title{
+  font-family: Marker Felt,
+      fantasy;
+  font-size: 40px;
+  padding-left: 20px;
 }
 
 #mapcard {

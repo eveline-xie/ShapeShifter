@@ -26,7 +26,10 @@ export default function HomeScreen() {
   const [openDelete, setOpenDelete] = useState(false);
   const [openExport, setOpenExport] = useState(false);
   const [openFork, setOpenFork] = useState(false);
+  const [numCards, setNumCards] = useState([1,2,3,4]);
+
   let navigate = useNavigate();
+  // let numCards = [1,2,3,4];
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
@@ -37,12 +40,21 @@ export default function HomeScreen() {
   };
   const openDeleteModal = (show) => {
     setOpenDelete(show);
+    numCards.pop();
+
+
   };
   const openExportModal = (show) => {
     setOpenExport(show);
   };
   const openForkModal = (show) => {
     setOpenFork(show);
+    numCards.push(1);
+    // const newNumCards = numCards.push(1);
+    // console.log(numCards);
+
+    // console.log(newNumCards)
+    // setNumCards(newNumCards)
   };
 
   const handleUploadDBF = () => {
@@ -52,27 +64,40 @@ export default function HomeScreen() {
     navigate("/createmap");
   };
 
+  
   let mapcards = "";
-  // if(store)
-  mapcards = (
-    <List id="mapcards">
-      <MapCard
-        setOpenDelete={openDeleteModal}
-        setOpenExport={openExportModal}
-        setOpenFork={openForkModal}
-      ></MapCard>
-    </List>
-  );
+    mapcards = (
+      <List
+        id="mapcards"
+      >
+        {numCards.map((i, index) => (
+          <MapCard
+            setOpenDelete={openDeleteModal}
+            setOpenExport={openExportModal}
+            setOpenFork={openForkModal}
+            key={index}
+            dropdown = {dropdown}
+          />
+        ))}
+      </List>
+    );
+
+ 
   return (
     <div id="main-screen">
       {/* create map */}
       <div id="create-map">
         <Card
-          sx={{ display: "flex", width: "100%", borderRadius: "30px", justifyContent: 'space-between' }}
+          sx={{
+            display: "flex",
+            width: "100%",
+            borderRadius: "30px",
+            justifyContent: "space-between",
+          }}
           style={{ backgroundColor: "rgba(0,0,0, 0.4)" }}
-        // 20,83,116
+          // 20,83,116
         >
-          <Box display="flex" sx={{flex: '50%'}}>
+          <Box display="flex" sx={{ flex: "50%", pl: "5%" }}>
             <Box sx={{ display: "flex", flexDirection: "column" }}>
               <CardContent sx={{ flex: "1 0 auto", mt: 6 }}>
                 <Typography
@@ -81,6 +106,7 @@ export default function HomeScreen() {
                   style={{
                     color: "#FFE484",
                   }}
+                  id="create-map-title"
                 >
                   Create New Map
                 </Typography>
@@ -118,7 +144,7 @@ export default function HomeScreen() {
             </Box>
             <CardMedia
               component="img"
-              sx={{ width: 400, m: 4, pl: "30%"}}
+              sx={{ width: 400, m: 4, pl: "30%" }}
               image="logo.png"
               alt="Live from space album cover"
             />
@@ -128,7 +154,15 @@ export default function HomeScreen() {
 
       <br></br>
 
-      <div id="home-dropdown" style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div
+        id="home-dropdown"
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
         {/* dropdown */}
         <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }}>
           <Select
@@ -138,7 +172,7 @@ export default function HomeScreen() {
             value={dropdown}
             onChange={handleDropdown}
             defaultValue={dropdown}
-            sx = {{borderRadius: "30px"}}
+            sx={{ borderRadius: "30px" }}
           >
             <MenuItem value={10}>Maps I Own</MenuItem>
             <MenuItem value={20}>Shared With Me</MenuItem>
@@ -152,7 +186,7 @@ export default function HomeScreen() {
           label="Search"
           value={searchTerm}
           onChange={handleSearch}
-          sx={{ width: 600}}
+          sx={{ width: 600 }}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
@@ -165,7 +199,7 @@ export default function HomeScreen() {
 
       <br></br>
       {/* mapcards */}
-      {mapcards}
+      <div>{mapcards}</div>
 
       <DeleteModal open={openDelete} setOpen={setOpenDelete} />
       <ExportModal open={openExport} setOpen={setOpenExport} />

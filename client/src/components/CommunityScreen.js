@@ -55,42 +55,45 @@ export default function CommunityScreen() {
             ></MapCard>
         </List>
     );
+
+    let searchResult = ""
+    if(searchTerm){
+        searchResult = <p>Search results for " {searchTerm}"</p>;
+    }
     return (
-        <div id="community-screen">
+      <div id="community-screen">
+        <Grid container spacing={1}>
+          <Grid item xs={2}>
+            <Button
+              variant="contained"
+              style={{
+                borderRadius: 40,
+                backgroundColor: "rgba(255, 255, 255, .4)",
+                padding: "13px 34px",
+                margin: "10px 10px",
+                fontSize: "10px",
+                color: "#000000",
+              }}
+            >
+              View All
+            </Button>
+          </Grid>
 
-            <Grid container spacing={1}>
-
-                <Grid item xs={2}>
-                    <Button
-                        variant="contained"
-                        style={{
-                            borderRadius: 40,
-                            backgroundColor: "rgba(255, 255, 255, .4)",
-                            padding: "13px 34px",
-                            margin: "10px 10px",
-                            fontSize: "10px",
-                            color: "#000000",
-                        }}
-                    >
-                        View All
-                    </Button>
-                </Grid>
-
-                <Grid item xs={2}>
-                    <Button
-                        variant="contained"
-                        style={{
-                            borderRadius: 40,
-                            backgroundColor: "rgba(255, 255, 255, .4)",
-                            padding: "13px 34px",
-                            margin: "10px 10px",
-                            fontSize: "10px",
-                            color: "#000000",
-                        }}
-                    >
-                        Key Waord
-                    </Button>
-                </Grid>
+          <Grid item xs={2}>
+            <Button
+              variant="contained"
+              style={{
+                borderRadius: 40,
+                backgroundColor: "rgba(255, 255, 255, .4)",
+                padding: "13px 34px",
+                margin: "10px 10px",
+                fontSize: "10px",
+                color: "#000000",
+              }}
+            >
+              Key Word
+            </Button>
+          </Grid>
 
                 <Grid item xs={2}>
                     <Button
@@ -108,53 +111,47 @@ export default function CommunityScreen() {
                     </Button>
                 </Grid>
 
-                <Grid item xs={6}>
-                    <TextField
-                        id="search-bar"
-                        type="search"
-                        label="Search"
-                        value={searchTerm}
-                        onChange={handleSearch}
-                        sx={{ width: 400 }}
-                        InputProps={{
-                            endAdornment: (
-                                <InputAdornment position="end">
-                                    <SearchIcon />
-                                </InputAdornment>
-                            ),
-                        }}
-                        InputLabelProps={{
-                            style: { color: '#ffffff' },
-                        }}
-                    />
-                </Grid>
+          <Grid item xs={6}>
+            <TextField
+              id="search-bar"
+              type="search"
+              label="Search"
+              value={searchTerm}
+              onChange={handleSearch}
+              sx={{ width: 400 }}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+              }}
+              InputLabelProps={{
+                style: { color: "#ffffff" },
+              }}
+            />
+          </Grid>
+        </Grid>
 
-            </Grid>
+        <br></br>
+        {searchResult}
+        <Grid container spacing={1}>
+          <Grid item xs={4}>
+            {mapcards}
 
-            <br></br>
+            <DeleteModal open={openDelete} setOpen={setOpenDelete} />
+            <ExportModal open={openExport} setOpen={setOpenExport} />
+            <ForkModal open={openFork} setOpen={setOpenFork} />
+          </Grid>
 
-            <Grid container spacing={1}>
+          <Grid item xs={4}>
+            {mapcards}
 
-                <Grid item xs={4}>
-                    {mapcards}
-
-                    <DeleteModal open={openDelete} setOpen={setOpenDelete} />
-                    <ExportModal open={openExport} setOpen={setOpenExport} />
-                    <ForkModal open={openFork} setOpen={setOpenFork} />
-
-                </Grid>
-
-                <Grid item xs={4}>
-                    {mapcards}
-
-                    <DeleteModal open={openDelete} setOpen={setOpenDelete} />
-                    <ExportModal open={openExport} setOpen={setOpenExport} />
-                    <ForkModal open={openFork} setOpen={setOpenFork} />
-
-                </Grid>
-
-            </Grid>
-
-        </div>
+            <DeleteModal open={openDelete} setOpen={setOpenDelete} />
+            <ExportModal open={openExport} setOpen={setOpenExport} />
+            <ForkModal open={openFork} setOpen={setOpenFork} />
+          </Grid>
+        </Grid>
+      </div>
     );
 }
