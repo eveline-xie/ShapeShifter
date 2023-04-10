@@ -69,10 +69,44 @@ function NavBar() {
         </Button>
       ))}
     </Box>
+
+  let pfp = ''
+
   // maybe include community page
   let notLoggedInPaths = ['/', '/login', '/signup']
   if (!notLoggedInPaths.includes(window.location.pathname)) {
-    buttons = ''
+    buttons = '';
+    pfp = <div>
+    <Box sx={{ flexGrow: 0 }} >
+      <Tooltip title="Open settings">
+        <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+          <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+        </IconButton>
+      </Tooltip>
+      <Menu
+        sx={{ mt: '45px' }}
+        id="menu-appbar"
+        anchorEl={anchorElUser}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        keepMounted
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        open={Boolean(anchorElUser)}
+        onClose={handleCloseUserMenu}
+      >
+        {settings.map((setting) => (
+          <MenuItem key={setting} onClick={handleCloseUserMenu}>
+            <Typography textAlign="center">{setting}</Typography>
+          </MenuItem>
+        ))}
+      </Menu>
+    </Box>
+  </div>;
   }
 
   let homeCommunity = ""
@@ -118,37 +152,7 @@ function NavBar() {
           </div>
           <div style={{ flexGrow: 1, textAlign: 'right' }}>{buttons}</div>
           {homeCommunity}
-          <div>
-            <Box sx={{ flexGrow: 0 }} >
-              <Tooltip title="Open settings">
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-                </IconButton>
-              </Tooltip>
-              <Menu
-                sx={{ mt: '45px' }}
-                id="menu-appbar"
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
-              >
-                {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                    <Typography textAlign="center">{setting}</Typography>
-                  </MenuItem>
-                ))}
-              </Menu>
-            </Box>
-          </div>
+          {pfp}
         </Box>
       </Container>
     </AppBar>
