@@ -42,12 +42,16 @@ export default function MapCard(props) {
     props.setOpenFork(true);
   }
 
-  async function handleEditMap() {;
+  async function handleEditMap() {
+    ;
     navigate('/createmap');
   }
 
-  async function handleViewMap() {
+  async function handleViewMap(event, id) {
+    event.stopPropagation();
+    props.setOpenView(true);
   }
+
   var editButton = <Button variant="contained" sx={{ maxWidth: 100 }} style={{
     borderRadius: 50,
     backgroundColor: "rgba(255,228,132, 0.4)",

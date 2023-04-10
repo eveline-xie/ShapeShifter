@@ -17,6 +17,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import DeleteModal from "./DeleteModal";
 import ExportModal from "./ExportModal";
 import ForkModal from "./ForkModal";
+import ExpandedMapcard from "./ExpandedMapcard";
 
 export default function CommunityScreen() {
     //   const theme = useTheme();
@@ -25,6 +26,7 @@ export default function CommunityScreen() {
       const [openDelete, setOpenDelete] = useState(false);
       const [openExport, setOpenExport] = useState(false);
       const [openFork, setOpenFork] = useState(false);
+      const [openView, setOpenView] = useState(false);
 
 
       const handleSearch = (event) => {
@@ -34,6 +36,7 @@ export default function CommunityScreen() {
     //   const handleDropdown = (event) => {
     //     setDropdown(event.target.value);
     //   };
+
       const openDeleteModal = (show) => {
         setOpenDelete(show);
       };
@@ -42,6 +45,9 @@ export default function CommunityScreen() {
       };
       const openForkModal = (show) => {
         setOpenFork(show);
+      };
+      const openViewModal = (show) => {
+        setOpenView(show);
       };
 
     let mapcards = "";
@@ -52,6 +58,7 @@ export default function CommunityScreen() {
                 setOpenDelete={openDeleteModal}
                 setOpenExport={openExportModal}
                 setOpenFork={openForkModal}
+                setOpenView={openViewModal}
             ></MapCard>
         </List>
     );
@@ -141,6 +148,7 @@ export default function CommunityScreen() {
                     <DeleteModal open={openDelete} setOpen={setOpenDelete} />
                     <ExportModal open={openExport} setOpen={setOpenExport} />
                     <ForkModal open={openFork} setOpen={setOpenFork} />
+                    <ExpandedMapcard open={openView} setOpen={setOpenView} />
 
                 </Grid>
 
@@ -150,6 +158,7 @@ export default function CommunityScreen() {
                     <DeleteModal open={openDelete} setOpen={setOpenDelete} />
                     <ExportModal open={openExport} setOpen={setOpenExport} />
                     <ForkModal open={openFork} setOpen={setOpenFork} />
+                    <ExpandedMapcard open={openView} setOpen={setOpenView} />
 
                 </Grid>
 
