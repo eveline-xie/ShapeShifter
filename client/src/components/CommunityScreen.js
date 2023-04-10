@@ -19,6 +19,10 @@ import ExportModal from "./ExportModal";
 import ForkModal from "./ForkModal";
 import ExpandedMapcard from "./ExpandedMapcard";
 
+/*
+This screen lists all the maps that are published.
+*/
+
 export default function CommunityScreen() {
     //   const theme = useTheme();
     //   const [dropdown, setDropdown] = React.useState("");

@@ -8,6 +8,12 @@ import Typography from '@mui/material/Typography';
 import DeleteModal from './DeleteModal';
 import { useNavigate } from 'react-router-dom';
 
+/*
+    This React component represents a single map item in our
+    home screen or community screen, which can be edited, forked, exported, or deleted.
+    
+*/
+
 export default function MapCard(props) {
   let navigate = useNavigate();
   let owner = "";

@@ -15,6 +15,13 @@ import CircleIcon from "@mui/icons-material/Circle";
 import SouthAmericaIcon from "@mui/icons-material/SouthAmerica";
 import DeleteIcon from "@mui/icons-material/Delete";
 import InfoIcon from "@mui/icons-material/Info";
+
+/*
+    This React component lets us edit the properties of a map, which only
+    happens when we are on the proper route.
+    
+*/
+
 export default function EditMap() {
   let navigate = useNavigate();
 

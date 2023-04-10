@@ -10,6 +10,12 @@ import { FormControl, FormLabel, TextField, Box } from "@mui/material";
 
 import InputAdornment from "@mui/material/InputAdornment";
 
+/*
+    This React component lets us create and attach custom properties to a map, which only
+    happens when we are on the proper route.
+    
+*/
+
 export default function CreateMap() {
   const [openExport, setOpenExport] = useState(false);
   const [openFork, setOpenFork] = useState(false);

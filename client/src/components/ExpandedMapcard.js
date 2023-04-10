@@ -17,6 +17,11 @@ import ForkModal from "./ForkModal";
 import ExportModal from "./ExportModal";
 import { useState } from "react";
 
+/*
+    This React component represents the expanded mapcard, after the user clicked on the "view" button in the community screen.
+    
+*/
+
 const style = {
   position: "absolute",
   top: "50%",

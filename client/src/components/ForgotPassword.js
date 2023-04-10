@@ -18,6 +18,10 @@ import { useNavigate } from "react-router-dom";
 // import { createTheme } from '@mui/material/styles';
 // import { GlobalStoreContext } from '../store'
 
+/*
+    This React component lets users input their email or username to recover their password, which only happens when we are on the proper route.
+    
+*/
 export default function ForgotPassword() {
     // const { auth } = useContext(AuthContext);
     // const { store } = useContext(GlobalStoreContext);

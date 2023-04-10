@@ -22,6 +22,12 @@ import { useState } from 'react';
 // import { createTheme } from '@mui/material/styles';
 // import { GlobalStoreContext } from '../store'
 
+/*
+    This React component lets users log in, which only
+    happens when we are on the proper route.
+    
+*/
+
 export default function LoginScreen() {
   // const { auth } = useContext(AuthContext);
   // const { store } = useContext(GlobalStoreContext);

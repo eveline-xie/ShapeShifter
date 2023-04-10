@@ -6,7 +6,9 @@ import NavBar from './NavBar';
 import { useNavigate } from 'react-router-dom';
 // import Copyright from './Copyright'
 
-
+/* 
+    This react component serves as the Welcome Page of Shapeshifter, which provides links to sign up and login, also community page for the guest
+*/
 
 
 export default function SplashScreen() {
