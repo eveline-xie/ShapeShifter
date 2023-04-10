@@ -89,6 +89,10 @@ export default function MapCard(props) {
       handleViewMap(event)
     }}>View</Button>
   }
+  if(props.dropdown === 20){
+    // console.log(props.dropdown)
+    deleteButton=""
+  }
 
   return (
     <Card sx={{
@@ -96,7 +100,6 @@ export default function MapCard(props) {
       backgroundColor: 'grey',
       backgroundImage: `url(${"cardBackground.png"})`,
       backgroundSize: 'cover',
-      position: 'absolute',
       left: 0
     }} id="mapcard">
       <CardMedia

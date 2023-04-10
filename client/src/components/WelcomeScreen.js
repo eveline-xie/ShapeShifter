@@ -6,12 +6,16 @@ import NavBar from './NavBar';
 import { useNavigate } from 'react-router-dom';
 // import Copyright from './Copyright'
 
+
+
+
 export default function SplashScreen() {
     // const { auth } = useContext(AuthContext);
     // function handleGuest(event) {
     //     console.log("guest log in rn")
     //     auth.guestLogin();
     // }
+
     let navigate = useNavigate();
     return (
         <div >
