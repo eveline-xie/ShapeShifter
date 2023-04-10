@@ -22,10 +22,23 @@ export default function ResetPassword() {
   // const { auth } = useContext(AuthContext);
   // const { store } = useContext(GlobalStoreContext);
   const [input, setInput] = useState(false);
+  const [password, setPassword] = useState("");
+  const [verifiedPassword, setVerifiedPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleSubmit = (event) => {
+    setErrorMessage("");
     event.preventDefault();
-    setInput(true);
+    // const formData = new FormData(event.currentTarget);
+    if (password == "" || verifiedPassword == "") {
+      setErrorMessage(<div style={{ color: 'red' }}>Fill Out Everything!</div>);
+    }
+    else if (password !== verifiedPassword) {
+      setErrorMessage(<div style={{ color: 'red' }}>Passwords Not Matching!</div>);
+    }
+    else {
+      setInput(true);
+    }
 
     // const formData = new FormData(event.currentTarget);
     // auth.loginUser(
@@ -70,6 +83,7 @@ export default function ResetPassword() {
           InputLabelProps={{
             style: { color: "#ffffff" },
           }}
+          onChange={(e) => setPassword(e.target.value)}
         />
       </Grid>
 
@@ -95,6 +109,7 @@ export default function ResetPassword() {
           InputLabelProps={{
             style: { color: "#ffffff" },
           }}
+          onChange={(e) => setVerifiedPassword(e.target.value)}
         />
       </Grid>
 
@@ -132,6 +147,7 @@ export default function ResetPassword() {
       <div id="splash-screen">
         <div id="resetpassword-text">Reset your password here</div>
         {form}
+        {errorMessage}
       </div>
     </div>
   );
