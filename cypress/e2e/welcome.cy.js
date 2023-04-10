@@ -37,7 +37,7 @@ describe('welcome page', () => {
     cy.get('div').contains('Incorrect email/username or password!')
   })
 
-  it.only('the user wants to view community', () => {
+  it('the user wants to view community', () => {
     cy.visit('https://shapershifter.onrender.com')
     //cy.get('form')
     cy.get('button').contains('Explore Our Community').click()
