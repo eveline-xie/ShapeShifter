@@ -1,7 +1,3 @@
-import { useContext } from "react";
-// import AuthContext from '../auth'
-
-// import Copyright from './Copyright'
 import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -11,8 +7,8 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import InputAdornment from "@mui/material/InputAdornment";
 import AccountCircle from "@mui/icons-material/AccountCircle";
-import Lock from "@mui/icons-material/Lock";
 import Email from "@mui/icons-material/Email";
+import Lock from "@mui/icons-material/Lock";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 

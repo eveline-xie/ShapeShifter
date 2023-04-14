@@ -5,7 +5,7 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import MapCard from "./MapCard";
+import MapCard from "../MapCard";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -14,9 +14,9 @@ import Button from "@mui/material/Button";
 import { Container, InputAdornment, TextField, List } from "@mui/material";
 import { useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
-import DeleteModal from "./DeleteModal";
-import ExportModal from "./ExportModal";
-import ForkModal from "./ForkModal";
+import DeleteModal from "../modals/DeleteModal";
+import ExportModal from "../modals/ExportModal";
+import ForkModal from "../modals/ForkModal";
 import { useNavigate } from "react-router-dom";
 
 /*

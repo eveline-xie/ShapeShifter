@@ -3,8 +3,8 @@ import IconButton from "@mui/material/IconButton";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import Button from "@mui/material/Button";
 import { useState } from "react";
-import ExportModal from "./ExportModal";
-import ForkModal from "./ForkModal";
+import ExportModal from "./modals/ExportModal";
+import ForkModal from "./modals/ForkModal";
 import { useNavigate } from "react-router-dom";
 import { FormControl, FormLabel, TextField, Box } from "@mui/material";
 

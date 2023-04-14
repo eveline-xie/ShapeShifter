@@ -1,18 +1,18 @@
-import WelcomeScreen from "./WelcomeScreen"
+import WelcomeScreen from "./screens/WelcomeScreen"
 import NavBar from "./NavBar"
-import HomeScreen from "./HomeScreen"
-import LoginScreen from "./LoginScreen"
+import HomeScreen from "./screens/HomeScreen";
+import LoginScreen from "./screens/LoginScreen";
 import MapCard from "./MapCard"
-import DeleteModal from "./DeleteModal"
-import ExportModal from "./ExportModal"
-import SignupScreen from "./SignupScreen"
+import DeleteModal from "./modals/DeleteModal"
+import ExportModal from "./modals/ExportModal";
+import SignupScreen from "./screens/SignupScreen";
 import CreateMap from "./CreateMap"
 import EditMap from "./EditMap"
-import ForgotPassword from "./ForgotPassword"
-import ResetPassword from "./ResetPassword"
-import CommunityScreen from "./CommunityScreen"
+import ForgotPassword from "./screens/ForgotPassword"
+import ResetPassword from "./screens/ResetPassword"
+import CommunityScreen from "./screens/CommunityScreen";
 import ExpandedMapcard from "./ExpandedMapcard"
-import CommunityGuestScreen from "./CommunityGuestScreen"
+import CommunityGuestScreen from "./screens/CommunityGuestScreen";
 
 /*
     This serves as a module so that we can import

@@ -1,4 +1,4 @@
-const User = require('./models/user-model.js')
+const User = require('../models/user-model.js')
 
 async function signup(firstName, lastName, username, email, passwordHash, res) {
     // Find existing user

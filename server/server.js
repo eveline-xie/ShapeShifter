@@ -8,7 +8,7 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 const mongoose = require('mongoose')
-const auth = require('./auth.js');
+const auth = require('./auth/auth.js');
 
 // Connect to MongoDB
 const uri = 'mongodb+srv://x8ddeve:Ruby%402018t@shapeshifter.xevxwkk.mongodb.net/?retryWrites=true&w=majority';
