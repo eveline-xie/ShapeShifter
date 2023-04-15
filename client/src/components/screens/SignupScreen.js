@@ -12,18 +12,16 @@ import Lock from '@mui/icons-material/Lock'
 import Email from '@mui/icons-material/Email'
 import { useNavigate } from "react-router-dom";
 import { useState } from 'react';
+import AuthContext  from "../../auth";
+
 
 /*
     This React component lets user sign up, which only
     happens when we are on the proper route.  
 */
-import axios from "axios";
-const api = axios.create({
-//   baseURL: "https://shapeshifter-api.onrender.com",
-  baseURL: "http://localhost:5000"
-});
+
 export default function SignupScreen() {
-    // const { auth } = useContext(AuthContext);
+    const { auth } = useContext(AuthContext);
     // const { store } = useContext(GlobalStoreContext);
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
@@ -46,22 +44,16 @@ export default function SignupScreen() {
         if (email == "" || username == "" || password == "" || verifiedPassword == "") {
             setErrorMessage(<div style={{ color: 'red' }}>Fill Out Everything!</div>);
         }
-       await api
-         .post("/auth/signup", {
-           firstName: firstName,
-           lastName: lastName,
-           username: username,
-           email: email,
-           password: password,
-         })
-         .then(function (res) {
-           console.log(res);
-           if (res.data.error) {
-             setErrorMessage(<div style={{ color: 'red' }}>{res.data.message}</div>);
-           } else {
-             navigate("/login");
-           }
-         });
+        const userData = {
+          firstName: firstName,
+          lastName: lastName,
+          username: username,
+          email: email,
+          password: password,
+          passwordVerify: verifiedPassword,
+        };
+        auth.signup(userData);
+        navigate("/login");
         // const formData = new FormData(event.currentTarget);
         // if (email == exampleUser.email) {
         //     setErrorMessage(<div style={{ color: 'red' }}>Email Already in Use!</div>);

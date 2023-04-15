@@ -1,7 +1,7 @@
 import "./App.css";
 import { React } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-// import { AuthContextProvider } from './auth';
+import { AuthContextProvider } from './auth';
 // import { GlobalStoreContextProvider } from './store'
 import {
   WelcomeScreen,
@@ -30,9 +30,8 @@ import {
 const Router = () => {
   return (
     <BrowserRouter>
-      {/* <AuthContextProvider>
-                <GlobalStoreContextProvider>               */}
-      {/* <AppBanner /> */}
+     <AuthContextProvider> 
+                {/* <GlobalStoreContextProvider>            */}
       <NavBar />
       <Routes>
         <Route path="/" element={<WelcomeScreen />} />
@@ -46,9 +45,8 @@ const Router = () => {
         <Route path="/community" element={<CommunityScreen />} />
         <Route path="/communityguest" element={<CommunityGuestScreen />} />
       </Routes>
-      {/* <Statusbar /> */}
-      {/* </GlobalStoreContextProvider>
-            </AuthContextProvider> */}
+      {/* </GlobalStoreContextProvider> */}
+            </AuthContextProvider> 
     </BrowserRouter>
   );
 };
