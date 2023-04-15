@@ -1,9 +1,4 @@
 import { useContext } from 'react';
-// import AuthContext from '../auth'
-
-// import Copyright from './Copyright'
-
-
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -18,14 +13,15 @@ import Email from '@mui/icons-material/Email'
 import { useNavigate } from "react-router-dom";
 import { useState } from 'react';
 
-// import { createTheme } from '@mui/material/styles';
-// import { GlobalStoreContext } from '../store'
-
 /*
     This React component lets user sign up, which only
     happens when we are on the proper route.  
 */
-
+import axios from "axios";
+const api = axios.create({
+//   baseURL: "https://shapeshifter-api.onrender.com",
+  baseURL: "http://localhost:5000"
+});
 export default function SignupScreen() {
     // const { auth } = useContext(AuthContext);
     // const { store } = useContext(GlobalStoreContext);
@@ -45,24 +41,43 @@ export default function SignupScreen() {
         navigate('/login');
     }
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async(event) => {
         event.preventDefault();
-        // const formData = new FormData(event.currentTarget);
-        if (email == exampleUser.email) {
-            setErrorMessage(<div style={{ color: 'red' }}>Email Already in Use!</div>);
-        }
-        else if (username == exampleUser.username) {
-            setErrorMessage(<div style={{ color: 'red' }}>Username Already in Use!</div>);
-        }
-        else if (password != verifiedPassword) {
-            setErrorMessage(<div style={{ color: 'red' }}>Passwords do not match!</div>);
-        }
-        else if (email == "" || username == "" || password == "" || verifiedPassword == "") {
+        if (email == "" || username == "" || password == "" || verifiedPassword == "") {
             setErrorMessage(<div style={{ color: 'red' }}>Fill Out Everything!</div>);
         }
-        else {
-            navigate("/login");
-        }
+       await api
+         .post("/auth/signup", {
+           firstName: firstName,
+           lastName: lastName,
+           username: username,
+           email: email,
+           password: password,
+         })
+         .then(function (res) {
+           console.log(res);
+           if (res.data.error) {
+             setErrorMessage(<div style={{ color: 'red' }}>{res.data.message}</div>);
+           } else {
+             navigate("/login");
+           }
+         });
+        // const formData = new FormData(event.currentTarget);
+        // if (email == exampleUser.email) {
+        //     setErrorMessage(<div style={{ color: 'red' }}>Email Already in Use!</div>);
+        // }
+        // else if (username == exampleUser.username) {
+        //     setErrorMessage(<div style={{ color: 'red' }}>Username Already in Use!</div>);
+        // }
+        // else if (password != verifiedPassword) {
+        //     setErrorMessage(<div style={{ color: 'red' }}>Passwords do not match!</div>);
+        // }
+        // else if (email == "" || username == "" || password == "" || verifiedPassword == "") {
+        //     setErrorMessage(<div style={{ color: 'red' }}>Fill Out Everything!</div>);
+        // }
+        // else {
+        //     navigate("/login");
+        // }
         // auth.loginUser(
         //     formData.get('email'),
         //     formData.get('password')
