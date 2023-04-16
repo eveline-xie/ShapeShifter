@@ -16,7 +16,7 @@ async function signup(req, res) {
     });
   }
   if (password !== passwordVerify) {
-  console.log("pw!=pw!!!" + password + ", " + passwordVerify);
+  console.log("pw!=pw!!!" + password+", "+passwordVerify);
 
     return res.status(400).json({
       errorMessage: "Please enter the same password twice.",
