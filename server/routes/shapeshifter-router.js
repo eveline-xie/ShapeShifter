@@ -11,5 +11,7 @@ router.get("/auth/forgotpassword", UserController.forgotPassword);
 router.get("/auth/logout", UserController.logout);
 
 router.post("/map", auth.verify, MapController.createMap);
-router.put('/update-map-props', auth.verify, MapController.updateMapCustomProperties);
+router.put("/update-map-props", auth.verify, MapController.updateMapCustomProperties);
+router.get("/load-user-maps", auth.verify, MapController.loadUserMaps);
+router.get("/map/:id", auth.verify, MapController.getMapById);
 module.exports = router;

@@ -6,6 +6,8 @@ import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { useNavigate } from 'react-router-dom';
+import { useContext } from 'react'
+import GlobalStoreContext from '../store';
 
 /*
     This React component represents a single map item in our
@@ -15,6 +17,7 @@ import { useNavigate } from 'react-router-dom';
 */
 
 export default function MapCard(props) {
+  const { store } = useContext(GlobalStoreContext);
   let navigate = useNavigate();
   let owner = "";
   // if(published){
@@ -49,8 +52,7 @@ export default function MapCard(props) {
   }
 
   async function handleEditMap() {
-    ;
-    navigate('/createmap');
+    store.loadMapById(props.id);
   }
 
   async function handleViewMap(event, id) {
@@ -140,7 +142,7 @@ export default function MapCard(props) {
       <CardContent>
         <Typography gutterBottom variant="h5" component="div"
           color="white" fontFamily="Kadwa" sx={{ fontSize: 30, fontWeight: 'bold' }}>
-          North America
+          {props.mapName}
         </Typography>
         {/* if published, add owner */}
         {owner}

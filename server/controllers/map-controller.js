@@ -24,7 +24,6 @@ async function createMap(req, res) {
         keywords: [],
         published: {isPublished: false, publishedDate: new Date()}
     })
-    console.log("map", map);
     if (!map) {
         return res.status(400).json({ success: false, error: err })
     }
@@ -39,7 +38,6 @@ async function createMap(req, res) {
 async function updateMapCustomProperties(req, res) {
     const body = req.body
     console.log("updateMap: " + JSON.stringify(body));
-    //console.log("req.body.name: " + req.body.name);
 
     if (!body) {
         return res.status(400).json({
@@ -49,20 +47,37 @@ async function updateMapCustomProperties(req, res) {
     }
 
     const map = await Map.findOne({ _id: body.id});
-    console.log("nonupdated", map);
-    console.log("name", body.name, body.keywords, body.collaborators);
     map.name = body.payload.name;
     map.keywords = body.payload.keywords;
     map.collaborators = body.payload.collaborators;
     map.save();
-    console.log("updatedmap", map);
     return res.status(201).json({
         success: true,
         map: map
 
     })
 }
+
+async function loadUserMaps(req, res) {
+    const loggedInUser = await User.findOne({ _id: req.userId });
+    const maps = await Map.find({ownerEmail: loggedInUser.email});
+    return res.status(201).json({
+        success: true,
+        userMaps: maps
+    })
+
+}
+
+async function getMapById(req, res) {
+    const map = await Map.findById({_id: req.params.id});
+    return res.status(201).json({
+        success: true,
+        currentMap: map
+    })
+}
 module.exports = {
     createMap,
-    updateMapCustomProperties
+    updateMapCustomProperties,
+    loadUserMaps,
+    getMapById
 }

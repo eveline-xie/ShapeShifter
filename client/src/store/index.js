@@ -16,12 +16,14 @@ console.log("create GlobalStoreContext");
 
 export const GlobalStoreActionType = {
     CREATE_NEW_MAP_SHPDBF: "CREATE_NEW_MAP_SHPDBF",
-    CREATE_NEW_MAP_GEOJSON: "CREATE_NEW_MAP_GEOJSON"
+    CREATE_NEW_MAP_GEOJSON: "CREATE_NEW_MAP_GEOJSON",
+    LOAD_USER_MAPS: "LOAD_USER_MAPS"
 }
 
 function GlobalStoreContextProvider(props) {
     const [store, setStore] = useState({
-        currentMap: null
+        currentMap: null,
+        userMaps: null
     })
 
     const navigate = useNavigate();
@@ -33,7 +35,13 @@ function GlobalStoreContextProvider(props) {
         switch (type) {
             case GlobalStoreActionType.CREATE_NEW_MAP: {
                 return setStore({
-                    currentMap: payload
+                    currentMap: payload,
+                    userMaps: store.userMaps
+                })
+            }
+            case GlobalStoreActionType.LOAD_USER_MAPS: {
+                return setStore({
+                    userMaps: payload
                 })
             }
         }
@@ -110,7 +118,6 @@ function GlobalStoreContextProvider(props) {
         if (response.status === 201) {
             //tps.clearAllTransactions();
             let newMap = response.data.map;
-            console.log("hi", newMap);
             storeReducer({
                 type: GlobalStoreActionType.CREATE_NEW_MAP,
                 payload: newMap
@@ -123,6 +130,29 @@ function GlobalStoreContextProvider(props) {
         }
         else {
             console.log("API FAILED TO CREATE A NEW LIST");
+        }
+    }
+
+    store.loadUserMaps = async function () {
+        const response = await api.loadUserMaps();
+        if (response.status === 201) {
+            console.log(response.data.userMaps);
+            storeReducer({
+                type: GlobalStoreActionType.LOAD_USER_MAPS,
+                payload: response.data.userMaps
+            })
+        }
+    }
+
+    store.loadMapById = async function (id) {
+        const response = await api.getMapById(id);
+        if (response.status === 201) {
+            console.log(response.data.currentMap);
+            storeReducer({
+                type: GlobalStoreActionType.LOAD_CURRENT_MAP,
+                payload: response.data.currentMap
+            })
+            navigate("/createmap");
         }
     }
 

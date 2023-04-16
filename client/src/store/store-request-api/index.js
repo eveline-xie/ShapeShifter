@@ -27,9 +27,19 @@ export const updateMapCustomProperties = (id, payload) => {
   });
 }
 
+export const loadUserMaps = () => {
+  return api.get('/load-user-maps');
+}
+
+export const getMapById = (id) => {
+  return api.get(`/map/${id}`);
+}
+
 const apis = {
   createMap,
-  updateMapCustomProperties
+  updateMapCustomProperties,
+  loadUserMaps,
+  getMapById
 };
 
 export default apis;

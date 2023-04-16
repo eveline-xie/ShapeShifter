@@ -17,7 +17,7 @@ import DeleteModal from "../modals/DeleteModal";
 import ExportModal from "../modals/ExportModal";
 import ForkModal from "../modals/ForkModal";
 import { useNavigate } from "react-router-dom";
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import GlobalStoreContext from "../../store";
 
 /*
@@ -42,6 +42,10 @@ export default function HomeScreen() {
   const dbfInputRef = React.useRef();
   const geoJsonInputRef = React.useRef();
 
+  useEffect(() => {
+    store.loadUserMaps();
+  }, []);
+
   let navigate = useNavigate();
   // let numCards = [1,2,3,4];
 
@@ -63,11 +67,6 @@ export default function HomeScreen() {
   const openForkModal = (show) => {
     setOpenFork(show);
     numCards.push(1);
-    // const newNumCards = numCards.push(1);
-    // console.log(numCards);
-
-    // console.log(newNumCards)
-    // setNumCards(newNumCards)
   };
 
   const handleUploadSHP = () => {
@@ -127,21 +126,26 @@ export default function HomeScreen() {
 
 
   let mapcards = "";
-  mapcards = (
-    <List
-      id="mapcards"
-    >
-      {numCards.map((i, index) => (
-        <MapCard
-          setOpenDelete={openDeleteModal}
-          setOpenExport={openExportModal}
-          setOpenFork={openForkModal}
-          key={index}
-          dropdown={dropdown}
-        />
-      ))}
-    </List>
-  );
+  if (store.userMaps) {
+
+    mapcards = (
+      <List
+        id="mapcards"
+      >
+        {store.userMaps.map((map) => (
+          <MapCard
+            id={map._id}
+            mapName={map.name}
+            ownerUsername={map.ownerUsername}
+            setOpenDelete={openDeleteModal}
+            setOpenExport={openExportModal}
+            setOpenFork={openForkModal}
+            dropdown={dropdown}
+          />
+        ))}
+      </List>
+    );
+  }
 
   return (
     <div id="main-screen">
@@ -155,7 +159,6 @@ export default function HomeScreen() {
             justifyContent: "space-between",
           }}
           style={{ backgroundColor: "rgba(0,0,0, 0.4)" }}
-        // 20,83,116
         >
           <Box display="flex" sx={{ flex: "50%", pl: "5%" }}>
             <Box sx={{ display: "flex", flexDirection: "column" }}>
@@ -252,7 +255,6 @@ export default function HomeScreen() {
           </Box>
         </Card>
       </div>
-
       <br></br>
 
       <div
