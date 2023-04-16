@@ -144,7 +144,7 @@ function AuthContextProvider(props) {
         
       }
     } catch (err) {
-      console.log(err.errorMessage);
+      console.log(err);
       authReducer({
         type: AuthActionType.ERROR,
         error: true,

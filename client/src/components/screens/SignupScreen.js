@@ -78,184 +78,181 @@ export default function SignupScreen() {
     };
 
     return (
-        <div >
-            <div id="splash-screen">
+      <div>
+        <div id="splash-screen">
+          <div id="signup-text">Sign Up</div>
 
-                <div id="signup-text">
-                    Sign Up
-                </div>
+          <div id="login-link">
+            <Link onClick={handleLogin} variant="body2" color="#ffffff">
+              Already have an account? Login here!
+            </Link>
+          </div>
 
-                <div id="login-link">
-                    <Link onClick = {handleLogin} variant="body2" color="#ffffff" >
-                        Already have an account?  Login here!
-                    </Link>
-                </div>
+          <Grid container component="main" rowSpacing={2} spacing={4}>
+            <Grid item xs={6}>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="firstname"
+                label="First Name"
+                name="firstname"
+                autoComplete="firstname"
+                autoFocus
+                variant="outlined"
+                // color="primary"
+                InputLabelProps={{
+                  style: { color: "#ffffff" },
+                }}
+                onChange={(e) => setFirstName(e.target.value)}
+              />
+            </Grid>
 
-                <Grid container component="main" rowSpacing={2} spacing={4} >
+            <Grid item xs={6}>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="lastname"
+                label="Last Name"
+                name="lastname"
+                autoComplete="lastname"
+                autoFocus
+                variant="outlined"
+                // color="primary"
+                InputLabelProps={{
+                  style: { color: "#ffffff" },
+                }}
+                onChange={(e) => setLastName(e.target.value)}
+              />
+            </Grid>
 
-                    <Grid item xs={6}>
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="firstname"
-                            label="First Name"
-                            name="firstname"
-                            autoComplete="firstname"
-                            autoFocus
-                            variant="outlined"
-                            // color="primary"
-                            InputLabelProps={{
-                                style: { color: '#ffffff' },
-                            }}
-                            onChange={(e) => setFirstName(e.target.value)}
-                        />
-                    </Grid>
+            <Grid item xs={12}>
+              <TextField
+                required
+                fullWidth
+                id="email"
+                label="Email"
+                name="email"
+                autoComplete="email"
+                autoFocus
+                variant="outlined"
+                // color="primary"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Email />
+                    </InputAdornment>
+                  ),
+                }}
+                InputLabelProps={{
+                  style: { color: "#ffffff" },
+                }}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </Grid>
 
-                    <Grid item xs={6}>
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="lastname"
-                            label="Last Name"
-                            name="lastname"
-                            autoComplete="lastname"
-                            autoFocus
-                            variant="outlined"
-                            // color="primary"
-                            InputLabelProps={{
-                                style: { color: '#ffffff' },
-                            }}
-                            onChange={(e) => setLastName(e.target.value)}
-                        />
-                    </Grid>
+            <Grid item xs={12}>
+              <TextField
+                // margin="normal"
+                required
+                fullWidth
+                id="username"
+                label="Username"
+                name="username"
+                autoComplete="username"
+                autoFocus
+                variant="outlined"
+                // color="primary"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <AccountCircle />
+                    </InputAdornment>
+                  ),
+                }}
+                InputLabelProps={{
+                  style: { color: "#ffffff" },
+                }}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+            </Grid>
 
-                    <Grid item xs={12}>
-                        <TextField
-                            required
-                            fullWidth
-                            id="email"
-                            label="Email"
-                            name="email"
-                            autoComplete="email"
-                            autoFocus
-                            variant="outlined"
-                            // color="primary"
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <Email />
-                                    </InputAdornment>
-                                ),
-                            }}
-                            InputLabelProps={{
-                                style: { color: '#ffffff' },
-                            }}
-                            onChange={(e) => setEmail(e.target.value)}
-                        />
-                    </Grid>
+            <Grid item xs={12}>
+              <TextField
+                // margin="normal"
+                required
+                fullWidth
+                id="password"
+                label="Password"
+                name="password"
+                autoComplete="current-password"
+                autoFocus
+                variant="outlined"
+                type="password"
+                // color="primary"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Lock />
+                    </InputAdornment>
+                  ),
+                }}
+                InputLabelProps={{
+                  style: { color: "#ffffff" },
+                }}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </Grid>
 
-                    <Grid item xs={12}>
-                        <TextField
-                            // margin="normal"
-                            required
-                            fullWidth
-                            id="username"
-                            label="Username"
-                            name="username"
-                            autoComplete="username"
-                            autoFocus
-                            variant="outlined"
-                            // color="primary"
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <AccountCircle />
-                                    </InputAdornment>
-                                ),
-                            }}
-                            InputLabelProps={{
-                                style: { color: '#ffffff' },
-                            }}
-                            onChange={(e) => setUsername(e.target.value)}
-                        />
-                    </Grid>
+            <Grid item xs={12}>
+              <TextField
+                // margin="normal"
+                required
+                fullWidth
+                id="verified-password"
+                label="Password Verify"
+                name="verified-password"
+                autoComplete="current-password"
+                type="password"
+                autoFocus
+                variant="outlined"
+                // color="primary"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Lock />
+                    </InputAdornment>
+                  ),
+                }}
+                InputLabelProps={{
+                  style: { color: "#ffffff" },
+                }}
+                onChange={(e) => setVerifiedPassword(e.target.value)}
+              />
+            </Grid>
 
-                    <Grid item xs={12}>
-                        <TextField
-                            // margin="normal"
-                            required
-                            fullWidth
-                            id="password"
-                            label="Password"
-                            name="password"
-                            autoComplete="current-password"
-                            autoFocus
-                            variant="outlined"
-                            // color="primary"
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <Lock />
-                                    </InputAdornment>
-                                ),
-                            }}
-                            InputLabelProps={{
-                                style: { color: '#ffffff' },
-                            }}
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
-                    </Grid>
-
-                    <Grid item xs={12}>
-                        <TextField
-                            // margin="normal"
-                            required
-                            fullWidth
-                            id="verified-password"
-                            label="Password Verify"
-                            name="verified-password"
-                            autoComplete="current-password"
-                            autoFocus
-                            variant="outlined"
-                            // color="primary"
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <Lock />
-                                    </InputAdornment>
-                                ),
-                            }}
-                            InputLabelProps={{
-                                style: { color: '#ffffff' },
-                            }}
-                            onChange={(e) => setVerifiedPassword(e.target.value)}
-
-                        />
-                    </Grid>
-
-                    <Grid item xs={12}>
-                        <Button
-                            type="submit"
-                            size="medium"
-                            variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
-                            style={{
-                                backgroundColor: "rgba(255, 228, 132, .4)",
-                                borderRadius: 40,
-                                padding: "13px 34px",
-                                fontSize: "15px",
-                                color: "rgba(255, 228, 132, 1)"
-                            }}
-                            onClick={handleSubmit}
-                        >Create an Account
-                        </Button>
-                    </Grid>
-
-                </Grid>
-                {errorMessage}
-            </div>
+            <Grid item xs={12}>
+              <Button
+                type="submit"
+                size="medium"
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+                style={{
+                  backgroundColor: "rgba(255, 228, 132, .4)",
+                  borderRadius: 40,
+                  padding: "13px 34px",
+                  fontSize: "15px",
+                  color: "rgba(255, 228, 132, 1)",
+                }}
+                onClick={handleSubmit}
+              >
+                Create an Account
+              </Button>
+            </Grid>
+          </Grid>
+          {errorMessage}
         </div>
+      </div>
     );
 }
