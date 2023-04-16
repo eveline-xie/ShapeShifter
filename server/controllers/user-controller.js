@@ -4,19 +4,19 @@ const bcrypt = require("bcryptjs");
 
 async function signup(req, res) {
   //firstName, lastName, username, email, passwordHash
-   const { firstName, lastName, username, email, password, passwordVerify } =
-     req.body;
+  const { firstName, lastName, username, email, password, passwordVerify } =
+    req.body;
   // Find existing user
-  console.log("signup here!!!"+firstName)
+  console.log("signup here!!!" + firstName)
   if (password.length < 8) {
-  console.log("<8!!!" + firstName);
+    console.log("<8!!!" + firstName);
 
     return res.status(400).json({
       errorMessage: "Please enter a password of at least 8 characters.",
     });
   }
   if (password !== passwordVerify) {
-  console.log("pw!=pw!!!" + password+", "+passwordVerify);
+    console.log("pw!=pw!!!" + password + ", " + passwordVerify);
 
     return res.status(400).json({
       errorMessage: "Please enter the same password twice.",
@@ -26,13 +26,13 @@ async function signup(req, res) {
     $or: [{ username: username }, { email: email }],
   }).then(async (user) => {
     if (user) {
-  console.log("error?!!!" + firstName);
+      console.log("error?!!!" + firstName);
 
       res.status(400).send(JSON.stringify({ error: true, message: "user exists" }));
     } else {
-        const saltRounds = 10;
-        const salt = await bcrypt.genSalt(saltRounds);
-        const passwordHash = await bcrypt.hash(password, salt);
+      const saltRounds = 10;
+      const salt = await bcrypt.genSalt(saltRounds);
+      const passwordHash = await bcrypt.hash(password, salt);
       await User.create({
         firstName: firstName,
         lastName: lastName,
@@ -43,6 +43,20 @@ async function signup(req, res) {
       res.send(JSON.stringify({ message: "Success" }));
     }
   });
+}
+
+async function logout(req, res) {
+  auth.verify(req, res, async function () {
+      try{
+          return res.status(200).json({
+              loggedIn: false,
+              user: null
+          }).send();
+      }catch(err){
+          console.log(err);
+          res.status(500).send();
+      }
+  })
 }
 
 module.exports = {
