@@ -15,15 +15,17 @@ export const GlobalStoreContext = createContext({});
 console.log("create GlobalStoreContext");
 
 export const GlobalStoreActionType = {
-    CREATE_NEW_MAP_SHPDBF: "CREATE_NEW_MAP_SHPDBF",
-    CREATE_NEW_MAP_GEOJSON: "CREATE_NEW_MAP_GEOJSON",
-    LOAD_USER_MAPS: "LOAD_USER_MAPS"
+    CREATE_NEW_MAP: "CREATE_NEW_MAP",
+    LOAD_USER_MAPS: "LOAD_USER_MAPS",
+    LOAD_CURRENT_MAP: "LOAD_CURRENT_MAP",
+    MARK_MAP_FOR_DELETION: "MARK_MAP_FOR_DELETION"
 }
 
 function GlobalStoreContextProvider(props) {
     const [store, setStore] = useState({
         currentMap: null,
-        userMaps: null
+        userMaps: null,
+        mapIdMarkedForDeletion: null,
     })
 
     const navigate = useNavigate();
@@ -44,6 +46,17 @@ function GlobalStoreContextProvider(props) {
                     userMaps: payload
                 })
             }
+            case GlobalStoreActionType.LOAD_CURRENT_MAP: {
+                return setStore({
+                    currentMap: payload,
+                    userMaps: store.userMaps
+                })
+            }
+            case GlobalStoreActionType.MARK_MAP_FOR_DELETION: {
+                return setStore({
+                    mapIdMarkedForDeletion: payload
+                })
+            }
         }
     }
 
@@ -59,7 +72,7 @@ function GlobalStoreContextProvider(props) {
         console.log(`Object size is approximately ${sizeInMB.toFixed(2)} MB`);
         
         //const response = await api.createMap({map: shp2geoContents});
-        const response = await api.createMap({map: "mapcontents"});
+        const response = await api.createNewMap({map: "mapcontents"});
         console.log("createNewMap response: " + response);
         if (response.status === 201) {
             //tps.clearAllTransactions();
@@ -84,7 +97,7 @@ function GlobalStoreContextProvider(props) {
         console.log("featurecollection", featureCollection);
 
         //const response = await api.createMap(featureCollection);
-        const response = await api.createMap({map: "mapcontents"});
+        const response = await api.createNewMap({map: "mapcontents"});
         console.log("createNewMap response: " + response);
         if (response.status === 201) {
             //tps.clearAllTransactions();
@@ -153,6 +166,29 @@ function GlobalStoreContextProvider(props) {
                 payload: response.data.currentMap
             })
             navigate("/createmap");
+        }
+    }
+
+    store.duplicateMapById = async function (id) {
+        const response = await api.duplicateMapById({id:id});
+        if (response.status === 201) {
+            store.loadUserMaps();
+        }
+    }
+
+    store.markMapForDeletion = function (id) {
+        console.log("marking this id to delete", id);
+        storeReducer({
+            type: GlobalStoreActionType.MARK_MAP_FOR_DELETION,
+            payload: id
+        })
+    }
+
+    store.deleteMarkedList = async function() {
+        console.log("delete", store.mapIdMarkedForDeletion);
+        let response = await api.deleteMapById(store.mapIdMarkedForDeletion);
+        if (response.status === 201) {
+            store.loadUserMaps();
         }
     }
 

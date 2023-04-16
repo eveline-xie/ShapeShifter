@@ -36,19 +36,20 @@ export default function MapCard(props) {
   //       color: "#000000"
   //   }} >View</Button>
   // }
-  async function handleDeleteList(event, id) {
+  async function handleDeleteList(event) {
     event.stopPropagation();
     props.setOpenDelete(true);
-    // store.markListForDeletion(id);
+    store.markMapForDeletion(props.id);
   }
 
-  async function handleExport(event, id) {
+  async function handleExport(event) {
     event.stopPropagation();
     props.setOpenExport(true);
   }
-  async function handleFork(event, id) {
+  async function handleFork(event) {
     event.stopPropagation();
     props.setOpenFork(true);
+    store.duplicateMapById(props.id);
   }
 
   async function handleEditMap() {

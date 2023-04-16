@@ -5,6 +5,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
+import GlobalStoreContext from "../../store";
 
 const style = {
     position: 'absolute',
@@ -25,7 +26,7 @@ const style = {
 */
 
 export default function DeleteModal(props) {
-    // const { store } = useContext(GlobalStoreContext);
+    const { store } = useContext(GlobalStoreContext);
 
     function handleClose() {
         props.setOpen(false);
@@ -33,7 +34,7 @@ export default function DeleteModal(props) {
 
     function handleDeleteList() {
         handleClose();
-        // store.deleteMarkedList();
+        store.deleteMarkedList();
     }
 
     return (

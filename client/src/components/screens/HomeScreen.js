@@ -32,7 +32,6 @@ export default function HomeScreen() {
   const [openDelete, setOpenDelete] = useState(false);
   const [openExport, setOpenExport] = useState(false);
   const [openFork, setOpenFork] = useState(false);
-  const [numCards, setNumCards] = useState([1, 2, 3, 4]);
 
   const [shpFile, setShpFile] = useState(null);
   const [dbfFile, setDbfFile] = useState(null);
@@ -46,9 +45,6 @@ export default function HomeScreen() {
     store.loadUserMaps();
   }, []);
 
-  let navigate = useNavigate();
-  // let numCards = [1,2,3,4];
-
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
   };
@@ -58,7 +54,6 @@ export default function HomeScreen() {
   };
   const openDeleteModal = (show) => {
     setOpenDelete(show);
-    numCards.pop();
   };
 
   const openExportModal = (show) => {
@@ -66,7 +61,6 @@ export default function HomeScreen() {
   };
   const openForkModal = (show) => {
     setOpenFork(show);
-    numCards.push(1);
   };
 
   const handleUploadSHP = () => {

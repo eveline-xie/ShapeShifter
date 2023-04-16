@@ -16,7 +16,7 @@ const api = axios.create({
   baseURL: "http://localhost:5000",
 });
 
-export const createMap = (payload) => {
+export const createNewMap = (payload) => {
     return api.post('/map', payload);
 }
 
@@ -35,11 +35,21 @@ export const getMapById = (id) => {
   return api.get(`/map/${id}`);
 }
 
+export const duplicateMapById = (id) => {
+  return api.post('/duplicate-map', id);
+}
+
+export const deleteMapById = (id) => {
+  return api.delete(`/map/${id}`);
+}
+
 const apis = {
-  createMap,
+  createNewMap,
   updateMapCustomProperties,
   loadUserMaps,
-  getMapById
+  getMapById,
+  duplicateMapById,
+  deleteMapById
 };
 
 export default apis;
