@@ -178,7 +178,7 @@ function AuthContextProvider(props) {
           },
         });
         console.log("user logged in: " + response.data.user.firstName);
-        // history.push("/");
+        navigate("/home");
         //load map
       }
     } catch (err) {
