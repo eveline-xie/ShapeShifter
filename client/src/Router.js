@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { AuthContextProvider } from './auth';
 import { GlobalStoreContextProvider } from './store'
 import {
+  HomeWrapper,
   WelcomeScreen,
   LoginScreen,
   HomeScreen,
@@ -34,7 +35,8 @@ const Router = () => {
         <GlobalStoreContextProvider>
           <NavBar />
           <Routes>
-            <Route path="/" element={<WelcomeScreen />} />
+            <Route path="/" element={<HomeWrapper />} />
+            {/* <Route path="/welcome" element={<WelcomeScreen />} /> */}
             <Route path="/login" element={<LoginScreen />} />
             <Route path="/signup" element={<SignupScreen />} />
             <Route path="/home" element={<HomeScreen />} />

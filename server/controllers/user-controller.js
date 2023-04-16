@@ -3,27 +3,27 @@ const User = require("../models/user-model.js");
 const bcrypt = require("bcryptjs");
 
 async function getLoggedIn(req, res) {
-    try {
-      auth.verify(req, res, async function () {
-        const loggedInUser = await User.findOne({ _id: req.userId });
-        console.log("loggedin user: "+loggedInUser)
-        return res
-          .status(200)
-          .json({
-            loggedIn: true,
-            user: {
-              firstName: loggedInUser.firstName,
-              lastName: loggedInUser.lastName,
-              email: loggedInUser.email,
-              username: loggedInUser.username,
-            },
-          })
-          .send();
-      });
-    } catch (err) {
-      console.error(err);
-      res.status(500).send();
-    }
+  try {
+    auth.verify(req, res, async function () {
+      const loggedInUser = await User.findOne({ _id: req.userId });
+      console.log("loggedin user: " + loggedInUser);
+      return res
+        .status(200)
+        .json({
+          loggedIn: true,
+          user: {
+            firstName: loggedInUser.firstName,
+            lastName: loggedInUser.lastName,
+            email: loggedInUser.email,
+            username: loggedInUser.username,
+          },
+        })
+        .send();
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send();
+  }
 }
 
 async function signup(req, res) {
@@ -127,30 +127,69 @@ async function login(req, res) {
 }
 
 async function forgotPassword(req, res) {
-    try {
-      const { email } = req.query;
-      console.log("forgot password email: " + email);
-      await User.findOne({
-        email: email,
-      }).then((user) => {
-        if (!user) {
-          res.status(400).json({ errorMessage: "Can not find user" });
-        } else {
-          console.log("found user");
-          //send pw recovery email
-          key = Math.random().toString(16).substring(2, 10);
-          sendRecoveryEmail(email, key);
-        }
-      });
-    } catch (err) {
-      console.error(err);
-      res.status(500).send();
-    }
+  try {
+    const { email } = req.query;
+    console.log("forgot password email: " + email);
+    await User.findOne({
+      email: email,
+    }).then((user) => {
+      if (!user) {
+        res.status(400).json({ errorMessage: "Can not find user" });
+      } else {
+        console.log("found user");
+        //send pw recovery email
+        key = Math.random().toString(16).substring(2, 10);
+        sendRecoveryEmail(email, key);
+      }
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send();
+  }
 }
 
 function sendRecoveryEmail(email, key) {
-    console.log(email);
+  console.log(email);
+}
 
+async function changePassword(username, password, req, res) {
+  await User.findOne({
+    username: username,
+  }).then(async (user) => {
+    // no user
+    console.log("change user: " + user);
+    if (!user) {
+      return res.status(400).json({ errorMessage: "Can not find user" });
+    } else {
+      console.log("found user");
+      const saltRounds = 10;
+      const salt = await bcrypt.genSalt(saltRounds);
+      const passwordHash = await bcrypt.hash(password, salt);
+      user.passwordHash = passwordHash;
+      user.save().then(() => {
+        res.send(JSON.stringify({ message: "Password Updated!" }));
+      });
+    }
+  });
+}
+
+async function logout(req, res) {
+  console.log("logout!!!");
+  auth.verify(req, res, async function () {
+    try {
+      return res
+        .clearCookie("token")
+        .status(200)
+        .json({
+          loggedIn: false,
+          user: null,
+        })
+        .send();
+    } catch (err) {
+      console.log(err);
+      res.status(500).send();
+    }
+  });
 }
 
 module.exports = {
@@ -159,4 +198,6 @@ module.exports = {
   login,
   forgotPassword,
   sendRecoveryEmail,
+  changePassword,
+  logout,
 };

@@ -55,6 +55,9 @@ export default function LoginScreen() {
        password: password,
      };
      auth.login(userData,store);
+     if(!auth.error){
+      navigate('/home');
+     }
  
     // store.resetStore();
   };

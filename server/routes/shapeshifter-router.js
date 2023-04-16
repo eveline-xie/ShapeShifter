@@ -7,7 +7,7 @@ router.get("/auth/loggedIn", UserController.getLoggedIn);
 router.post("/auth/signup", UserController.signup);
 router.post("/auth/login", UserController.login);
 router.get("/auth/forgotpassword", UserController.forgotPassword);
-
+router.get("/auth/logout", UserController.logout);
 
 
 module.exports = router;

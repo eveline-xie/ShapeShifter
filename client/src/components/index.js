@@ -13,13 +13,14 @@ import ResetPassword from "./screens/ResetPassword"
 import CommunityScreen from "./screens/CommunityScreen";
 import ExpandedMapcard from "./ExpandedMapcard"
 import CommunityGuestScreen from "./screens/CommunityGuestScreen";
-
+import HomeWrapper from "./HomeWrapper";
 /*
     This serves as a module so that we can import
     all the other components as we wish.
 */
 
 export{
+    HomeWrapper,
     WelcomeScreen,
     NavBar,
     HomeScreen,

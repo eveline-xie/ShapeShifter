@@ -118,7 +118,7 @@ function AuthContextProvider(props) {
   };
 
   auth.logoutUser = async function () {
-    const response = await api.logoutUser();
+    const response = await api.logout();
     if (response.status === 200) {
       authReducer({
         type: AuthActionType.LOGOUT,
@@ -177,7 +177,7 @@ function AuthContextProvider(props) {
             user: response.data.user,
           },
         });
-        console.log("user logged in: " + response.data.user);
+        console.log("user logged in: " + response.data.user.firstName);
         // history.push("/");
         //load map
       }
@@ -214,15 +214,15 @@ function AuthContextProvider(props) {
       }
     };
 
-  auth.error = async function () {
-    authReducer({
-      type: AuthActionType.ERROR,
-      error: true,
-      payload: {
-        errMessage: "Duplicate list name or item,  or empty item",
-      },
-    });
-  };
+  // auth.error = async function () {
+  //   authReducer({
+  //     type: AuthActionType.ERROR,
+  //     error: true,
+  //     payload: {
+  //       errMessage: "Duplicate list name or item,  or empty item",
+  //     },
+  //   });
+  // };
 
   auth.noError = async function () {
     console.log("no error");
