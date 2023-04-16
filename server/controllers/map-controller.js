@@ -3,12 +3,12 @@ const User = require('../models/user-model');
 
 async function createNewMap(req, res) {
     const body = req.body;
-    console.log("createMap body: " + JSON.stringify(body));
+    //console.log("createMap body: " + JSON.stringify(body));
 
     if (!body) {
         return res.status(400).json({
             success: false,
-            error: 'You must provide a Playlist',
+            error: 'You must provide a map',
         })
     }
     console.log("id:", req.userId);

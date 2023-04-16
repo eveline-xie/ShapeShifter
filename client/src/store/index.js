@@ -96,8 +96,8 @@ function GlobalStoreContextProvider(props) {
         let featureCollection = JSON.parse(jsonString);
         console.log("featurecollection", featureCollection);
 
-        //const response = await api.createMap(featureCollection);
-        const response = await api.createNewMap({map: "mapcontents"});
+        const response = await api.createNewMap({map:featureCollection});
+        //const response = await api.createNewMap({map: "mapcontents"});
         console.log("createNewMap response: " + response);
         if (response.status === 201) {
             //tps.clearAllTransactions();
