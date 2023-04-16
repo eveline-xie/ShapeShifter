@@ -91,10 +91,7 @@ export default function HomeScreen() {
       setShpFile(buffer.target.result);
 
       if (event.target.files[0] && dbfFile !== null) {
-        console.log(event.target.files[0], dbfFile);
-        //store.createNewMapSHPDBF(event.target.files[0], dbfFile);
         store.createNewMapSHPDBF(buffer.target.result, dbfFile);
-        navigate("/createmap");
       }
     };
     reader.readAsArrayBuffer(event.target.files[0]);
@@ -109,10 +106,7 @@ export default function HomeScreen() {
       setDbfFile(buffer.target.result);
 
       if (event.target.files[0] && shpFile !== null) {
-        console.log(shpFile, event.target.files[0]);
-        //store.createNewMapSHPDBF(shpFile, event.target.files[0]);
         store.createNewMapSHPDBF(shpFile, buffer.target.result);
-        navigate("/createmap");
       }
     };
     reader.readAsArrayBuffer(event.target.files[0]);
@@ -123,12 +117,12 @@ export default function HomeScreen() {
     var reader = new FileReader();
     reader.onload = function (buffer) {
       console.log("geojson", buffer.target.result);
+      console.log("type", typeof buffer.target.result);
       setGeoJsonFile(buffer.target.result);
-      store.createNewMapGeoJson(geoJsonFile);
-      navigate("/createmap");
+      store.createNewMapGeoJson(buffer.target.result);
     };
 
-    reader.readAsText(event.target.files[0]);
+    reader.readAsArrayBuffer(event.target.files[0]);
   };
 
 
