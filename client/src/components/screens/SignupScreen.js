@@ -54,8 +54,7 @@ export default function SignupScreen() {
           passwordVerify: verifiedPassword,
         };
         auth.signup(userData);
-        if(!auth.error){
-        navigate("/login");}
+
         // store.resetStore();
     };
 

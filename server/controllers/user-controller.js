@@ -60,13 +60,14 @@ async function signup(req, res) {
         const saltRounds = 10;
         const salt = await bcrypt.genSalt(saltRounds);
         const passwordHash = await bcrypt.hash(password, salt);
-        await User.create({
+        const newUser = await User.create({
           firstName: firstName,
           lastName: lastName,
           username: username,
           email: email,
           passwordHash: passwordHash,
         });
+        console.log(newUser);
         res.send(JSON.stringify({ message: "Success" }));
       }
     });
