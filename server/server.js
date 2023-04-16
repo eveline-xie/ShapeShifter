@@ -1,10 +1,13 @@
 const express = require("express");
-
-const app = express();
 const cors = require("cors");
-//const cookieParser = require('cookie-parser')
-require("dotenv").config({ path: "./config.env" });
+const cookieParser = require("cookie-parser");
+const mongoose = require("mongoose");
+
+require("dotenv").config();
 const port = process.env.PORT || 5000;
+const app = express();
+
+app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
     origin: "http://localhost:3000",
@@ -12,11 +15,10 @@ app.use(
   })
 );
 app.use(express.json());
-const mongoose = require("mongoose");
+app.use(cookieParser());
 
 // Connect to MongoDB
-const uri =
-  "mongodb+srv://x8ddeve:Ruby%402018t@shapeshifter.xevxwkk.mongodb.net/?retryWrites=true&w=majority";
+const uri = process.env.MONGOCONNECT;
 mongoose.connect(uri, { useNewUrlParser: true });
 const connection = mongoose.connection;
 connection.once("open", () => {

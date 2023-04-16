@@ -16,13 +16,20 @@ const api = axios.create({
   baseURL: "http://localhost:5000",
 });
 
+export const getLoggedIn = () => api.get(`/auth/loggedIn`);
 export const signup = (payload) => api.post(`/auth/signup`, payload);
 export const login = (payload) => api.post(`/auth/login`, payload);
-// export const logout = () => api.get(`/auth/logout`);
+export const logout = () => api.get(`/auth/logout`);
+export const forgotPassword = (payload) =>
+  api.get(`/auth/forgotpassword?email=${payload}`);
+
 
 const apis = {
+  getLoggedIn,
   signup,
   login,
+  logout,
+  forgotPassword,
 };
 
 export default apis;

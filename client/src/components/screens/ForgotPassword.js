@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-// import AuthContext from '../auth'
+import AuthContext from '../../auth'
 import { useState } from "react";
 // import Copyright from './Copyright'
 import Button from '@mui/material/Button';
@@ -23,7 +23,7 @@ import { useNavigate } from "react-router-dom";
     
 */
 export default function ForgotPassword() {
-    // const { auth } = useContext(AuthContext);
+    const { auth } = useContext(AuthContext);
     // const { store } = useContext(GlobalStoreContext);
   const [input, setInput] = useState(false);
   const [email, setEmail] = useState("");
@@ -39,16 +39,16 @@ export default function ForgotPassword() {
         if (email == "") {
           setErrorMessage(<div style={{ color: 'red' }}>Provide an Email!</div>);
         }
-        else if (email !== exampleEmail) {
-          setErrorMessage(<div style={{ color: 'red' }}>We Couldn't Find Your Email :(</div>);
-        }
-        else {
-          setInput(true);
-        }
-        // auth.loginUser(
-        //     formData.get('email'),
-        //     formData.get('password')
-        // );
+        // else if (email !== exampleEmail) {
+        //   setErrorMessage(<div style={{ color: 'red' }}>We Couldn't Find Your Email :(</div>);
+        // }
+        // else {
+        //   setInput(true);
+        // }
+        const userData = 
+          email
+        ;
+       auth.forgotPassword(userData);
         // store.resetStore();
     };
 
@@ -73,7 +73,7 @@ export default function ForgotPassword() {
             required
             fullWidth
             id="email"
-            label="Email/Username"
+            label="Email"
             name="email"
             autoComplete="email"
             autoFocus

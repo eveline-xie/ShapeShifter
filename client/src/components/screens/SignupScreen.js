@@ -13,6 +13,7 @@ import Email from '@mui/icons-material/Email'
 import { useNavigate } from "react-router-dom";
 import { useState } from 'react';
 import AuthContext  from "../../auth";
+import { GlobalStoreContext } from "../../store";
 
 
 /*
@@ -22,7 +23,7 @@ import AuthContext  from "../../auth";
 
 export default function SignupScreen() {
     const { auth } = useContext(AuthContext);
-    // const { store } = useContext(GlobalStoreContext);
+    const { store } = useContext(GlobalStoreContext);
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
@@ -53,27 +54,8 @@ export default function SignupScreen() {
           passwordVerify: verifiedPassword,
         };
         auth.signup(userData);
-        navigate("/login");
-        // const formData = new FormData(event.currentTarget);
-        // if (email == exampleUser.email) {
-        //     setErrorMessage(<div style={{ color: 'red' }}>Email Already in Use!</div>);
-        // }
-        // else if (username == exampleUser.username) {
-        //     setErrorMessage(<div style={{ color: 'red' }}>Username Already in Use!</div>);
-        // }
-        // else if (password != verifiedPassword) {
-        //     setErrorMessage(<div style={{ color: 'red' }}>Passwords do not match!</div>);
-        // }
-        // else if (email == "" || username == "" || password == "" || verifiedPassword == "") {
-        //     setErrorMessage(<div style={{ color: 'red' }}>Fill Out Everything!</div>);
-        // }
-        // else {
-        //     navigate("/login");
-        // }
-        // auth.loginUser(
-        //     formData.get('email'),
-        //     formData.get('password')
-        // );
+        if(!auth.error){
+        navigate("/login");}
         // store.resetStore();
     };
 

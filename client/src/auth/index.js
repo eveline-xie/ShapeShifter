@@ -14,6 +14,7 @@ export const AuthActionType = {
   ERROR: "ERROR",
   GUEST_LOGGED_IN: "GUEST_LOGGED_IN",
   NO_ERROR: "NO_ERROR",
+  FORGOT_PASSWORD: "FORGOT_PASSWORD",
 };
 
 function AuthContextProvider(props) {
@@ -26,9 +27,9 @@ function AuthContextProvider(props) {
   });
 //   const history = useHistory();
 
-  // useEffect(() => {
-  //   auth.getLoggedIn();
-  // }, []);
+  useEffect(() => {
+    auth.getLoggedIn();
+  }, []);
 
   const authReducer = (action) => {
     const { type, payload } = action;
@@ -96,6 +97,15 @@ function AuthContextProvider(props) {
           guest: true,
         });
       }
+      case AuthActionType.FORGOT_PASSWORD: {
+        return setAuth({
+          user: null,
+          loggedIn: false,
+          error: false,
+          errMessage: null,
+          guest: false,
+        });
+      }
       default:
         return auth;
     }
@@ -107,27 +117,27 @@ function AuthContextProvider(props) {
     });
   };
 
-//   auth.logoutUser = async function () {
-//     const response = await api.logoutUser();
-//     if (response.status === 200) {
-//       authReducer({
-//         type: AuthActionType.LOGOUT,
-//       });
-//     }
-//   };
+  auth.logoutUser = async function () {
+    const response = await api.logoutUser();
+    if (response.status === 200) {
+      authReducer({
+        type: AuthActionType.LOGOUT,
+      });
+    }
+  };
 
-//   auth.getLoggedIn = async function () {
-//     const response = await api.getLoggedIn();
-//     if (response.status === 200) {
-//       authReducer({
-//         type: AuthActionType.GET_LOGGED_IN,
-//         payload: {
-//           loggedIn: response.data.loggedIn,
-//           user: response.data.user,
-//         },
-//       });
-//     }
-//   };
+  auth.getLoggedIn = async function () {
+    const response = await api.getLoggedIn();
+    if (response.status === 200) {
+      authReducer({
+        type: AuthActionType.GET_LOGGED_IN,
+        payload: {
+          loggedIn: response.data.loggedIn,
+          user: response.data.user,
+        },
+      });
+    }
+  };
 
   auth.signup = async function (userData) { 
     try {
@@ -167,7 +177,7 @@ function AuthContextProvider(props) {
             user: response.data.user,
           },
         });
-        console.log("user: " + response.data.user);
+        console.log("user logged in: " + response.data.user);
         // history.push("/");
         //load map
       }
@@ -182,6 +192,27 @@ function AuthContextProvider(props) {
       });
     }
   };
+
+    auth.forgotPassword = async function (userData) {
+      try {
+        const response = await api.forgotPassword(userData);
+        if (response.status === 200) {
+          authReducer({
+            type: AuthActionType.FORGOT_PASSWORD,
+          });
+          // history.push("/");
+        }
+      } catch (err) {
+        console.log(err);
+        authReducer({
+          type: AuthActionType.ERROR,
+          error: true,
+          payload: {
+            errMessage: err.response.data.errorMessage,
+          },
+        });
+      }
+    };
 
   auth.error = async function () {
     authReducer({
