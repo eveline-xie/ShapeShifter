@@ -13,7 +13,6 @@ app.use(
 );
 app.use(express.json());
 const mongoose = require("mongoose");
-const auth = require("../../auth.js");
 
 // Connect to MongoDB
 const uri =

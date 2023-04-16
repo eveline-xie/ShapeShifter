@@ -1,5 +1,4 @@
 import * as React from "react";
-import { useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -18,19 +17,30 @@ import DeleteModal from "../modals/DeleteModal";
 import ExportModal from "../modals/ExportModal";
 import ForkModal from "../modals/ForkModal";
 import { useNavigate } from "react-router-dom";
+import { useContext } from 'react'
+import GlobalStoreContext from "../../store";
 
 /*
 This screen lists all the maps that the logged in user owns and all the maps that have been shared with the user.
 */
 
 export default function HomeScreen() {
-  const theme = useTheme();
+  const { store } = useContext(GlobalStoreContext);
+
   const [dropdown, setDropdown] = React.useState(10);
   const [searchTerm, setSearchTerm] = useState("");
   const [openDelete, setOpenDelete] = useState(false);
   const [openExport, setOpenExport] = useState(false);
   const [openFork, setOpenFork] = useState(false);
-  const [numCards, setNumCards] = useState([1,2,3,4]);
+  const [numCards, setNumCards] = useState([1, 2, 3, 4]);
+
+  const [shpFile, setShpFile] = useState(null);
+  const [dbfFile, setDbfFile] = useState(null);
+  const [geoJsonFile, setGeoJsonFile] = useState(null);
+
+  const shpInputRef = React.useRef();
+  const dbfInputRef = React.useRef();
+  const geoJsonInputRef = React.useRef();
 
   let navigate = useNavigate();
   // let numCards = [1,2,3,4];
@@ -45,9 +55,8 @@ export default function HomeScreen() {
   const openDeleteModal = (show) => {
     setOpenDelete(show);
     numCards.pop();
-
-
   };
+
   const openExportModal = (show) => {
     setOpenExport(show);
   };
@@ -61,32 +70,85 @@ export default function HomeScreen() {
     // setNumCards(newNumCards)
   };
 
+  const handleUploadSHP = () => {
+    shpInputRef.current.click();
+  };
+
   const handleUploadDBF = () => {
-    navigate("/createmap");
-  };
+    dbfInputRef.current.click();
+  }
+
   const handleUploadGeoJson = () => {
-    navigate("/createmap");
+    geoJsonInputRef.current.click();
   };
 
-  
-  let mapcards = "";
-    mapcards = (
-      <List
-        id="mapcards"
-      >
-        {numCards.map((i, index) => (
-          <MapCard
-            setOpenDelete={openDeleteModal}
-            setOpenExport={openExportModal}
-            setOpenFork={openForkModal}
-            key={index}
-            dropdown = {dropdown}
-          />
-        ))}
-      </List>
-    );
+  const handleShpFileChange = (event) => {
+    //setShpFile(event.target.files[0])
 
- 
+    var reader = new FileReader();
+    reader.onload = function (buffer) {
+      console.log("shp", buffer.target.result);
+      setShpFile(buffer.target.result);
+
+      if (event.target.files[0] && dbfFile !== null) {
+        console.log(event.target.files[0], dbfFile);
+        //store.createNewMapSHPDBF(event.target.files[0], dbfFile);
+        store.createNewMapSHPDBF(buffer.target.result, dbfFile);
+        navigate("/createmap");
+      }
+    };
+    reader.readAsArrayBuffer(event.target.files[0]);
+  };
+
+  const handleDbfFileChange = (event) => {
+    //setDbfFile(event.target.files[0])
+
+    var reader = new FileReader();
+    reader.onload = function (buffer) {
+      console.log("dbf", buffer.target.result);
+      setDbfFile(buffer.target.result);
+
+      if (event.target.files[0] && shpFile !== null) {
+        console.log(shpFile, event.target.files[0]);
+        //store.createNewMapSHPDBF(shpFile, event.target.files[0]);
+        store.createNewMapSHPDBF(shpFile, buffer.target.result);
+        navigate("/createmap");
+      }
+    };
+    reader.readAsArrayBuffer(event.target.files[0]);
+  };
+
+  const handleGeoJsonFileChange = (event) => {
+
+    var reader = new FileReader();
+    reader.onload = function (buffer) {
+      console.log("geojson", buffer.target.result);
+      setGeoJsonFile(buffer.target.result);
+      store.createNewMapGeoJson(geoJsonFile);
+      navigate("/createmap");
+    };
+
+    reader.readAsText(event.target.files[0]);
+  };
+
+
+  let mapcards = "";
+  mapcards = (
+    <List
+      id="mapcards"
+    >
+      {numCards.map((i, index) => (
+        <MapCard
+          setOpenDelete={openDeleteModal}
+          setOpenExport={openExportModal}
+          setOpenFork={openForkModal}
+          key={index}
+          dropdown={dropdown}
+        />
+      ))}
+    </List>
+  );
+
   return (
     <div id="main-screen">
       {/* create map */}
@@ -99,7 +161,7 @@ export default function HomeScreen() {
             justifyContent: "space-between",
           }}
           style={{ backgroundColor: "rgba(0,0,0, 0.4)" }}
-          // 20,83,116
+        // 20,83,116
         >
           <Box display="flex" sx={{ flex: "50%", pl: "5%" }}>
             <Box sx={{ display: "flex", flexDirection: "column" }}>
@@ -116,34 +178,75 @@ export default function HomeScreen() {
                 </Typography>
               </CardContent>
               <Box sx={{ display: "flex", alignItems: "center", pl: 1, pb: 1 }}>
-                <Button
-                  variant="contained"
-                  style={{
-                    borderRadius: 50,
-                    backgroundColor: "#AEAFFF",
-                    padding: "13px 34px",
-                    margin: "10px 10px",
-                    fontSize: "13px",
-                    color: "#000000",
-                  }}
-                  onClick={handleUploadDBF}
-                >
-                  SHP/DBF
-                </Button>
-                <Button
-                  variant="contained"
-                  style={{
-                    borderRadius: 50,
-                    backgroundColor: "#FFE484",
-                    padding: "13px 34px",
-                    margin: "10px 10px",
-                    fontSize: "13px",
-                    color: "#000000",
-                  }}
-                  onClick={handleUploadGeoJson}
-                >
-                  GeoJson
-                </Button>
+                <div>
+                  <Button
+                    variant="contained"
+                    style={{
+                      borderRadius: 50,
+                      backgroundColor: "#AEAFFF",
+                      padding: "13px 34px",
+                      margin: "10px 10px",
+                      fontSize: "13px",
+                      color: "#000000",
+                    }}
+                    onClick={handleUploadSHP}
+                  >
+                    SHP
+                  </Button>
+                  <input
+                    type="file"
+                    ref={shpInputRef}
+                    onChange={handleShpFileChange}
+                    accept=".shp"
+                    style={{ display: 'none' }}
+                  />
+                </div>
+                <div>
+                  <Button
+                    variant="contained"
+                    style={{
+                      borderRadius: 50,
+                      backgroundColor: "#AEAFFF",
+                      padding: "13px 34px",
+                      margin: "10px 10px",
+                      fontSize: "13px",
+                      color: "#000000",
+                    }}
+                    onClick={handleUploadDBF}
+                  >
+                    DBF
+                  </Button>
+                  <input
+                    type="file"
+                    ref={dbfInputRef}
+                    onChange={handleDbfFileChange}
+                    accept=".dbf"
+                    style={{ display: 'none' }}
+                  />
+                </div>
+                <div>
+                  <Button
+                    variant="contained"
+                    style={{
+                      borderRadius: 50,
+                      backgroundColor: "#FFE484",
+                      padding: "13px 34px",
+                      margin: "10px 10px",
+                      fontSize: "13px",
+                      color: "#000000",
+                    }}
+                    onClick={handleUploadGeoJson}
+                  >
+                    GeoJson
+                  </Button>
+                  <input
+                    type="file"
+                    ref={geoJsonInputRef}
+                    accept=".json"
+                    onChange={handleGeoJsonFileChange}
+                    style={{ display: 'none' }}
+                  />
+                </div>
               </Box>
             </Box>
             <CardMedia
