@@ -11,6 +11,10 @@ import { Global } from '@emotion/react'
 import shpjs from 'shpjs';
 import { useNavigate } from 'react-router-dom';
 
+import { saveAs } from 'file-saver';
+
+
+
 export const GlobalStoreContext = createContext({});
 console.log("create GlobalStoreContext");
 
@@ -18,7 +22,8 @@ export const GlobalStoreActionType = {
     CREATE_NEW_MAP: "CREATE_NEW_MAP",
     LOAD_USER_MAPS: "LOAD_USER_MAPS",
     LOAD_CURRENT_MAP: "LOAD_CURRENT_MAP",
-    MARK_MAP_FOR_DELETION: "MARK_MAP_FOR_DELETION"
+    MARK_MAP_FOR_DELETION: "MARK_MAP_FOR_DELETION",
+    MARK_MAP_FOR_EXPORT: "MARK_MAP_FOR_EXPORT"
 }
 
 function GlobalStoreContextProvider(props) {
@@ -26,6 +31,7 @@ function GlobalStoreContextProvider(props) {
         currentMap: null,
         userMaps: null,
         mapIdMarkedForDeletion: null,
+        mapIdMarkedForExport: null,
     })
 
     const navigate = useNavigate();
@@ -43,6 +49,7 @@ function GlobalStoreContextProvider(props) {
             }
             case GlobalStoreActionType.LOAD_USER_MAPS: {
                 return setStore({
+                    currentMap: store.currentMap,
                     userMaps: payload
                 })
             }
@@ -54,7 +61,15 @@ function GlobalStoreContextProvider(props) {
             }
             case GlobalStoreActionType.MARK_MAP_FOR_DELETION: {
                 return setStore({
+                    userMaps: store.userMaps,
                     mapIdMarkedForDeletion: payload
+                })
+            }
+            case GlobalStoreActionType.MARK_MAP_FOR_EXPORT: {
+                return setStore({
+                    currentMap: store.currentMap,
+                    userMaps: store.userMaps,
+                    mapIdMarkedForExport: payload
                 })
             }
         }
@@ -70,9 +85,9 @@ function GlobalStoreContextProvider(props) {
         const sizeInBytes = JSON.stringify(shp2geoContents).length;
         const sizeInMB = sizeInBytes / (1024 * 1024);
         console.log(`Object size is approximately ${sizeInMB.toFixed(2)} MB`);
-        
+
         //const response = await api.createMap({map: shp2geoContents});
-        const response = await api.createNewMap({map: "mapcontents"});
+        const response = await api.createNewMap({ map: "mapcontents" });
         console.log("createNewMap response: " + response);
         if (response.status === 201) {
             //tps.clearAllTransactions();
@@ -96,7 +111,7 @@ function GlobalStoreContextProvider(props) {
         let featureCollection = JSON.parse(jsonString);
         console.log("featurecollection", featureCollection);
 
-        const response = await api.createNewMap({map:featureCollection});
+        const response = await api.createNewMap({ map: featureCollection });
         //const response = await api.createNewMap({map: "mapcontents"});
         console.log("createNewMap response: " + response);
         if (response.status === 201) {
@@ -170,7 +185,7 @@ function GlobalStoreContextProvider(props) {
     }
 
     store.duplicateMapById = async function (id) {
-        const response = await api.duplicateMapById({id:id});
+        const response = await api.duplicateMapById({ id: id });
         if (response.status === 201) {
             store.loadUserMaps();
         }
@@ -184,11 +199,53 @@ function GlobalStoreContextProvider(props) {
         })
     }
 
-    store.deleteMarkedList = async function() {
+    store.deleteMarkedList = async function () {
         console.log("delete", store.mapIdMarkedForDeletion);
         let response = await api.deleteMapById(store.mapIdMarkedForDeletion);
         if (response.status === 201) {
             store.loadUserMaps();
+        }
+    }
+
+    store.markMapForExport = function (id) {
+        console.log("marking this id to export", id);
+        storeReducer({
+            type: GlobalStoreActionType.MARK_MAP_FOR_EXPORT,
+            payload: id
+        })
+    }
+
+    store.exportToGeoJSON = async function () {
+        const response = await api.getMapById(store.mapIdMarkedForExport);
+        if (response.status === 201) {
+            console.log(response.data.currentMap);
+            const map = response.data.currentMap;
+            const json = JSON.stringify(map.geoJsonMap);
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = map.name + '.json';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            URL.revokeObjectURL(url);
+        }
+    }
+
+    store.exportToSHPDBF = async function () {
+        const response = await api.getMapById(store.mapIdMarkedForExport);
+        if (response.status === 201) {
+            const map = response.data.currentMap;
+
+            // shpjs.zip(map.geoJsonMap).then(function(content) {
+            //     // content is a Blob containing the zipped shapefile
+            //     // Do something with the shapefile, such as download it
+            //     saveAs(content, 'myshapefile.zip');
+            //   });
+
         }
     }
 

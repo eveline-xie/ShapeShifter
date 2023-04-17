@@ -45,6 +45,7 @@ export default function MapCard(props) {
   async function handleExport(event) {
     event.stopPropagation();
     props.setOpenExport(true);
+    store.markMapForExport(props.id);
   }
   async function handleFork(event) {
     event.stopPropagation();

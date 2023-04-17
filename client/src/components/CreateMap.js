@@ -29,10 +29,12 @@ export default function CreateMap() {
   async function handleExport(event, id) {
     event.stopPropagation();
     setOpenExport(true);
+    store.markMapForExport(store.currentMap._id);
   }
   async function handleFork(event, id) {
     event.stopPropagation();
     setOpenFork(true);
+    store.duplicateMapById(store.currentMap._id);
   }
 
   const handleSave = (event) => {

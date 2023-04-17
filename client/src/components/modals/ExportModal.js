@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useContext } from "react";
-// import { GlobalStoreContext } from '../store'
+import GlobalStoreContext from "../../store";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
@@ -24,17 +24,21 @@ const style = {
 */
 
 export default function ExportModal(props) {
-  // const { store } = useContext(GlobalStoreContext);
+   const { store } = useContext(GlobalStoreContext);
 
   function handleClose() {
     props.setOpen(false);
   }
 
-  function handleExportDBF() {
+  function handleExportSHPDBF() {
+    console.log("test", store.mapIdMarkedForExport);
+    store.exportToSHPDBF();
     handleClose();
   }
 
   function handleExportGeoJson() {
+    console.log("yes", store.mapIdMarkedForExport);
+    store.exportToGeoJSON();
     handleClose();
   }
 
@@ -77,7 +81,7 @@ export default function ExportModal(props) {
               fontSize: "13px",
               color: "#000000",
             }}
-            onClick={handleExportDBF}
+            onClick={handleExportSHPDBF}
           >
             DBF/SHP
           </Button>
