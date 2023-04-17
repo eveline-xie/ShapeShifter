@@ -53,7 +53,7 @@ describe('welcome page', () => {
     //cy.url().should('include', '/login')
     cy.url().should('include', '/home')
   })
-
+//new deploy
   it('the user uploads a new map', () => {
     cy.visit('https://shapershifter.onrender.com')
     cy.contains('Login').click()
