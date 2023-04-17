@@ -23,7 +23,7 @@ const style = {
     This component serves as a popup modal. It only shows up when the user clicks the fork button on the map.
 */
 
-export default function ExportModal(props) {
+export default function ForkModal(props) {
   // const { store } = useContext(GlobalStoreContext);
 
   function handleClose() {
@@ -33,7 +33,7 @@ export default function ExportModal(props) {
   return (
     <div>
       <Modal
-        id="delete-modal"
+        id="fork-modal"
         open={props.open}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
