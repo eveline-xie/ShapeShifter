@@ -80,10 +80,10 @@ export default function LoginScreen() {
               margin="normal"
               required
               fullWidth
-              id="email"
+              id="username"
               label="Username"
-              name="email"
-              autoComplete="email"
+              name="username"
+              autoComplete="username"
               autoFocus
               variant="outlined"
               // color="primary"
