@@ -18,7 +18,7 @@ app.use(
   })
 );
 
-app.use(bodyParser.json({ limit: '10000000mb' }));
+app.use(bodyParser.json({ limit: '100000000mb' }));
 app.use(express.json());
 app.use(cookieParser());
 
