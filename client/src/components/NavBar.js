@@ -53,8 +53,13 @@ function NavBar() {
     else if (page == "Join") {
       navigate('/signup');
     }
-    else if (page == "Splash") {
-      navigate('');
+    else if (page == "SplashorHome") {
+      if (auth.loggedIn) {
+        navigate('/home');
+      }
+      else {
+        navigate('');
+      }
     }
     else if (page == "Community") {
       navigate('/community');
@@ -159,7 +164,7 @@ function NavBar() {
               noWrap
               component="div"
               sx={{ display: { xs: 'none', sm: 'block' } }}
-              onClick={(event) => handleSwitchPage(event, "Splash")}
+              onClick={(event) => handleSwitchPage(event, "SplashorHome")}
             >
               <img src='logo.png' width="150px" height="64.5px" />
             </Typography>

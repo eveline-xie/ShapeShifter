@@ -35,7 +35,7 @@ const Router = () => {
         <GlobalStoreContextProvider>
           <NavBar />
           <Routes>
-            <Route path="/" element={<HomeWrapper />} />
+            <Route path="/" element={<WelcomeScreen />} />
             {/* <Route path="/welcome" element={<WelcomeScreen />} /> */}
             <Route path="/login" element={<LoginScreen />} />
             <Route path="/signup" element={<SignupScreen />} />
