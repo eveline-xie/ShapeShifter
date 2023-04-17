@@ -2,6 +2,8 @@ const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
+const bodyParser = require('body-parser');
+
 
 require("dotenv").config();
 const port = process.env.PORT || 5000;
@@ -14,6 +16,8 @@ app.use(
     credentials: true,
   })
 );
+
+app.use(bodyParser.json({ limit: '1000000mb' }));
 app.use(express.json());
 app.use(cookieParser());
 

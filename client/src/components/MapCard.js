@@ -6,6 +6,8 @@ import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { useNavigate } from 'react-router-dom';
+import { useContext } from 'react'
+import GlobalStoreContext from '../store';
 
 /*
     This React component represents a single map item in our
@@ -15,6 +17,7 @@ import { useNavigate } from 'react-router-dom';
 */
 
 export default function MapCard(props) {
+  const { store } = useContext(GlobalStoreContext);
   let navigate = useNavigate();
   let owner = "";
   // if(published){
@@ -33,24 +36,25 @@ export default function MapCard(props) {
   //       color: "#000000"
   //   }} >View</Button>
   // }
-  async function handleDeleteList(event, id) {
+  async function handleDeleteList(event) {
     event.stopPropagation();
     props.setOpenDelete(true);
-    // store.markListForDeletion(id);
+    store.markMapForDeletion(props.id);
   }
 
-  async function handleExport(event, id) {
+  async function handleExport(event) {
     event.stopPropagation();
     props.setOpenExport(true);
+    store.markMapForExport(props.id);
   }
-  async function handleFork(event, id) {
+  async function handleFork(event) {
     event.stopPropagation();
     props.setOpenFork(true);
+    store.duplicateMapById(props.id);
   }
 
   async function handleEditMap() {
-    ;
-    navigate('/createmap');
+    store.loadMapById(props.id);
   }
 
   async function handleViewMap(event, id) {
@@ -140,7 +144,7 @@ export default function MapCard(props) {
       <CardContent>
         <Typography gutterBottom variant="h5" component="div"
           color="white" fontFamily="Kadwa" sx={{ fontSize: 30, fontWeight: 'bold' }}>
-          North America
+          {props.mapName}
         </Typography>
         {/* if published, add owner */}
         {owner}

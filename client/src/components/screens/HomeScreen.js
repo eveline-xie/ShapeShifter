@@ -17,7 +17,7 @@ import DeleteModal from "../modals/DeleteModal";
 import ExportModal from "../modals/ExportModal";
 import ForkModal from "../modals/ForkModal";
 import { useNavigate } from "react-router-dom";
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import GlobalStoreContext from "../../store";
 
 /*
@@ -32,7 +32,6 @@ export default function HomeScreen() {
   const [openDelete, setOpenDelete] = useState(false);
   const [openExport, setOpenExport] = useState(false);
   const [openFork, setOpenFork] = useState(false);
-  const [numCards, setNumCards] = useState([1, 2, 3, 4]);
 
   const [shpFile, setShpFile] = useState(null);
   const [dbfFile, setDbfFile] = useState(null);
@@ -42,8 +41,9 @@ export default function HomeScreen() {
   const dbfInputRef = React.useRef();
   const geoJsonInputRef = React.useRef();
 
-  let navigate = useNavigate();
-  // let numCards = [1,2,3,4];
+  useEffect(() => {
+    store.loadUserMaps();
+  }, []);
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
@@ -54,7 +54,6 @@ export default function HomeScreen() {
   };
   const openDeleteModal = (show) => {
     setOpenDelete(show);
-    numCards.pop();
   };
 
   const openExportModal = (show) => {
@@ -62,12 +61,6 @@ export default function HomeScreen() {
   };
   const openForkModal = (show) => {
     setOpenFork(show);
-    numCards.push(1);
-    // const newNumCards = numCards.push(1);
-    // console.log(numCards);
-
-    // console.log(newNumCards)
-    // setNumCards(newNumCards)
   };
 
   const handleUploadSHP = () => {
@@ -91,10 +84,7 @@ export default function HomeScreen() {
       setShpFile(buffer.target.result);
 
       if (event.target.files[0] && dbfFile !== null) {
-        console.log(event.target.files[0], dbfFile);
-        //store.createNewMapSHPDBF(event.target.files[0], dbfFile);
         store.createNewMapSHPDBF(buffer.target.result, dbfFile);
-        navigate("/createmap");
       }
     };
     reader.readAsArrayBuffer(event.target.files[0]);
@@ -109,10 +99,7 @@ export default function HomeScreen() {
       setDbfFile(buffer.target.result);
 
       if (event.target.files[0] && shpFile !== null) {
-        console.log(shpFile, event.target.files[0]);
-        //store.createNewMapSHPDBF(shpFile, event.target.files[0]);
         store.createNewMapSHPDBF(shpFile, buffer.target.result);
-        navigate("/createmap");
       }
     };
     reader.readAsArrayBuffer(event.target.files[0]);
@@ -123,31 +110,36 @@ export default function HomeScreen() {
     var reader = new FileReader();
     reader.onload = function (buffer) {
       console.log("geojson", buffer.target.result);
+      console.log("type", typeof buffer.target.result);
       setGeoJsonFile(buffer.target.result);
-      store.createNewMapGeoJson(geoJsonFile);
-      navigate("/createmap");
+      store.createNewMapGeoJson(buffer.target.result);
     };
 
-    reader.readAsText(event.target.files[0]);
+    reader.readAsArrayBuffer(event.target.files[0]);
   };
 
 
   let mapcards = "";
-  mapcards = (
-    <List
-      id="mapcards"
-    >
-      {numCards.map((i, index) => (
-        <MapCard
-          setOpenDelete={openDeleteModal}
-          setOpenExport={openExportModal}
-          setOpenFork={openForkModal}
-          key={index}
-          dropdown={dropdown}
-        />
-      ))}
-    </List>
-  );
+  if (store.userMaps) {
+
+    mapcards = (
+      <List
+        id="mapcards"
+      >
+        {store.userMaps.map((map) => (
+          <MapCard
+            id={map._id}
+            mapName={map.name}
+            ownerUsername={map.ownerUsername}
+            setOpenDelete={openDeleteModal}
+            setOpenExport={openExportModal}
+            setOpenFork={openForkModal}
+            dropdown={dropdown}
+          />
+        ))}
+      </List>
+    );
+  }
 
   return (
     <div id="main-screen">
@@ -161,7 +153,6 @@ export default function HomeScreen() {
             justifyContent: "space-between",
           }}
           style={{ backgroundColor: "rgba(0,0,0, 0.4)" }}
-        // 20,83,116
         >
           <Box display="flex" sx={{ flex: "50%", pl: "5%" }}>
             <Box sx={{ display: "flex", flexDirection: "column" }}>
@@ -258,7 +249,6 @@ export default function HomeScreen() {
           </Box>
         </Card>
       </div>
-
       <br></br>
 
       <div

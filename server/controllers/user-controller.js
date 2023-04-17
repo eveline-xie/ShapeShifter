@@ -7,6 +7,7 @@ const crypto = require("crypto");
 async function getLoggedIn(req, res) {
   try {
     auth.verify(req, res, async function () {
+      console.log("id", req.userId);
       const loggedInUser = await User.findOne({ _id: req.userId });
       console.log("loggedin user: " + loggedInUser);
       return res
@@ -62,7 +63,7 @@ async function signup(req, res) {
         const saltRounds = 10;
         const salt = await bcrypt.genSalt(saltRounds);
         const passwordHash = await bcrypt.hash(password, salt);
-        await User.create({
+        const newUser = await User.create({
           firstName: firstName,
           lastName: lastName,
           username: username,
