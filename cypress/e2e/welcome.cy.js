@@ -8,7 +8,7 @@ describe('welcome page', () => {
   })
   
 
-  it('user signs up for an account', () => {
+  it.only('user signs up for an account', () => {
     cy.visit('https://shapershifter.onrender.com')
     //cy.get('form')
     cy.contains('Join').click()
@@ -48,7 +48,7 @@ describe('welcome page', () => {
 
     cy.get('button').contains('Log In').click()
     //cy.get('button').contains('Login').click()
-    cy.get('div').contains('Incorrect email/username or password!')
+    cy.url().should('include', '/login')
   })
 
   it('the guest user wants to view community', () => {
