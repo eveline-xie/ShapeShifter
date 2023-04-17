@@ -45,7 +45,7 @@ export default function ExportModal(props) {
   return (
     <div>
       <Modal
-        id="delete-modal"
+        id="export-modal"
         open={props.open}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"

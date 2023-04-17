@@ -48,7 +48,7 @@ export default function DeleteModal(props) {
             >
                 <Box sx={style}>
                     <Typography id="modal-modal-title" variant="h6" component="h2" >
-                        Are you sure you want to delete this list
+                        Are you sure you want to delete this list?
                     </Typography>
                     <Button variant="contained" sx={{ maxWidth: 100 }} style={{
         borderRadius: 50,

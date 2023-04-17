@@ -26,6 +26,7 @@ jobs:
       - name: install cypress
         run: 
           npm install cypress
+          npm install cypress-file-upload 
       - name: test
         run: 
           npx cypress run
