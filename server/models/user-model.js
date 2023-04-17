@@ -3,17 +3,18 @@ const Schema = mongoose.Schema
 const ObjectId = Schema.Types.ObjectId
 
 const UserSchema = new Schema(
-    {
-        firstName: { type: String, required: true },
-        lastName: { type: String, required: true },
-        username: {type: String, required: true},
-        email: { type: String, required: true },
-        passwordHash: { type: String, required: true },
-        mapsIOwn: [{type: ObjectId, ref: 'Map'}],
-        sharedWithMe: [{type: ObjectId, ref: 'Map'}]
-
-    },
-    { timestamps: true },
-)
+  {
+    firstName: { type: String, required: true },
+    lastName: { type: String, required: true },
+    username: { type: String, required: true },
+    email: { type: String, required: true },
+    passwordHash: { type: String, required: true },
+    mapsIOwn: [{ type: ObjectId, ref: "Map" }],
+    sharedWithMe: [{ type: ObjectId, ref: "Map" }],
+    resetPasswordToken: { type: String, required: false },
+    resetPasswordExpires: { type: Date, required: false },
+  },
+  { timestamps: true }
+);
 
 module.exports = mongoose.model('User', UserSchema)

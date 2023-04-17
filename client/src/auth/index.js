@@ -15,6 +15,8 @@ export const AuthActionType = {
   GUEST_LOGGED_IN: "GUEST_LOGGED_IN",
   NO_ERROR: "NO_ERROR",
   FORGOT_PASSWORD: "FORGOT_PASSWORD",
+  VERIFY_CODE: "VERIFY_CODE",
+  UPDATE_PASSWORD: "UPDATE_PASSWORD",
 };
 
 function AuthContextProvider(props) {
@@ -100,6 +102,24 @@ function AuthContextProvider(props) {
       case AuthActionType.FORGOT_PASSWORD: {
         return setAuth({
           user: null,
+          loggedIn: false,
+          error: false,
+          errMessage: null,
+          guest: false,
+        });
+      }
+      case AuthActionType.UPDATE_PASSWORD: {
+        return setAuth({
+          user: null,
+          loggedIn: false,
+          error: false,
+          errMessage: null,
+          guest: false,
+        });
+      }
+      case AuthActionType.VERIFY_CODE: {
+        return setAuth({
+          user: payload.user,
           loggedIn: false,
           error: false,
           errMessage: null,
@@ -214,6 +234,54 @@ function AuthContextProvider(props) {
       }
     };
 
+    auth.updatePassword = async function (userData) {
+      try {
+        const response = await api.updatePassword(userData);
+        if (response.status === 200) {
+          authReducer({
+            type: AuthActionType.UPDATE_PASSWORD,
+          });
+          // history.push("/");
+        }
+      } catch (err) {
+        console.log(err);
+        authReducer({
+          type: AuthActionType.ERROR,
+          error: true,
+          payload: {
+            errMessage: err.response.data.errorMessage,
+          },
+        });
+      }
+    };
+
+auth.verifycode = async function (email, code) {
+  //add store to param
+  try {
+    const response = await api.verifyPassword(email, code);
+    console.log(response.data.user + " verify code");
+    if (response.status === 200) {
+      authReducer({
+        type: AuthActionType.VERIFY_CODE,
+        payload: {
+          user: response.data.user,
+        },
+      });
+      console.log("user verified: " + response.data.user.firstName);
+      // history.push("/");
+      //load map
+    }
+  } catch (err) {
+    console.log(err.response.data.errorMessage);
+    authReducer({
+      type: AuthActionType.ERROR,
+      error: true,
+      payload: {
+        errMessage: err.response.data.errorMessage,
+      },
+    });
+  }
+};
   // auth.error = async function () {
   //   authReducer({
   //     type: AuthActionType.ERROR,

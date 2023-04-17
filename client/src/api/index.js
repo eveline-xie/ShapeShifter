@@ -22,7 +22,10 @@ export const login = (payload) => api.post(`/auth/login`, payload);
 export const logout = () => api.get(`/auth/logout`);
 export const forgotPassword = (payload) =>
   api.get(`/auth/forgotpassword?email=${payload}`);
-
+export const verifyPassword = (email, token) =>
+  api.get(`/auth/verifypassword?email=${email}&token=${token}`);
+export const updatePassword = (payload) =>
+  api.put(`/auth/updatepassword`, payload);
 
 const apis = {
   getLoggedIn,
@@ -30,6 +33,8 @@ const apis = {
   login,
   logout,
   forgotPassword,
+  verifyPassword,
+  updatePassword,
 };
 
 export default apis;

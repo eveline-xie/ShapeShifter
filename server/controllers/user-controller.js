@@ -1,6 +1,8 @@
 const auth = require("../auth");
 const User = require("../models/user-model.js");
 const bcrypt = require("bcryptjs");
+const nodemailer = require("nodemailer");
+const crypto = require("crypto");
 
 async function getLoggedIn(req, res) {
   try {
@@ -67,7 +69,17 @@ async function signup(req, res) {
           email: email,
           passwordHash: passwordHash,
         });
-        res.send(JSON.stringify({ message: "Success" }));
+        res.send(
+          JSON.stringify({
+            message: "Success",
+            user: {
+              firstName: firstName,
+              lastName: lastName,
+              username: username,
+              email: email,
+            },
+          })
+        );
       }
     });
   } catch (err) {
@@ -130,6 +142,9 @@ async function forgotPassword(req, res) {
   try {
     const { email } = req.query;
     console.log("forgot password email: " + email);
+    if (email === "") {
+      res.status(400).json({ errorMessage: "email required" });
+    }
     await User.findOne({
       email: email,
     }).then((user) => {
@@ -138,8 +153,12 @@ async function forgotPassword(req, res) {
       } else {
         console.log("found user");
         //send pw recovery email
-        key = Math.random().toString(16).substring(2, 10);
-        sendRecoveryEmail(email, key);
+        // const token = crypto.randomBytes(20).toString("hex");
+        const token = Math.random().toString(16).substring(2, 10);
+        console.log("token is : "+token)
+        user.resetPasswordToken = token;
+        (user.resetPasswordExpires = Date.now() + 3600000), user.save();
+        sendRecoveryEmail(email, token);
       }
     });
   } catch (err) {
@@ -148,16 +167,86 @@ async function forgotPassword(req, res) {
   }
 }
 
-function sendRecoveryEmail(email, key) {
-  console.log(email);
+function sendRecoveryEmail(email, token) {
+  console.log("sending email: "+email+", "+token);
+  const transporter = nodemailer.createTransport({
+    host: "smtp-mail.outlook.com", // hostname
+    secureConnection: false, // TLS requires secureConnection to be false
+    port: 587, // port for secure SMTP
+    tls: {
+      ciphers: "SSLv3",
+    },
+    auth: {
+      user: `${process.env.EMAIL_ADDRESS}`,
+      pass: `${process.env.EMAIL_PASSWORD}`,
+    },
+  });
+
+  const mailOptions = {
+    from: "shapeshifter416@outlook.com",
+    to: `${email}`,
+    subject: "Link To Reset Password",
+    text:
+      "You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n" +
+      "Your verification code is:\n\n" +
+      // `http://localhost:3000/resetpassword?email=${email}&token=${token}\n\n` +
+      token+"\n\n"+
+      "If you did not request this, please ignore this email and your password will remain unchanged.\n",
+  };
+  console.log("sending mail");
+
+  transporter.sendMail(mailOptions, (err, response) => {
+    if (err) {
+      console.error("there was an error: ", err);
+    } else {
+      console.log("here is the res: ", response);
+      res.status(200).json("recovery email sent");
+    }
+  });
 }
 
-async function changePassword(username, password, req, res) {
+async function verifyPassword(req, res) {
+  const { email, token } = req.query;
+  console.log(email+", "+token+ ": verify code")
+  await User.findOne({
+    $and: [
+      { resetPasswordToken: token },
+      {
+        resetPasswordExpires: {
+          $gt: Date.now(),
+        },
+      },
+    ],
+  }).then(async (user) => {
+    // no user
+    console.log("user code verified: "+user);
+    if (!user) {
+      res
+        .status(400)
+        .json({ errorMessage: "Password code incorrect" });
+    } else {
+      res.status(200).send({
+        success: true,
+        user: {
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+          username: user.username,
+          password: user.password,
+        },
+      });
+    }
+  });
+}
+
+async function updatePassword(req, res) {
+  const { username, password } = req.body;
+  console.log("update password for "+username)
   await User.findOne({
     username: username,
   }).then(async (user) => {
     // no user
-    console.log("change user: " + user);
+    console.log("reset pw user: " + user);
     if (!user) {
       return res.status(400).json({ errorMessage: "Can not find user" });
     } else {
@@ -198,6 +287,7 @@ module.exports = {
   login,
   forgotPassword,
   sendRecoveryEmail,
-  changePassword,
+  verifyPassword,
+  updatePassword,
   logout,
 };
