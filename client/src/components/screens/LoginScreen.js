@@ -1,6 +1,6 @@
 import { useContext } from 'react';
-// import AuthContext from '../auth'
-// import Copyright from './Copyright'
+import AuthContext from '../../auth'
+import { GlobalStoreContext } from "../../store";
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -29,10 +29,10 @@ import { useState } from 'react';
 */
 
 export default function LoginScreen() {
-  // const { auth } = useContext(AuthContext);
-  // const { store } = useContext(GlobalStoreContext);
+  const { auth } = useContext(AuthContext);
+  const { store } = useContext(GlobalStoreContext);
 
-  const [emailUsername, setEmailUsername] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -50,33 +50,13 @@ export default function LoginScreen() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    if ((emailUsername !== exampleUser.email || emailUsername !== exampleUser.username) && password !== exampleUser.pass) {
-      setErrorMessage(<div style={{color:'red'}}>Incorrect email/username or password!</div>);
-      console.log("show error");
-    }
-    else {
-      navigate("/home");
-    }
-    // auth.loginUser(
-    //     formData.get('email'),
-    //     formData.get('password')
-    // );
+     const userData = {
+       username: username,
+       password: password,
+     };
+     auth.login(userData);
     // store.resetStore();
   };
-
-  // const theme = createTheme({
-  //     palette: {
-  //       primary: {
-  //         main: '#FFE484',
-  //       },
-  //       secondary: {
-  //         main: '#ffffff',
-  //       },
-  //     },
-  //   });
-
-
 
   return (
     <div>
@@ -101,7 +81,7 @@ export default function LoginScreen() {
               required
               fullWidth
               id="email"
-              label="Email/Username"
+              label="Username"
               name="email"
               autoComplete="email"
               autoFocus
@@ -117,7 +97,7 @@ export default function LoginScreen() {
               InputLabelProps={{
                 style: { color: "#ffffff" },
               }}
-              onChange={(e) => setEmailUsername(e.target.value)}
+              onChange={(e) => setUsername(e.target.value)}
             />
 
             <TextField

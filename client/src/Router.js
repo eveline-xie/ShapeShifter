@@ -1,9 +1,10 @@
 import "./App.css";
 import { React } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-// import { AuthContextProvider } from './auth';
-// import { GlobalStoreContextProvider } from './store'
+import { AuthContextProvider } from './auth';
+import { GlobalStoreContextProvider } from './store'
 import {
+  HomeWrapper,
   WelcomeScreen,
   LoginScreen,
   HomeScreen,
@@ -30,25 +31,24 @@ import {
 const Router = () => {
   return (
     <BrowserRouter>
-      {/* <AuthContextProvider>
-                <GlobalStoreContextProvider>               */}
-      {/* <AppBanner /> */}
-      <NavBar />
-      <Routes>
-        <Route path="/" element={<WelcomeScreen />} />
-        <Route path="/login" element={<LoginScreen />} />
-        <Route path="/signup" element={<SignupScreen />} />
-        <Route path="/home" element={<HomeScreen />} />
-        <Route path="/createmap" element={<CreateMap />} />
-        <Route path="/editmap" element={<EditMap />} />
-        <Route path="/forgotpassword" element={<ForgotPassword />} />
-        <Route path="/resetpassword" element={<ResetPassword />} />
-        <Route path="/community" element={<CommunityScreen />} />
-        <Route path="/communityguest" element={<CommunityGuestScreen />} />
-      </Routes>
-      {/* <Statusbar /> */}
-      {/* </GlobalStoreContextProvider>
-            </AuthContextProvider> */}
+      <AuthContextProvider>
+        <GlobalStoreContextProvider>
+          <NavBar />
+          <Routes>
+            <Route path="/" element={<WelcomeScreen />} />
+            {/* <Route path="/welcome" element={<WelcomeScreen />} /> */}
+            <Route path="/login" element={<LoginScreen />} />
+            <Route path="/signup" element={<SignupScreen />} />
+            <Route path="/home" element={<HomeScreen />} />
+            <Route path="/createmap" element={<CreateMap />} />
+            <Route path="/editmap" element={<EditMap />} />
+            <Route path="/forgotpassword" element={<ForgotPassword />} />
+            <Route path="/resetpassword" element={<ResetPassword />} />
+            <Route path="/community" element={<CommunityScreen />} />
+            <Route path="/communityguest" element={<CommunityGuestScreen />} />
+          </Routes>
+        </GlobalStoreContextProvider>
+      </AuthContextProvider>
     </BrowserRouter>
   );
 };

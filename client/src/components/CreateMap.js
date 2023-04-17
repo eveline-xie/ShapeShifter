@@ -3,12 +3,12 @@ import IconButton from "@mui/material/IconButton";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import Button from "@mui/material/Button";
 import { useState } from "react";
-import ExportModal from "./ExportModal";
-import ForkModal from "./ForkModal";
+import ExportModal from "./modals/ExportModal";
+import ForkModal from "./modals/ForkModal";
 import { useNavigate } from "react-router-dom";
 import { FormControl, FormLabel, TextField, Box } from "@mui/material";
-
-import InputAdornment from "@mui/material/InputAdornment";
+import GlobalStoreContext from "../store";
+import { useContext } from 'react'
 
 /*
     This React component lets us create and attach custom properties to a map, which only
@@ -17,20 +17,28 @@ import InputAdornment from "@mui/material/InputAdornment";
 */
 
 export default function CreateMap() {
+  const { store } = useContext(GlobalStoreContext);
+
   const [openExport, setOpenExport] = useState(false);
   const [openFork, setOpenFork] = useState(false);
+
+  const [name, setName] = useState(store.currentMap.name);
+  const [keywords, setKeywords] = useState(store.currentMap.keywords.toString());
+  const [collaborators, setCollaborators] = useState(store.currentMap.collaborators.toString());
   let navigate = useNavigate();
   async function handleExport(event, id) {
     event.stopPropagation();
     setOpenExport(true);
+    store.markMapForExport(store.currentMap._id);
   }
   async function handleFork(event, id) {
     event.stopPropagation();
     setOpenFork(true);
+    store.duplicateMapById(store.currentMap._id);
   }
 
   const handleSave = (event) => {
-    navigate("/home");
+    store.updateMapCustomProperties(name, keywords, collaborators);
   };
   const handlePublish = (event) => {
     navigate("/home");
@@ -135,6 +143,8 @@ export default function CreateMap() {
               variant="outlined"
               // color="secondary"
               focused
+              defaultValue = {store.currentMap.name}
+              onChange={(e) => setName(e.target.value)}
             />
             <TextField
               margin="normal"
@@ -145,6 +155,8 @@ export default function CreateMap() {
               variant="outlined"
               // color="secondary"
               focused
+              defaultValue = {store.currentMap.keywords.toString()}
+              onChange={(e) => setKeywords(e.target.value)}
             />
             <TextField
               margin="normal"
@@ -155,6 +167,8 @@ export default function CreateMap() {
               variant="outlined"
               // color="secondary"
               focused
+              defaultValue = {store.currentMap.collaborators.toString()}
+              onChange={(e) => setCollaborators(e.target.value)}
             />
             <div>
               <Button

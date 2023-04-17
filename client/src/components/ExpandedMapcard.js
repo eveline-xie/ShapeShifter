@@ -13,8 +13,8 @@ import {
     Avatar,
     CardMedia,
 } from "@mui/material";
-import ForkModal from "./ForkModal";
-import ExportModal from "./ExportModal";
+import ForkModal from "./modals/ForkModal";
+import ExportModal from "./modals/ExportModal";
 import { useState } from "react";
 
 /*

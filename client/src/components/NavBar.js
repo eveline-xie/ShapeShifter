@@ -13,6 +13,8 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { useNavigate } from 'react-router-dom'
+import { useContext, useState } from "react";
+import AuthContext from "../auth";
 
 /*
    This navbar is a functional React component that
@@ -22,6 +24,7 @@ const pages = ["Login", "Join"];
 const settings = ['Logout'];
 
 function NavBar() {
+  const { auth } = useContext(AuthContext);
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -50,8 +53,13 @@ function NavBar() {
     else if (page == "Join") {
       navigate('/signup');
     }
-    else if (page == "Splash") {
-      navigate('');
+    else if (page == "SplashorHome") {
+      if (auth.loggedIn) {
+        navigate('/home');
+      }
+      else {
+        navigate('');
+      }
     }
     else if (page == "Community") {
       navigate('/community');
@@ -63,6 +71,7 @@ function NavBar() {
 
   const handleLogout = () =>{
     handleCloseUserMenu();
+    auth.logoutUser();
     navigate("/");
   }
 
@@ -82,8 +91,9 @@ function NavBar() {
   let pfp = ''
 
   // maybe include community page
-  let notLoggedInPaths = ['/', '/login', '/signup', '/forgotpassword', '/communityguest']
-  if (!notLoggedInPaths.includes(window.location.pathname)) {
+  // let notLoggedInPaths = ['/', '/login', '/signup', '/forgotpassword', '/communityguest']
+  // if (!notLoggedInPaths.includes(window.location.pathname)) {
+  if (auth.loggedIn) {
     buttons = '';
     pfp = <div>
     <Box sx={{ flexGrow: 0 }} >
@@ -154,7 +164,7 @@ function NavBar() {
               noWrap
               component="div"
               sx={{ display: { xs: 'none', sm: 'block' } }}
-              onClick={(event) => handleSwitchPage(event, "Splash")}
+              onClick={(event) => handleSwitchPage(event, "SplashorHome")}
             >
               <img src='logo.png' width="150px" height="64.5px" />
             </Typography>
