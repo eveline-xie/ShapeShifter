@@ -33,7 +33,7 @@ export default function EditMap() {
 
   useEffect(() => {
     console.log("created map");
-    let newmap = L.map('my-map', { editable: true }).setView([20, 100], 3);
+    let newmap = L.map('my-map', { editable: true, }).setView([0, 0], 3);
     console.log(newmap);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution:
