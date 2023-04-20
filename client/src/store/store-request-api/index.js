@@ -47,6 +47,12 @@ export const deleteMapById = (id) => {
   return api.delete(`/map/${id}`);
 }
 
+export const addPolygonToMap = (id, feature) => {
+  return api.put(`/map/${id}`, {
+    feature: feature
+  })
+}
+
 const apis = {
   createNewMap,
   updateMapCustomProperties,
@@ -54,7 +60,8 @@ const apis = {
   loadUserMapsNoGeoJson,
   getMapById,
   duplicateMapById,
-  deleteMapById
+  deleteMapById,
+  addPolygonToMap
 };
 
 export default apis;

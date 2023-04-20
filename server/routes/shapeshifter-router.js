@@ -21,6 +21,7 @@ router.get("/load-user-maps-no-geojson", auth.verify, MapController.loadUserMaps
 router.get("/map/:id", auth.verify, MapController.getMapById);
 router.post("/duplicate-map", auth.verify, MapController.duplicateMapById);
 router.delete("/map/:id", auth.verify, MapController.deleteMapById);
+router.put("/map/:id", auth.verify, MapController.addPolygonToMap);
 
 
 module.exports = router;

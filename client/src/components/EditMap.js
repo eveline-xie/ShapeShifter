@@ -16,7 +16,7 @@ import SouthAmericaIcon from "@mui/icons-material/SouthAmerica";
 import DeleteIcon from "@mui/icons-material/Delete";
 import InfoIcon from "@mui/icons-material/Info";
 import GlobalStoreContext from "../store";
-import { useContext, useEffect } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import L from 'leaflet';
 import 'leaflet-editable'
 import "leaflet/dist/leaflet.css";
@@ -31,14 +31,16 @@ export default function EditMap() {
   let navigate = useNavigate();
 
   const { store } = useContext(GlobalStoreContext);
+  const [map, setMap] = useState("");
 
   useEffect(() => {
     console.log("created map");
     let newmap = L.map('my-map', { editable: true, }).setView([0, 0], 3);
     console.log(newmap);
-    //newmap.editTools.featuresLayer.addTo(newmap);
+    newmap.editTools.featuresLayer.addTo(newmap);
     newmap.on('editable:vertex:dragend', handleFeatureEdit);
-    newmap.on('editable:deleted', handleFeatureDelete);
+    newmap.on('editable:deleted', handleFeatureAdd);
+    newmap.on('editable:drawing:end', handleFeatureAdd);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -54,6 +56,7 @@ export default function EditMap() {
     // window.createdMap.push(newmap);
     // console.log(window.createdMap[0]);
     // console.log(window.createdMap.length);
+    setMap(newmap);
     return () => {
       // Remove the map
       newmap.remove();
@@ -63,25 +66,26 @@ export default function EditMap() {
   function onEachRegion(country, layer) {
     // layer.bindPopup(country.properties.admin,{ autoClose: false, closeOnClick: false });
     let regionName = "";
-    if (country.properties.NAME_5) {
-      regionName = country.properties.NAME_5;
+    if (country.properties !== undefined) {
+      if (country.properties.NAME_5) {
+        regionName = country.properties.NAME_5;
+      }
+      else if (country.properties.NAME_4) {
+        regionName = country.properties.NAME_4;
+      }
+      else if (country.properties.NAME_3) {
+        regionName = country.properties.NAME_3;
+      }
+      else if (country.properties.NAME_2) {
+        regionName = country.properties.NAME_2;
+      }
+      else if (country.properties.NAME_1) {
+        regionName = country.properties.NAME_1;
+      }
+      else if (country.properties.NAME_0) {
+        regionName = country.properties.NAME_0;
+      }
     }
-    else if (country.properties.NAME_4) {
-      regionName = country.properties.NAME_4;
-    }
-    else if (country.properties.NAME_3) {
-      regionName = country.properties.NAME_3;
-    }
-    else if (country.properties.NAME_2) {
-      regionName = country.properties.NAME_2;
-    }
-    else if (country.properties.NAME_1) {
-      regionName = country.properties.NAME_1;
-    }
-    else if (country.properties.NAME_0) {
-      regionName = country.properties.NAME_0;
-    }
-    //layer.enableEdit();
     layer.bindTooltip(regionName, { permanent: true, direction: "center", fillColor: "blue" });
     layer.on("dblclick", function () {
       console.log("double")
@@ -119,11 +123,18 @@ export default function EditMap() {
     //setTransaction([...transaction, { type: 'edit', feature }]);
   };
 
-  const handleFeatureDelete = (e) => {
+  const handleFeatureAdd = (e) => {
     const feature = e.layer.toGeoJSON();
-    console.log(feature);
+    console.log("yes", feature);
+    store.addPolygonToMap(feature);
     //setTransaction([...transaction, { type: 'delete', feature }]);
   };
+
+  const handleStartPolyline = (e) => {
+    if (map.editTools) {
+      map.editTools.startPolygon();
+    }
+  }
 
   return (
     <div>
@@ -200,6 +211,7 @@ export default function EditMap() {
                 color="inherit"
                 aria-label="menu"
                 sx={{ mr: 2 }}
+                onClick = {handleStartPolyline}
               >
                 <AddIcon />
               </IconButton>

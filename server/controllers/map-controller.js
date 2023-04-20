@@ -145,6 +145,21 @@ async function deleteMapById(req, res) {
     return res.status(201).json({});
 }
 
+async function addPolygonToMap(req, res) {
+    const map = await Map.findOne({ _id: req.params.id });
+    console.log("features length", map.geoJsonMap.features.length);
+    console.log("0", map.geoJsonMap.features[0]);
+    let newgeojson = map.geoJsonMap;
+    newgeojson.features.push(req.body.feature);
+    map.name = "yes";
+    map.geoJsonMap = "";
+    map.geoJsonMap = newgeojson;
+    map.save().then(() => {
+    return res.status(201).json({
+        map: map
+    });})
+}
+
 
 module.exports = {
     createNewMap,
@@ -153,5 +168,6 @@ module.exports = {
     loadUserMapsNoGeoJson,
     getMapById,
     duplicateMapById,
-    deleteMapById
+    deleteMapById,
+    addPolygonToMap
 }
