@@ -27,8 +27,11 @@ async function createNewMap(req, res) {
         return res.status(400).json({ success: false, error: err })
     }
     loggedInUser.mapsIOwn.push(map._id);
-    loggedInUser.save();
-    map.save();
+    console.log("e");
+    await loggedInUser.save();
+    console.log("f");
+    await map.save();
+    console.log("g");
     return res.status(201).json({
         map: map
     })
