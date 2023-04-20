@@ -80,12 +80,7 @@ function GlobalStoreContextProvider(props) {
         let shp2geoContents = shpjs.combine([shpfileContents, dbffileContents]);
         console.log("featurecollection", shp2geoContents);
 
-        const sizeInBytes = JSON.stringify(shp2geoContents).length;
-        const sizeInMB = sizeInBytes / (1024 * 1024);
-        console.log(`Object size is approximately ${sizeInMB.toFixed(2)} MB`);
-
-        //const response = await api.createMap({map: shp2geoContents});
-        const response = await api.createNewMap({ map: "mapcontents" });
+        const response = await api.createNewMap({ map: shp2geoContents });
         console.log("createNewMap response: " + response);
         if (response.status === 201) {
             //tps.clearAllTransactions();
@@ -110,7 +105,6 @@ function GlobalStoreContextProvider(props) {
         console.log("featurecollection", featureCollection);
 
         const response = await api.createNewMap({ map: featureCollection });
-        //const response = await api.createNewMap({map: "mapcontents"});
         console.log("createNewMap response: " + response);
         if (response.status === 201) {
             //tps.clearAllTransactions();

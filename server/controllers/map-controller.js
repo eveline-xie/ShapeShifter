@@ -4,7 +4,7 @@ const User = require('../models/user-model');
 async function createNewMap(req, res) {
     const body = req.body;
     //console.log("createMap body: " + JSON.stringify(body));
-
+    console.log("in here");
     if (!body) {
         return res.status(400).json({
             success: false,
