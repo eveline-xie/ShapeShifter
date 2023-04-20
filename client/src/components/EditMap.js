@@ -18,6 +18,7 @@ import InfoIcon from "@mui/icons-material/Info";
 import GlobalStoreContext from "../store";
 import { useContext, useEffect } from 'react'
 import L from 'leaflet';
+import 'leaflet-editable'
 import "leaflet/dist/leaflet.css";
 
 /*
@@ -35,13 +36,16 @@ export default function EditMap() {
     console.log("created map");
     let newmap = L.map('my-map', { editable: true, }).setView([0, 0], 3);
     console.log(newmap);
+    //newmap.editTools.featuresLayer.addTo(newmap);
+    newmap.on('editable:vertex:dragend', handleFeatureEdit);
+    newmap.on('editable:deleted', handleFeatureDelete);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(newmap);
     var geojsonMap =
       L.geoJson(store.currentMap.geoJsonMap, {
-        // onEachFeature: onEachRegion
+        onEachFeature: onEachRegion
       });
     geojsonMap.eachLayer(function (layer) {
       //console.log(layer);
@@ -55,6 +59,71 @@ export default function EditMap() {
       newmap.remove();
     };
   }, []);
+
+  function onEachRegion(country, layer) {
+    // layer.bindPopup(country.properties.admin,{ autoClose: false, closeOnClick: false });
+    let regionName = "";
+    if (country.properties.NAME_5) {
+      regionName = country.properties.NAME_5;
+    }
+    else if (country.properties.NAME_4) {
+      regionName = country.properties.NAME_4;
+    }
+    else if (country.properties.NAME_3) {
+      regionName = country.properties.NAME_3;
+    }
+    else if (country.properties.NAME_2) {
+      regionName = country.properties.NAME_2;
+    }
+    else if (country.properties.NAME_1) {
+      regionName = country.properties.NAME_1;
+    }
+    else if (country.properties.NAME_0) {
+      regionName = country.properties.NAME_0;
+    }
+    //layer.enableEdit();
+    layer.bindTooltip(regionName, { permanent: true, direction: "center", fillColor: "blue" });
+    layer.on("dblclick", function () {
+      console.log("double")
+      var content = document.createElement("textarea");
+      content.addEventListener("keyup", function (e) {
+        console.log("uppppp" + e.key)
+        if (e.key == "Enter") {
+          layer.bindPopup(content.value);
+          regionName = content.value;
+          layer.setTooltipContent(regionName);
+        }
+        // country.properties.admin = content.value
+      })
+      layer.bindPopup(content).openPopup();
+    })
+    layer.on("click", function () {
+      if (layer.editEnabled()) {
+        layer.disableEdit();
+      }
+      else {
+        layer.enableEdit();
+      }
+      if (layer.selected == true) {
+        //deSelect(layer);
+      }
+      else {
+        //selectRegion(layer);
+      }
+    })
+  }
+
+  const handleFeatureEdit = (e) => {
+    const feature = e.layer.toGeoJSON();
+    console.log(feature);
+    //setTransaction([...transaction, { type: 'edit', feature }]);
+  };
+
+  const handleFeatureDelete = (e) => {
+    const feature = e.layer.toGeoJSON();
+    console.log(feature);
+    //setTransaction([...transaction, { type: 'delete', feature }]);
+  };
 
   return (
     <div>
