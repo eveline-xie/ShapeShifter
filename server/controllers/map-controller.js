@@ -64,7 +64,30 @@ async function loadUserMaps(req, res) {
         success: true,
         userMaps: maps
     })
+}
 
+async function loadUserMapsNoGeoJson(req, res) {
+    const loggedInUser = await User.findOne({ _id: req.userId });
+    const maps = await Map.find({ownerEmail: loggedInUser.email});
+    let mapsNoGeoJson = [];
+    for (let i = 0; i < maps.length; i++) {
+        mapsNoGeoJson.push(
+            {
+                _id: maps[i]._id,
+                name: maps[i].name,
+                ownerUsername: maps[i].ownerUsername,
+                ownerEmail: maps[i].ownerEmail,
+                comments: maps[i].comments,
+                collaborators: maps[i].collaborators,
+                keywords: maps[i].keywords,
+                published: maps[i].published
+            }
+        )
+    }
+    return res.status(201).json({
+        success: true,
+        userMapsNoGeoJson: mapsNoGeoJson
+    })
 }
 
 async function getMapById(req, res) {
@@ -124,6 +147,7 @@ module.exports = {
     createNewMap,
     updateMapCustomProperties,
     loadUserMaps,
+    loadUserMapsNoGeoJson,
     getMapById,
     duplicateMapById,
     deleteMapById

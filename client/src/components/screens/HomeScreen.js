@@ -42,7 +42,7 @@ export default function HomeScreen() {
   const geoJsonInputRef = React.useRef();
 
   useEffect(() => {
-    store.loadUserMaps();
+    store.loadUserMapsNoGeoJson();
   }, []);
 
   const handleSearch = (event) => {

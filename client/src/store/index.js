@@ -170,6 +170,17 @@ function GlobalStoreContextProvider(props) {
         }
     }
 
+    store.loadUserMapsNoGeoJson = async function () {
+        const response = await api.loadUserMapsNoGeoJson();
+        if (response.status === 201) {
+            console.log(response.data.userMapsNoGeoJson);
+            storeReducer({
+                type: GlobalStoreActionType.LOAD_USER_MAPS,
+                payload: response.data.userMapsNoGeoJson
+            })
+        }
+    }
+
     store.loadMapById = async function (id) {
         const response = await api.getMapById(id);
         if (response.status === 201) {
@@ -185,7 +196,7 @@ function GlobalStoreContextProvider(props) {
     store.duplicateMapById = async function (id) {
         const response = await api.duplicateMapById({ id: id });
         if (response.status === 201) {
-            store.loadUserMaps();
+            store.loadUserMapsNoGeoJson();
         }
     }
 
@@ -201,7 +212,7 @@ function GlobalStoreContextProvider(props) {
         console.log("delete", store.mapIdMarkedForDeletion);
         let response = await api.deleteMapById(store.mapIdMarkedForDeletion);
         if (response.status === 201) {
-            store.loadUserMaps();
+            store.loadUserMapsNoGeoJson();
         }
     }
 

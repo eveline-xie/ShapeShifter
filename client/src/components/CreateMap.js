@@ -41,7 +41,8 @@ export default function CreateMap() {
     store.updateMapCustomProperties(name, keywords, collaborators);
   };
   const handlePublish = (event) => {
-    navigate("/home");
+    console.log(store.currentMap);
+    //navigate("/home");
   };
   const handleEdit = (event) => {
     navigate("/editmap");

@@ -12,8 +12,8 @@
 import axios from "axios";
 axios.defaults.withCredentials = true;
 const api = axios.create({
-  baseURL: "https://shapeshifter-api.onrender.com"
-  //baseURL: "http://localhost:5000"
+  //baseURL: "https://shapeshifter-api.onrender.com"
+  baseURL: "http://localhost:5000"
 });
 
 export const createNewMap = (payload) => {
@@ -29,6 +29,10 @@ export const updateMapCustomProperties = (id, payload) => {
 
 export const loadUserMaps = () => {
   return api.get('/load-user-maps');
+}
+
+export const loadUserMapsNoGeoJson = () => {
+  return api.get('/load-user-maps-no-geojson');
 }
 
 export const getMapById = (id) => {
@@ -47,6 +51,7 @@ const apis = {
   createNewMap,
   updateMapCustomProperties,
   loadUserMaps,
+  loadUserMapsNoGeoJson,
   getMapById,
   duplicateMapById,
   deleteMapById
