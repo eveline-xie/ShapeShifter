@@ -13,6 +13,13 @@ async function createNewMap(req, res) {
     }
     console.log("id:", req.userId);
     const loggedInUser = await User.findOne({ _id: req.userId });
+    console.log("features", body.map.features);
+    let mapWithIdentifiers = body.map.features.map(function(feature, index) {
+        feature.properties.myId = index;
+        return feature;
+    })
+    body.map.features = mapWithIdentifiers;
+
     const map = new Map({
         name: "Untitled",
         ownerUsername: loggedInUser.username,
@@ -148,10 +155,73 @@ async function deleteMapById(req, res) {
 async function addPolygonToMap(req, res) {
     const map = await Map.findOne({ _id: req.params.id });
     console.log("features length", map.geoJsonMap.features.length);
-    console.log("0", map.geoJsonMap.features[0]);
     let newgeojson = map.geoJsonMap;
-    newgeojson.features.push(req.body.feature);
-    map.name = "yes";
+    let newPolygon = req.body.feature;
+    console.log(newPolygon.properties);
+    newgeojson.features.push(newPolygon);
+    map.geoJsonMap = "";
+    map.geoJsonMap = newgeojson;
+    map.save().then(() => {
+    return res.status(201).json({
+        map: map
+    });})
+}
+
+async function updatePolygonOfMap(req, res) {
+    const map = await Map.findOne({ _id: req.params.id });
+    let newgeojson = map.geoJsonMap;
+    var index;
+    
+    if (req.body.prevPolygon.properties) {
+        if (req.body.prevPolygon.properties.myId) {
+            index = req.body.prevPolygon.properties.myId;
+        }
+    }
+    else {
+        for (let i = 0; i < newgeojson.features.length; i++) {
+            if (newgeojson.features[i].geometry.coordinates.length == req.body.prevPolygon.geometry.coordinates.length) {
+                if ((newgeojson.features[i].geometry.coordinates[0][0] == req.body.prevPolygon.geometry.coordinates[0][0] && 
+                    newgeojson.features[i].geometry.coordinates[0][1] == req.body.prevPolygon.geometry.coordinates[0][1]) ||
+                    (newgeojson.features[i].geometry.coordinates[1][0] == req.body.prevPolygon.geometry.coordinates[1][0] && 
+                        newgeojson.features[i].geometry.coordinates[1][1] == req.body.prevPolygon.geometry.coordinates[1][1])) {
+                            index = i;
+                        }
+            }
+        }
+    }
+    console.log(index);
+    console.log(newgeojson.features[8].geometry.coordinates);
+    console.log(req.body.prevPolygon.geometry.coordinates);
+    newgeojson.features[index] = req.body.updatedPolygon;
+    map.geoJsonMap = "";
+    map.geoJsonMap = newgeojson;
+    map.save().then(() => {
+    return res.status(201).json({
+        map: map
+    });})
+}
+
+async function deletePolygonOfMap(req, res) {
+    const map = await Map.findOne({ _id: req.params.id });
+    let newgeojson = map.geoJsonMap;
+    var index;
+    console.log(req.body.feature);
+    if (req.body.feature.properties) {
+        if (req.body.feature.properties.myId) {
+            index = req.body.feature.properties.myId;
+        }
+    }
+    else {
+        for (let i = 0; i < newgeojson.features.length; i++) {
+            if (JSON.stringify(newgeojson.features[i].geometry.coordinates[0]) == JSON.stringify(req.body.feature.geometry.coordinates[0])) {
+                index = i;
+            }
+        }
+    }
+    console.log(index);
+    console.log("prev length", newgeojson.features.length);
+    newgeojson.features.splice(index, 1);
+    console.log("updated length", newgeojson.features.length);
     map.geoJsonMap = "";
     map.geoJsonMap = newgeojson;
     map.save().then(() => {
@@ -169,5 +239,7 @@ module.exports = {
     getMapById,
     duplicateMapById,
     deleteMapById,
-    addPolygonToMap
+    addPolygonToMap,
+    updatePolygonOfMap,
+    deletePolygonOfMap
 }

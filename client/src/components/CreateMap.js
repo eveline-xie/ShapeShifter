@@ -26,6 +26,7 @@ export default function CreateMap() {
   const [keywords, setKeywords] = useState(store.currentMap.keywords.toString());
   const [collaborators, setCollaborators] = useState(store.currentMap.collaborators.toString());
   let navigate = useNavigate();
+  
   async function handleExport(event, id) {
     event.stopPropagation();
     setOpenExport(true);

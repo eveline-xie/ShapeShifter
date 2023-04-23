@@ -266,7 +266,23 @@ function GlobalStoreContextProvider(props) {
             console.log("success");
             const map = response.data.map;
             console.log(map.geoJsonMap.features.length);
-            store.loadUserMaps();
+        }
+    }
+    store.updatePolygonOfMap = async function (prevPolygon, updatedPolygon) {
+        const response = await api.updatePolygonOfMap(store.currentMap._id, prevPolygon, updatedPolygon);
+        if (response.status === 201) {
+            console.log("success");
+            const map = response.data.map;
+            console.log(map.geoJsonMap.features.length);
+        }
+    }
+
+    store.deletePolygonOfMap = async function (feature) {
+        const response = await api.deletePolygonOfMap(store.currentMap._id, feature);
+        if (response.status === 201) {
+            console.log("ww");
+            const map = response.data.map;
+            console.log(map.geoJsonMap.features.length);
         }
     }
 
