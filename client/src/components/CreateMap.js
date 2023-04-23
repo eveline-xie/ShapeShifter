@@ -32,7 +32,7 @@ export default function CreateMap() {
   //   store.currentMap.collaborators.toString()
   // );
   const [collaborators, setCollaborators] = useState(
-    store.currentMap.collaborators.toString().split(",")
+    store.currentMap.collaborators
   );
   const [value, setValue] = useState("");
   const [error, setError] = useState(null);

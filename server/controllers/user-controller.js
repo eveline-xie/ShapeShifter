@@ -188,12 +188,12 @@ function sendRecoveryEmail(email, token) {
   const mailOptions = {
     from: "shapeshifter416@outlook.com",
     to: `${email}`,
-    subject: "Link To Reset Password",
+    subject: "Reset Password Verification Code",
     text:
       "You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n" +
       "Your verification code is:\n\n" +
-      // `http://localhost:3000/resetpassword?email=${email}&token=${token}\n\n` +
-      token+"\n\n"+
+      token +
+      "\n\n" +
       "If you did not request this, please ignore this email and your password will remain unchanged.\n",
   };
   console.log("sending mail");

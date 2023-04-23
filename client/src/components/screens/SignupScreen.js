@@ -54,6 +54,11 @@ export default function SignupScreen() {
         verifiedPassword == ""
       ) {
         setErrorMessage("Fill Out Everything!");
+        return;
+      }
+      if(!isEmail(email)){
+        setErrorMessage(`${email} is not a valid email address.`);
+        return;
       }
       const userData = {
         firstName: firstName,
@@ -67,7 +72,9 @@ export default function SignupScreen() {
       // setErrorMessage(auth.errMessage);
       // store.resetStore();
     };
-
+    function isEmail(email) {
+      return /[\w\d\.-]+@[\w\d\.-]+\.[\w\d\.-]+/.test(email);
+    }
     return (
       <div>
         <div id="splash-screen">

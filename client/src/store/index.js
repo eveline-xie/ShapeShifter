@@ -11,6 +11,9 @@ import { Global } from '@emotion/react'
 import shpjs from 'shpjs';
 import { useNavigate } from 'react-router-dom';
 
+import * as topoServer from 'topojson-server';
+import * as topoClient from 'topojson-client';
+import * as topoSimplify from 'topojson-simplify';
 
 
 export const GlobalStoreContext = createContext({});
@@ -78,9 +81,14 @@ function GlobalStoreContextProvider(props) {
         let shpfileContents = shpjs.parseShp(shpfile);
         let dbffileContents = shpjs.parseDbf(dbffile);
         let shp2geoContents = shpjs.combine([shpfileContents, dbffileContents]);
-        console.log("featurecollection", shp2geoContents);
+        console.log("test", shp2geoContents);
 
-        const response = await api.createNewMap({ map: shp2geoContents });
+        let top = topoServer.topology({foo: shp2geoContents});
+        let top2 = topoSimplify.presimplify(top);
+        let top3 = topoSimplify.simplify(top2, .005);
+        let feature = topoClient.feature(top3, "foo");
+
+        const response = await api.createNewMap({ map: feature });
         console.log("createNewMap response: " + response);
         if (response.status === 201) {
             //tps.clearAllTransactions();
@@ -250,6 +258,16 @@ function GlobalStoreContextProvider(props) {
             //     saveAs(content, 'myshapefile.zip');
             //   });
 
+        }
+    }
+
+    store.addPolygonToMap = async function (feature) {
+        const response = await api.addPolygonToMap(store.currentMap._id, feature);
+        if (response.status === 201) {
+            console.log("success");
+            const map = response.data.map;
+            console.log(map.geoJsonMap.features.length);
+            store.loadUserMaps();
         }
     }
 
