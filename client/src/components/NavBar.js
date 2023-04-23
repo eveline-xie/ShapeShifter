@@ -48,13 +48,16 @@ function NavBar() {
   const handleSwitchPage = (event, page) => {
     console.log(window.location.pathname);
     if (page == "Login") {
+      auth.noError();
       navigate('/login');
     }
     else if (page == "Join") {
+      auth.noError();
       navigate('/signup');
     }
     else if (page == "SplashorHome") {
       if (auth.loggedIn) {
+        auth.noError();
         navigate('/home');
       }
       else {
@@ -62,9 +65,11 @@ function NavBar() {
       }
     }
     else if (page == "Community") {
+      auth.noError();
       navigate('/community');
     }
     else if (page == "Home") {
+      auth.noError();
       navigate('/home');
     }
   }
@@ -72,6 +77,7 @@ function NavBar() {
   const handleLogout = () =>{
     handleCloseUserMenu();
     auth.logoutUser();
+    auth.noError();
     navigate("/");
   }
 

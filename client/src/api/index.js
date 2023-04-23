@@ -26,7 +26,8 @@ export const verifyPassword = (email, token) =>
   api.get(`/auth/verifypassword?email=${email}&token=${token}`);
 export const updatePassword = (payload) =>
   api.put(`/auth/updatepassword`, payload);
-
+export const getUserByEmail = (payload) =>
+  api.get(`/auth/user?email=${payload}`);
 const apis = {
   getLoggedIn,
   signup,
@@ -35,6 +36,7 @@ const apis = {
   forgotPassword,
   verifyPassword,
   updatePassword,
+  getUserByEmail,
 };
 
 export default apis;

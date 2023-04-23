@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import AuthContext from "../../auth";
 import { useState } from "react";
 // import Copyright from './Copyright'
@@ -32,13 +32,17 @@ export default function ForgotPassword() {
 
   let navigate = useNavigate();
   let exampleEmail = "email";
-
+  useEffect(() => {
+    if (auth.error) {
+      setErrorMessage(auth.errMessage);
+    }
+  });
   const handleSubmit = (event) => {
     setErrorMessage("");
     event.preventDefault();
     // const formData = new FormData(event.currentTarget);
     if (email == "") {
-      setErrorMessage(<div style={{ color: "red" }}>Provide an Email!</div>);
+      setErrorMessage("Provide an Email!");
     }
     // else if (email !== exampleEmail) {
     //   setErrorMessage(<div style={{ color: 'red' }}>We Couldn't Find Your Email :(</div>);
@@ -48,7 +52,14 @@ export default function ForgotPassword() {
     // }
     const userData = email;
     auth.forgotPassword(userData);
-    setInput(true);
+    if (errorMessage === "") {
+       setInput(true);
+    }
+    // if (!auth.error) {
+    //   setInput(true);
+    // } else {
+    //   setErrorMessage(auth.errMessage);
+    // }
     // store.resetStore();
   };
 
@@ -144,7 +155,7 @@ export default function ForgotPassword() {
           required
           fullWidth
           id="code"
-          label="Verificiation Code"
+          label="Verification Code"
           name="code"
           //  autoComplete="email"
           autoFocus
@@ -186,7 +197,7 @@ export default function ForgotPassword() {
       codeform;
     title = (
       <div>
-        <div id="forgotpassword-text">Enter Verificaiton Code</div>
+        <div id="forgotpassword-text">Enter Verification Code</div>
 
         <div id="forgotpassword-subtext">Check your email :)</div>
       </div>
@@ -197,7 +208,7 @@ export default function ForgotPassword() {
     <div id="splash-screen">
       {title}
       {form}
-      {errorMessage}
+      <div style={{ color: "red" }}>{errorMessage}</div>
     </div>
   );
 }

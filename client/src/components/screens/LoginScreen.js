@@ -1,23 +1,23 @@
-import { useContext } from 'react';
-import AuthContext from '../../auth'
+import { useContext, useEffect } from "react";
+import AuthContext from "../../auth";
 import { GlobalStoreContext } from "../../store";
-import Avatar from '@mui/material/Avatar';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Checkbox from '@mui/material/Checkbox';
-import CssBaseline from '@mui/material/CssBaseline';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Grid from '@mui/material/Grid';
-import Link from '@mui/material/Link';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Paper from '@mui/material/Paper';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
-import InputAdornment from '@mui/material/InputAdornment';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import Lock from '@mui/icons-material/Lock'
+import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Checkbox from "@mui/material/Checkbox";
+import CssBaseline from "@mui/material/CssBaseline";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Grid from "@mui/material/Grid";
+import Link from "@mui/material/Link";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import Paper from "@mui/material/Paper";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import InputAdornment from "@mui/material/InputAdornment";
+import AccountCircle from "@mui/icons-material/AccountCircle";
+import Lock from "@mui/icons-material/Lock";
 import { useNavigate } from "react-router-dom";
-import { useState } from 'react';
+import { useState } from "react";
 
 // import { createTheme } from '@mui/material/styles';
 // import { GlobalStoreContext } from '../store'
@@ -37,24 +37,33 @@ export default function LoginScreen() {
   const [errorMessage, setErrorMessage] = useState("");
 
   let navigate = useNavigate();
+  useEffect(() => {
+    if (auth.error) {
+    console.log(auth.errMessage);
+    setErrorMessage(auth.errMessage);
+  }
+  });
 
-  let exampleUser = { email: "email", username: "username", pass: "password" }
+  let exampleUser = { email: "email", username: "username", pass: "password" };
 
   const handleSignUp = () => {
-    navigate('/signup')
-  }
+    auth.noError();
+    navigate("/signup");
+  };
 
   const handleForgotPassword = () => {
-    navigate('/forgotpassword')
-  }
+    auth.noError();
+    navigate("/forgotpassword");
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-     const userData = {
-       username: username,
-       password: password,
-     };
-     auth.login(userData);
+    const userData = {
+      username: username,
+      password: password,
+    };
+    auth.login(userData);
+    // setErrorMessage(auth.errMessage);
     // store.resetStore();
   };
 
@@ -128,11 +137,11 @@ export default function LoginScreen() {
               control={
                 <Checkbox
                   value="remember"
-                //     checked={cryon}
-                //     onChange={this.handleChange('cryon')}
-                //     style ={{
-                //       color: "#00e676",
-                //     }}
+                  //     checked={cryon}
+                  //     onChange={this.handleChange('cryon')}
+                  //     style ={{
+                  //       color: "#00e676",
+                  //     }}
                 />
               }
               label="Remember me"
@@ -140,7 +149,7 @@ export default function LoginScreen() {
                 color: "white",
               }}
             />
-            {errorMessage}
+            <div style={{ color: "red" }}>{errorMessage}</div>
             <Button
               type="submit"
               fullWidth
@@ -159,14 +168,16 @@ export default function LoginScreen() {
 
             <Grid container justifyContent="space-between">
               <Grid item xs={4}>
-                <Link  variant="body2" color="#ffffff"
-                onClick={handleSignUp}>
+                <Link variant="body2" color="#ffffff" onClick={handleSignUp}>
                   Need an account? Sign up now!
                 </Link>
               </Grid>
               <Grid item xs={8}>
-                <Link variant="body2" color="#ffffff"
-                onClick={handleForgotPassword}>
+                <Link
+                  variant="body2"
+                  color="#ffffff"
+                  onClick={handleForgotPassword}
+                >
                   Forgot password?
                 </Link>
               </Grid>

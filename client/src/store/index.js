@@ -135,7 +135,8 @@ function GlobalStoreContextProvider(props) {
 
     store.updateMapCustomProperties = async function (name, keywords, collaborators) {
         let keywordsArray = keywords.split(/[\s,]+/);
-        let collaboratorsArray = collaborators.split((/[\s,]+/))
+        // let collaboratorsArray = collaborators.split((/[\s,]+/))
+        let collaboratorsArray = collaborators;
         let payload = {
             name: name,
             keywords: keywordsArray,
