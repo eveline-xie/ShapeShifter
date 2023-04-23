@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect} from 'react';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -33,29 +33,39 @@ export default function SignupScreen() {
     const [errorMessage, setErrorMessage] = useState("");
 
     let navigate = useNavigate();
-
+    useEffect(() => {
+      if (auth.error) {
+      setErrorMessage(auth.errMessage);  
+      }
+    });
     let exampleUser = { email: "email", username: "username", password: "password", verifiedPassword: "password" }
 
     const handleLogin = () => {
-        navigate('/login');
+      auth.noError();
+      navigate('/login');
     }
 
     const handleSubmit = async(event) => {
-        event.preventDefault();
-        if (email == "" || username == "" || password == "" || verifiedPassword == "") {
-            setErrorMessage(<div style={{ color: 'red' }}>Fill Out Everything!</div>);
-        }
-        const userData = {
-          firstName: firstName,
-          lastName: lastName,
-          username: username,
-          email: email,
-          password: password,
-          passwordVerify: verifiedPassword,
-        };
-        auth.signup(userData);
-
-        // store.resetStore();
+      event.preventDefault();
+      if (
+        email == "" ||
+        username == "" ||
+        password == "" ||
+        verifiedPassword == ""
+      ) {
+        setErrorMessage("Fill Out Everything!");
+      }
+      const userData = {
+        firstName: firstName,
+        lastName: lastName,
+        username: username,
+        email: email,
+        password: password,
+        passwordVerify: verifiedPassword,
+      };
+      auth.signup(userData);
+      // setErrorMessage(auth.errMessage);
+      // store.resetStore();
     };
 
     return (
@@ -214,6 +224,7 @@ export default function SignupScreen() {
             </Grid>
 
             <Grid item xs={12}>
+              <div style={{ color: "red" }}>{errorMessage}</div>
               <Button
                 type="submit"
                 size="medium"
@@ -232,7 +243,6 @@ export default function SignupScreen() {
               </Button>
             </Grid>
           </Grid>
-          {errorMessage}
         </div>
       </div>
     );

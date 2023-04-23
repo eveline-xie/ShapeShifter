@@ -9,7 +9,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import Email from "@mui/icons-material/Email";
 import Lock from "@mui/icons-material/Lock";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../../auth";
 // import { createTheme } from '@mui/material/styles';
@@ -28,36 +28,43 @@ export default function ResetPassword(props) {
   const [password, setPassword] = useState("");
   const [verifiedPassword, setVerifiedPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [username, setUsername] = useState("");
 
   let navigate = useNavigate();
-
+  useEffect(() => {
+    if (auth.user) setUsername(auth.user.username);
+    if (auth.error) {
+      setErrorMessage(auth.errMessage);
+    }
+  });
   const handleLogin = () => {
+    auth.noError();
     navigate("/login");
   };
 
   const handleSubmit = (event) => {
     setErrorMessage("");
-    console.log(props.email + " reset email");
     event.preventDefault();
     // const formData = new FormData(event.currentTarget);
     if (password == "" || verifiedPassword == "") {
-      setErrorMessage(<div style={{ color: "red" }}>Fill Out Everything!</div>);
+      setErrorMessage("Fill Out Everything!");
     } else if (password !== verifiedPassword) {
-      setErrorMessage(
-        <div style={{ color: "red" }}>Passwords Not Matching!</div>
-      );
+      setErrorMessage("Passwords Not Matching!");
     }
 
-    console.log("username for recover password: " + auth.user.username);
+    // console.log("username for recover password: " + auth.user.username);
     const userData = {
       username: auth.user.username,
       password: password,
     };
     auth.updatePassword(userData);
-    if (!auth.error) {
-      setInput(true);
-    }
-
+    if(errorMessage===""){
+    setInput(true);}
+    // if (!auth.error) {
+    //   setInput(true);
+    // } else {
+    //   setErrorMessage(auth.resetErrMessage);
+    // }
     // store.resetStore();
   };
 
@@ -167,7 +174,7 @@ export default function ResetPassword(props) {
       <div id="splash-screen">
         <div id="resetpassword-text">Reset your password here</div>
         {form}
-        {errorMessage}
+        <div style={{ color: "red" }}>{errorMessage}</div>
       </div>
     </div>
   );

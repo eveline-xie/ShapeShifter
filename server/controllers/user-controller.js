@@ -58,7 +58,7 @@ async function signup(req, res) {
 
         res
           .status(400)
-          .send(JSON.stringify({ error: true, message: "user exists" }));
+          .send(JSON.stringify({ error: true, errorMessage: "user exists" }));
       } else {
         const saltRounds = 10;
         const salt = await bcrypt.genSalt(saltRounds);
@@ -102,6 +102,7 @@ async function login(req, res) {
       username: username,
     });
     if (!savedUser) {
+      console.log("error: cannot find user")
       return res.status(400).json({ errorMessage: "Can not find user" });
     }
     const passwordCorrect = await bcrypt.compare(
@@ -109,6 +110,7 @@ async function login(req, res) {
       savedUser.passwordHash
     );
     if (!passwordCorrect) {
+      console.log("error: Wrong username or password");
       return res.status(401).json({
         errorMessage: "Wrong username or password.",
       });
@@ -263,6 +265,28 @@ async function updatePassword(req, res) {
   });
 }
 
+async function getUserByEmail(req, res){
+  try {
+    const { email} = req.query;
+    const savedUser = await User.findOne({
+      email: email,
+    });
+    if (!savedUser) {
+      console.log("error: cannot find user");
+      return res.status(200).json({ success: false });
+    }
+    else{
+      return res
+        .status(200)
+        .json({
+          success: true,})
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send();
+  }
+}
+
 async function logout(req, res) {
   console.log("logout!!!");
   auth.verify(req, res, async function () {
@@ -290,5 +314,6 @@ module.exports = {
   sendRecoveryEmail,
   verifyPassword,
   updatePassword,
+  getUserByEmail,
   logout,
 };

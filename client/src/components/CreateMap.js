@@ -8,7 +8,9 @@ import ForkModal from "./modals/ForkModal";
 import { useNavigate } from "react-router-dom";
 import { FormControl, FormLabel, TextField, Box } from "@mui/material";
 import GlobalStoreContext from "../store";
-import { useContext } from 'react'
+import { useContext, useEffect } from "react";
+import api from "../api";
+import AuthContext from "../auth";
 
 /*
     This React component lets us create and attach custom properties to a map, which only
@@ -18,13 +20,28 @@ import { useContext } from 'react'
 
 export default function CreateMap() {
   const { store } = useContext(GlobalStoreContext);
-
+  const { auth } = useContext(AuthContext);
   const [openExport, setOpenExport] = useState(false);
   const [openFork, setOpenFork] = useState(false);
 
   const [name, setName] = useState(store.currentMap.name);
-  const [keywords, setKeywords] = useState(store.currentMap.keywords.toString());
-  const [collaborators, setCollaborators] = useState(store.currentMap.collaborators.toString());
+  const [keywords, setKeywords] = useState(
+    store.currentMap.keywords.toString()
+  );
+  // const [collaborators, setCollaborators] = useState(
+  //   store.currentMap.collaborators.toString()
+  // );
+  const [collaborators, setCollaborators] = useState(
+    store.currentMap.collaborators.toString().split(",")
+  );
+  const [value, setValue] = useState("");
+  const [error, setError] = useState(null);
+  // useEffect(() => {
+  //   if (auth.error) {
+  //     console.log(auth.errMessage);
+  //     setError(auth.errMessage);
+  //   }
+  // });
   let navigate = useNavigate();
   async function handleExport(event, id) {
     event.stopPropagation();
@@ -46,6 +63,69 @@ export default function CreateMap() {
   };
   const handleEdit = (event) => {
     navigate("/editmap");
+  };
+ 
+  async function isValid(email) {
+    let error = null;
+    if (email === "") {
+      error = `Please enter an email`;
+      setError(error);
+      return false;
+    }
+    if (isInList(email)) {
+      error = `${email} has already been added.`;
+      setError(error);
+      return false;
+    }
+    if (!isEmail(email)) {
+      error = `${email} is not a valid email address.`;
+      setError(error);
+      return false;
+    }
+    const response = await auth.getUserByEmail(email);
+    if (!response) {
+      error = `${email} is not registered.`;
+      setError(error);
+      return false;
+    }
+    return true;
+  }
+
+  function isInList(email) {
+    return collaborators.includes(email);
+  }
+
+  function isEmail(email) {
+    return /[\w\d\.-]+@[\w\d\.-]+\.[\w\d\.-]+/.test(email);
+  }
+
+  function handleDelete(item){
+    console.log("item: "+item)
+    let temp_collab = collaborators.filter((i) => i !== item);
+    console.log("after delete: " + temp_collab);
+    setCollaborators(temp_collab);
+  };
+
+  function handleChange(evt){
+    setValue(evt.target.value);
+    setError(null);
+  };
+
+  const handleKeyDown = async (evt) => {
+    if (["Enter", "Tab", ","].includes(evt.key)) {
+      evt.preventDefault();
+
+      // var value = value.trim();
+      // collaborators.map((item) => (console.log(item+"\n")))
+      const isValidValue = await isValid(value);
+      if (value && isValidValue) {
+        setError(null);
+        setValue("");
+        collaborators.push(value);
+        console.log("collaborators: " + collaborators);
+        setCollaborators(collaborators);
+      }
+    }
   };
 
   return (
@@ -144,7 +224,7 @@ export default function CreateMap() {
               variant="outlined"
               // color="secondary"
               focused
-              defaultValue = {store.currentMap.name}
+              defaultValue={store.currentMap.name}
               onChange={(e) => setName(e.target.value)}
             />
             <TextField
@@ -156,7 +236,7 @@ export default function CreateMap() {
               variant="outlined"
               // color="secondary"
               focused
-              defaultValue = {store.currentMap.keywords.toString()}
+              defaultValue={store.currentMap.keywords.toString()}
               onChange={(e) => setKeywords(e.target.value)}
             />
             <TextField
@@ -168,9 +248,25 @@ export default function CreateMap() {
               variant="outlined"
               // color="secondary"
               focused
-              defaultValue = {store.currentMap.collaborators.toString()}
-              onChange={(e) => setCollaborators(e.target.value)}
+              // defaultValue={store.currentMap.collaborators.toString()}
+              value={value}
+              // onChange={(e) => setValue(e.target.value)}
+              onKeyDown={handleKeyDown}
+              onChange={handleChange}
             />
+            {error && <p className="collaborator-error">{error}</p>}
+            {collaborators.map((item) => (
+              <div className="tag-item" key={item}>
+                {item}
+                <button
+                  type="button"
+                  className="button"
+                  onClick={() => handleDelete(item)}
+                >
+                  &times;
+                </button>
+              </div>
+            ))}
             <div>
               <Button
                 variant="contained"
