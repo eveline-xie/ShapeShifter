@@ -3,7 +3,7 @@ import IconButton from "@mui/material/IconButton";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import { useNavigate } from "react-router-dom";
 import MenuIcon from "@mui/icons-material/Menu";
-import { Button, Typography, Toolbar, Box, AppBar } from "@mui/material";
+import { Button, Typography, Toolbar, Box, AppBar, Tooltip } from "@mui/material";
 import UndoIcon from "@mui/icons-material/Undo";
 import RedoIcon from "@mui/icons-material/Redo";
 import AddIcon from "@mui/icons-material/Add";
@@ -27,11 +27,20 @@ import "leaflet/dist/leaflet.css";
     
 */
 
+export let selectedRegions = [];
+
 export default function EditMap() {
   let navigate = useNavigate();
 
   const { store } = useContext(GlobalStoreContext);
   const [map, setMap] = useState("");
+  const [selectedLayer, setSelectedLayer] = useState(null);
+  const [selectedCountry, setSelectedCountry] = useState(null);
+
+  const [vertexButtonEnabled, setVertexbuttonEnabled] = useState(true);
+  const [addButtonEnabled, setAddButtonEnabled] = useState(false);
+  const [renameButtonEnabled, setRenameButtonEnabled] = useState(false);
+
 
   useEffect(() => {
     console.log("created map");
@@ -63,6 +72,26 @@ export default function EditMap() {
     };
   }, []);
 
+  function selectRegion(layer) {
+    layer.setStyle({
+      color: 'yellow'
+    });
+    layer.selected = true;
+    selectedRegions.push(layer);
+    setRenameButtonEnabled(true)
+    //console.log(selectedRegions.toString())
+  }
+  function deSelect(layer) {
+    layer.setStyle({
+      color: '#3388FF'
+    });
+    layer.selected = false;
+    const index = selectedRegions.indexOf(layer);
+    selectedRegions.splice(index, 1);
+    setRenameButtonEnabled(false)
+    //console.log(selectedRegions.toString())
+  }
+
   function onEachRegion(country, layer) {
     // layer.bindPopup(country.properties.admin,{ autoClose: false, closeOnClick: false });
     let regionName = "";
@@ -86,33 +115,27 @@ export default function EditMap() {
         regionName = country.properties.NAME_0;
       }
     }
-    layer.bindTooltip(regionName, { permanent: true, direction: "center", fillColor: "blue" });
-    layer.on("dblclick", function () {
-      console.log("double")
-      var content = document.createElement("textarea");
-      content.addEventListener("keyup", function (e) {
-        console.log("uppppp" + e.key)
-        if (e.key == "Enter") {
-          layer.bindPopup(content.value);
-          regionName = content.value;
-          layer.setTooltipContent(regionName);
-        }
-        // country.properties.admin = content.value
-      })
-      layer.bindPopup(content).openPopup();
-    })
+
     layer.on("click", function () {
       if (layer.editEnabled()) {
         layer.disableEdit();
+        setSelectedLayer(null);
+        setSelectedCountry(null);
       }
       else {
         layer.enableEdit();
+        setSelectedLayer(layer);
+        setSelectedCountry(country);
       }
       if (layer.selected == true) {
-        //deSelect(layer);
+        deSelect(layer);
+        setSelectedLayer(null);
+        setSelectedCountry(null);
       }
       else {
-        //selectRegion(layer);
+        selectRegion(layer);
+        setSelectedLayer(layer);
+        setSelectedCountry(country);
       }
     })
   }
@@ -136,6 +159,32 @@ export default function EditMap() {
     }
   }
 
+
+  const handleEditSubregionName = (e) => {
+    let regionName = "";
+    if (selectedLayer) {
+      // Bind the tooltip to the layer and set its content
+      selectedLayer.bindTooltip(regionName, { permanent: true, direction: "center", fillColor: "blue" });
+      // Set up the click event listener on the layer
+      var content = document.createElement("textarea");
+      content.addEventListener("keyup", function (e) {
+      if (e.key === "Enter") {
+        selectedLayer.bindPopup(content.value);
+        regionName= content.value;
+        selectedLayer.setTooltipContent(content.value);
+        }
+      });
+      selectedLayer.bindPopup(content).openPopup();
+
+    }
+  }
+
+  const handleVertexButton = () => {
+    setAddButtonEnabled(true);
+  }
+
+
+
   return (
     <div>
       <div id="create-map-screen">
@@ -151,106 +200,152 @@ export default function EditMap() {
         <Box sx={{ flexGrow: 1 }}>
           <AppBar position="static" color="">
             <Toolbar>
-              <IconButton
-                size="large"
-                edge="start"
-                color="inherit"
-                aria-label="menu"
-                sx={{ mr: 2 }}
-              >
-                <UndoIcon />
-              </IconButton>
-              <IconButton
-                size="large"
-                edge="start"
-                color="inherit"
-                aria-label="menu"
-                sx={{ mr: 2 }}
-              >
-                <RedoIcon />
-              </IconButton>
-              <IconButton
-                size="large"
-                edge="start"
-                color="inherit"
-                aria-label="menu"
-                sx={{ mr: 2 }}
-              >
-                <BorderColorIcon />
-              </IconButton>
-              <IconButton
-                size="large"
-                edge="start"
-                color="inherit"
-                aria-label="menu"
-                sx={{ mr: 2 }}
-              >
-                <FormatColorFillIcon />
-              </IconButton>
-              <IconButton
-                size="large"
-                edge="start"
-                color="inherit"
-                aria-label="menu"
-                sx={{ mr: 2 }}
-              >
-                <CircleIcon />
-              </IconButton>
-              <IconButton
-                size="large"
-                edge="start"
-                color="inherit"
-                aria-label="menu"
-                sx={{ mr: 2 }}
-              >
-                <SouthAmericaIcon />
-              </IconButton>
-              <IconButton
-                size="large"
-                edge="start"
-                color="inherit"
-                aria-label="menu"
-                sx={{ mr: 2 }}
-                onClick = {handleStartPolyline}
-              >
-                <AddIcon />
-              </IconButton>
-              <IconButton
-                size="large"
-                edge="start"
-                color="inherit"
-                aria-label="menu"
-                sx={{ mr: 2 }}
-              >
-                <DeleteIcon />
-              </IconButton>
-              <IconButton
-                size="large"
-                edge="start"
-                color="inherit"
-                aria-label="menu"
-                sx={{ mr: 2 }}
-              >
-                <MergeIcon />
-              </IconButton>
-              <IconButton
-                size="large"
-                edge="start"
-                color="inherit"
-                aria-label="menu"
-                sx={{ mr: 2 }}
-              >
-                <CallSplitIcon />
-              </IconButton>
-              <IconButton
-                size="large"
-                edge="start"
-                color="inherit"
-                aria-label="menu"
-                sx={{ mr: 2 }}
-              >
-                <InfoIcon />
-              </IconButton>
+
+              <Tooltip title="Undo">
+                <IconButton 
+                  disabled
+                  size="large"
+                  edge="start"
+                  color="inherit"
+                  aria-label="menu"
+                  sx={{ mr: 2 }}
+                >
+                  <UndoIcon />
+                </IconButton>
+              </Tooltip>
+
+              <Tooltip title="Redo">
+                <IconButton
+                  disabled
+                  size="large"
+                  edge="start"
+                  color="inherit"
+                  aria-label="menu"
+                  sx={{ mr: 2 }}
+                >
+                  <RedoIcon />
+                </IconButton>
+              </Tooltip>
+
+              <Tooltip title="Rename">
+                <IconButton
+                  disabled={!renameButtonEnabled}
+                  size="large"
+                  edge="start"
+                  color="inherit"
+                  aria-label="menu"
+                  sx={{ mr: 2 }}
+                  // onClick={this.handleEditSubregionName.bind(this,layer)}
+                  onClick={handleEditSubregionName}
+                >
+                  <BorderColorIcon />
+                </IconButton>
+              </Tooltip>
+
+              <Tooltip title="Change Color">
+                <IconButton
+                  disabled
+                  size="large"
+                  edge="start"
+                  color="inherit"
+                  aria-label="menu"
+                  sx={{ mr: 2 }}
+                >
+                  <FormatColorFillIcon />
+                </IconButton>
+              </Tooltip>
+
+              <Tooltip title="Vertex">
+                <IconButton
+                  disabled={!vertexButtonEnabled}
+                  size="large"
+                  edge="start"
+                  color="inherit"
+                  aria-label="menu"
+                  sx={{ mr: 2 }}
+                  onClick={handleVertexButton}
+                >
+                  <CircleIcon />
+                </IconButton>
+              </Tooltip>
+
+              <Tooltip title="Subregion">
+                <IconButton
+                  disabled
+                  size="large"
+                  edge="start"
+                  color="inherit"
+                  aria-label="menu"
+                  sx={{ mr: 2 }}
+                >
+                  <SouthAmericaIcon />
+                </IconButton>
+              </Tooltip>
+
+              <Tooltip title="Add Vertices/Subregions">
+                <IconButton
+                  disabled={!addButtonEnabled}
+                  size="large"
+                  edge="start"
+                  color="inherit"
+                  aria-label="menu"
+                  sx={{ mr: 2 }}
+                  onClick={handleStartPolyline}
+                >
+                  <AddIcon />
+                </IconButton>
+              </Tooltip>
+
+              <Tooltip title="Delete Vertices/Subregions">
+                <IconButton
+                  disabled
+                  size="large"
+                  edge="start"
+                  color="inherit"
+                  aria-label="menu"
+                  sx={{ mr: 2 }}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </Tooltip>
+
+              <Tooltip title="Merge Subregions">
+                <IconButton
+                  disabled
+                  size="large"
+                  edge="start"
+                  color="inherit"
+                  aria-label="menu"
+                  sx={{ mr: 2 }}
+                >
+                  <MergeIcon />
+                </IconButton>
+              </Tooltip>
+
+              <Tooltip title="Split Subregions">
+                <IconButton
+                  disabled
+                  size="large"
+                  edge="start"
+                  color="inherit"
+                  aria-label="menu"
+                  sx={{ mr: 2 }}
+                >
+                  <CallSplitIcon />
+                </IconButton>
+              </Tooltip>
+
+              <Tooltip title="Info">
+                <IconButton
+                  size="large"
+                  edge="start"
+                  color="inherit"
+                  aria-label="menu"
+                  sx={{ mr: 2 }}
+                >
+                  <InfoIcon />
+                </IconButton>
+              </Tooltip>
             </Toolbar>
           </AppBar>
         </Box>
