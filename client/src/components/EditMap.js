@@ -34,7 +34,7 @@ export default function EditMap() {
   let navigate = useNavigate();
 
   const { store } = useContext(GlobalStoreContext);
-  //const [selectedPolygon, setSelectedPolygon] = useState("");
+  //const [selectedPolygon, setSelectedPolygon] = useState("");;
   var map;
   let prevPolygon = null;
   let selectedPolygon = null;
