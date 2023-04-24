@@ -16,7 +16,7 @@ import * as topoClient from 'topojson-client';
 import * as topoSimplify from 'topojson-simplify';
 import L from 'leaflet';
 import leafletImage from 'leaflet-image';
-import mapboxgl from 'mapbox-gl';
+//import  useEffect from 'react';
 
 
 export const GlobalStoreContext = createContext({});
@@ -95,26 +95,8 @@ function GlobalStoreContextProvider(props) {
 
 console.log("feature", feature);
 
-let map = L.map('map').setView([37.776, -122.414], 10);
 
-// Add a TileLayer to the map
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
-}).addTo(map);
 
-// Add a GeoJSON layer to the map
-const geojsonLayer = L.geoJSON(feature).addTo(map);
-
-// Generate the thumbnail
-const canvas = document.createElement('canvas');
-const context = canvas.getContext('2d');
-canvas.width = 800;
-canvas.height = 600;
-context.fillStyle = '#fff';
-context.fillRect(0, 0, canvas.width, canvas.height);
-context.drawImage(map.getRenderer().canvas, 0, 0, canvas.width, canvas.height);
-const thumbnail = canvas.toDataURL('image/png');
-console.log(thumbnail);
 
         const response = await api.createNewMap({ map: feature });
         console.log("createNewMap response: " + response);

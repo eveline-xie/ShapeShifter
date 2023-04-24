@@ -11,6 +11,11 @@ import GlobalStoreContext from "../store";
 import { useContext, useEffect } from "react";
 import api from "../api";
 import AuthContext from "../auth";
+import L from 'leaflet';
+import { createCanvas, Image } from 'canvas';
+import { GeoJSON } from 'leaflet';
+
+
 
 
 /*
@@ -44,6 +49,75 @@ export default function CreateMap() {
   //   }
   // });
   let navigate = useNavigate();
+
+  const geojsonData = store.currentMap.geojsonMap;
+
+const canvas = createCanvas(800, 600);
+const ctx = canvas.getContext('2d');
+const geojsonLayer = L.geoJson(geojsonData);
+geojsonLayer.eachLayer(function (layer) {
+  //console.log(layer);
+  layer.addTo(canvas);
+})
+//geojsonLayer.addTo(canvas);
+
+ctx.fillStyle = '#FFFFFF'; // set canvas background color
+ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+geojsonLayer.eachLayer(layer => {
+  layer.eachLayer(subLayer => {
+    subLayer.setStyle({ // set sublayer style
+      color: '#FF0000', // red line color
+      weight: 3, // line weight
+      opacity: 1, // line opacity
+    });
+  });
+});
+
+var thumbnail = canvas.toDataURL('image/png');
+//const thumbnail = 'data:image/png;base64,' + thumbnailBuffer.toString('base64');
+thumbnail = 'data:image/png;base64,' + thumbnail.toString('base64');
+
+
+console.log(thumbnail);
+
+
+/*
+  useEffect(() =>{
+    const geojsonLayer = new L.geoJSON(store.currentMap.geoJsonMap);
+    const map = new L.map('map', { zoomControl: false });
+    geojsonLayer.addTo(map);
+    
+    const canvas = document.createElement('canvas');
+    canvas.width = 800;
+    canvas.height = 600;
+    
+    const bounds = geojsonLayer.getBounds();
+    const center = bounds.getCenter();
+    
+    const layer = geojsonLayer.getLayers()[0];
+    const topLeft = map.latLngToContainerPoint(layer.getBounds().getNorthWest());
+    
+    const ratio = Math.min(canvas.width / layer.getBounds().getSize().x, canvas.height / layer.getBounds().getSize().y);
+    const zoom = map.getBoundsZoom(bounds, false);
+    const zoomAdjusted = Math.floor(zoom + Math.log(ratio) / Math.log(2));
+    
+    const map2 = new L.Map(canvas, { zoomControl: false });
+    map2.setView(center, zoomAdjusted, false);
+    
+    const geojsonLayer2 = new L.geoJSON(store.currentMap.geoJsonMap);
+    geojsonLayer2.addTo(map2);
+    
+    const thumbnail = canvas.toDataURL();
+    console.log(thumbnail)
+    
+
+    return () => {
+      // Remove the map
+      map.remove();
+    };
+  }, []);
+  */
   
   async function handleExport(event, id) {
     event.stopPropagation();
@@ -189,7 +263,7 @@ export default function CreateMap() {
               //   maxWidth: { xs: 350, md: 250 },
             }}
             alt="Map Preview"
-            src={"map.png"}
+            src={thumbnail}
           />
           <div>
             <Button

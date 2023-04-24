@@ -68,6 +68,7 @@ export default function EditMap() {
     // console.log(window.createdMap[0]);
     // console.log(window.createdMap.length);
     map = newmap;
+    
     //setMap(newmap);
     return () => {
       // Remove the map
