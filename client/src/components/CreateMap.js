@@ -12,6 +12,7 @@ import { useContext, useEffect } from "react";
 import api from "../api";
 import AuthContext from "../auth";
 
+
 /*
     This React component lets us create and attach custom properties to a map, which only
     happens when we are on the proper route.
@@ -115,7 +116,6 @@ export default function CreateMap() {
   const handleKeyDown = async (evt) => {
     if (["Enter", "Tab", ","].includes(evt.key)) {
       evt.preventDefault();
-
       // var value = value.trim();
       // collaborators.map((item) => (console.log(item+"\n")))
       const isValidValue = await isValid(value);
@@ -128,6 +128,7 @@ export default function CreateMap() {
       }
     }
   };
+
 
   return (
     <div id="main-screen">
@@ -188,7 +189,7 @@ export default function CreateMap() {
               //   maxWidth: { xs: 350, md: 250 },
             }}
             alt="Map Preview"
-            src="map.png"
+            src={"map.png"}
           />
           <div>
             <Button

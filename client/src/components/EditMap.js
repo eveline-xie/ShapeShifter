@@ -3,7 +3,7 @@ import IconButton from "@mui/material/IconButton";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import { useNavigate } from "react-router-dom";
 import MenuIcon from "@mui/icons-material/Menu";
-import { Button, Typography, Toolbar, Box, AppBar } from "@mui/material";
+import { Button, Typography, Toolbar, Box, AppBar, Tooltip } from "@mui/material";
 import UndoIcon from "@mui/icons-material/Undo";
 import RedoIcon from "@mui/icons-material/Redo";
 import AddIcon from "@mui/icons-material/Add";
@@ -27,6 +27,8 @@ import { feature } from "topojson-client";
     happens when we are on the proper route.
     
 */
+
+export let selectedRegions = [];
 
 export default function EditMap() {
   let navigate = useNavigate();
@@ -73,6 +75,26 @@ export default function EditMap() {
     };
   }, []);
 
+  function selectRegion(layer) {
+    layer.setStyle({
+      color: 'yellow'
+    });
+    layer.selected = true;
+    selectedRegions.push(layer);
+    setRenameButtonEnabled(true)
+    //console.log(selectedRegions.toString())
+  }
+  function deSelect(layer) {
+    layer.setStyle({
+      color: '#3388FF'
+    });
+    layer.selected = false;
+    const index = selectedRegions.indexOf(layer);
+    selectedRegions.splice(index, 1);
+    setRenameButtonEnabled(false)
+    //console.log(selectedRegions.toString())
+  }
+
   function onEachRegion(country, layer) {
     // layer.bindPopup(country.properties.admin,{ autoClose: false, closeOnClick: false });
     let regionName = "";
@@ -96,21 +118,7 @@ export default function EditMap() {
         regionName = country.properties.NAME_0;
       }
     }
-    layer.bindTooltip(regionName, { permanent: true, direction: "center", fillColor: "blue" });
-    layer.on("dblclick", function () {
-      console.log("double")
-      var content = document.createElement("textarea");
-      content.addEventListener("keyup", function (e) {
-        console.log("uppppp" + e.key)
-        if (e.key == "Enter") {
-          layer.bindPopup(content.value);
-          regionName = content.value;
-          layer.setTooltipContent(regionName);
-        }
-        // country.properties.admin = content.value
-      })
-      layer.bindPopup(content).openPopup();
-    })
+
     layer.on("click", function () {
       if (layer.editEnabled()) {
         layer.disableEdit();
@@ -129,10 +137,14 @@ export default function EditMap() {
         console.log(selectedPolygon);
       }
       if (layer.selected == true) {
-        //deSelect(layer);
+        deSelect(layer);
+        setSelectedLayer(null);
+        setSelectedCountry(null);
       }
       else {
-        //selectRegion(layer);
+        selectRegion(layer);
+        setSelectedLayer(layer);
+        setSelectedCountry(country);
       }
     })
   }

@@ -14,6 +14,8 @@ import { useNavigate } from 'react-router-dom';
 import * as topoServer from 'topojson-server';
 import * as topoClient from 'topojson-client';
 import * as topoSimplify from 'topojson-simplify';
+import L from 'leaflet';
+import leafletImage from 'leaflet-image';
 
 
 export const GlobalStoreContext = createContext({});
@@ -88,6 +90,43 @@ function GlobalStoreContextProvider(props) {
         let top3 = topoSimplify.simplify(top2, .005);
         let feature = topoClient.feature(top3, "foo");
         console.log("test2", feature);
+
+console.log("feature", feature);
+var mapOptions = {
+    center: [0, 0],
+    zoom: 1,
+    layers: [
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
+      })
+    ]
+  };
+  var map = new L.Map(document.createElement('div'), mapOptions);
+  
+  // Create a new L.GeoJSON instance and add it to the map
+  var geojsonLayer = L.geoJSON(feature);
+  geojsonLayer.addTo(map);
+  
+  // Get the bounds of the GeoJSON layer
+  var bounds = geojsonLayer.getBounds();
+  
+  // Generate the thumbnail image using leafletImage
+  leafletImage(map, function(err, canvas) {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    // Convert the canvas to a data URI and display it
+    var thumbnailDataUri = canvas.toDataURL();
+    console.log(thumbnailDataUri);
+  });
+  
+  // Remove the GeoJSON layer from the map
+  geojsonLayer.remove();
+
+// Remove the GeoJSON layer from the map
+map.removeLayer(geojsonLayer);
 
         const response = await api.createNewMap({ map: feature });
         console.log("createNewMap response: " + response);

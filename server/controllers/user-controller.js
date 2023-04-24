@@ -276,6 +276,7 @@ async function getUserByEmail(req, res){
       return res.status(200).json({ success: false });
     }
     else{
+      sendCollaboratorEmail(email);
       return res
         .status(200)
         .json({
@@ -286,6 +287,40 @@ async function getUserByEmail(req, res){
     res.status(500).send();
   }
 }
+
+function sendCollaboratorEmail(email) {
+  const transporter = nodemailer.createTransport({
+    host: "smtp-mail.outlook.com", // hostname
+    secureConnection: false, // TLS requires secureConnection to be false
+    port: 587, // port for secure SMTP
+    tls: {
+      ciphers: "SSLv3",
+    },
+    auth: {
+      user: `${process.env.EMAIL_ADDRESS}`,
+      pass: `${process.env.EMAIL_PASSWORD}`,
+    },
+  });
+
+  const mailOptions = {
+    from: "shapeshifter416@outlook.com",
+    to: `${email}`,
+    subject: "Map Shared With You",
+    text:
+      "Someone has invited you to edit the map",
+  };
+  console.log("sending mail");
+
+  transporter.sendMail(mailOptions, (err, response) => {
+    if (err) {
+      console.error("there was an error: ", err);
+    } else {
+      console.log("here is the res: ", response);
+      res.status(200).json("recovery email sent");
+    }
+  });
+}
+
 
 async function logout(req, res) {
   console.log("logout!!!");
