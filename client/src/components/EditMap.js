@@ -49,7 +49,7 @@ export default function EditMap() {
     newmap.on('editable:vertex:dragstart', handleFeatureStartMoveVertex);
     newmap.on('editable:vertex:dragend', handleFeatureEndMoveVertex);
     newmap.on('editable:vertex:new', handleFeatureAddVertex);
-    newmap.on('editable:vertex:deleted', handleFeatureEndMoveVertex);
+    newmap.on('editable:vertex:deleted', handleFeatureDeleteVertex);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -182,22 +182,32 @@ export default function EditMap() {
 
   const handleFeatureStartMoveVertex = (e) => {
     const feature = e.layer.toGeoJSON();
+    prevPolygon = selectedPolygon;
     selectedPolygon = feature;
     //setTransaction([...transaction, { type: 'edit', feature }]);
   };
 
   const handleFeatureEndMoveVertex = (e) => {
     const feature = e.layer.toGeoJSON();
-    console.log("prev", selectedPolygon);
+    console.log("prev", prevPolygon);
     console.log("updated", feature);
-    store.updatePolygonOfMap(selectedPolygon, feature);
+    store.updatePolygonOfMap(prevPolygon, feature);
+    prevPolygon = null;
     selectedPolygon = feature;
     //setTransaction([...transaction, { type: 'edit', feature }]);
   };
 
   const handleFeatureAddVertex = (e) => {
     const feature = e.layer.toGeoJSON();
+    prevPolygon = selectedPolygon;
     selectedPolygon = feature;
+  }
+
+  const handleFeatureDeleteVertex = (e) => {
+    const feature = e.layer.toGeoJSON();
+    prevPolygon = selectedPolygon;
+    selectedPolygon = feature;
+    store.updatePolygonOfMap(prevPolygon, feature);
   }
 
   return (

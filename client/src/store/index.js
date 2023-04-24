@@ -87,6 +87,7 @@ function GlobalStoreContextProvider(props) {
         let top2 = topoSimplify.presimplify(top);
         let top3 = topoSimplify.simplify(top2, .005);
         let feature = topoClient.feature(top3, "foo");
+        console.log("test2", feature);
 
         const response = await api.createNewMap({ map: feature });
         console.log("createNewMap response: " + response);
@@ -112,7 +113,12 @@ function GlobalStoreContextProvider(props) {
         let featureCollection = JSON.parse(jsonString);
         console.log("featurecollection", featureCollection);
 
-        const response = await api.createNewMap({ map: featureCollection });
+        let top = topoServer.topology({foo: featureCollection});
+        let top2 = topoSimplify.presimplify(top);
+        let top3 = topoSimplify.simplify(top2, .005);
+        let feature = topoClient.feature(top3, "foo");
+
+        const response = await api.createNewMap({ map: feature });
         console.log("createNewMap response: " + response);
         if (response.status === 201) {
             //tps.clearAllTransactions();
