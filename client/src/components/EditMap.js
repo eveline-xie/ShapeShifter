@@ -166,8 +166,10 @@ export default function EditMap() {
     prevPolygon = selectedPolygon;
     if (selectedLayer) {
       selectedLayer.disableEdit();
+      deSelect(selectedLayer);
     }
     selectedLayer = e.layer;
+    selectRegion(selectedLayer);
     selectedPolygon = feature;
     //setTransaction([...transaction, { type: 'delete', feature }]);
   };
