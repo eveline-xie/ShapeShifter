@@ -179,11 +179,11 @@ async function updatePolygonOfMap(req, res) {
     //     }
     // }
     // else {
-    //     for (let i = 0; i < newgeojson.features.length; i++) {
-    //         if (JSON.stringify(newgeojson.features[i].geometry.coordinates[0][0]) == JSON.stringify(req.body.prevPolygon.geometry.coordinates[0][0])) {
-    //             index = i;
-    //         }
-    //     }
+        // for (let i = 0; i < newgeojson.features.length; i++) {
+        //     if (JSON.stringify(newgeojson.features[i].geometry.coordinates[0][0]) == JSON.stringify(req.body.prevPolygon.geometry.coordinates[0][0])) {
+        //         index = i;
+        //     }
+        // }
     // }
 
     for (let i = 0; i < newgeojson.features.length; i++) {
@@ -217,6 +217,13 @@ async function updatePolygonOfMap(req, res) {
                         req.body.prevPolygon.geometry.coordinates[1][0][0][1]) <= .00001))) {
                 index = i;
                 break;
+            }
+        }
+    }
+    if (index == undefined) {
+        for (let i = 0; i < newgeojson.features.length; i++) {
+            if (JSON.stringify(newgeojson.features[i].geometry.coordinates[0][0]) == JSON.stringify(req.body.prevPolygon.geometry.coordinates[0][0])) {
+                index = i;
             }
         }
     }

@@ -208,6 +208,7 @@ export default function EditMap() {
     const feature = e.layer.toGeoJSON();
     prevPolygon = selectedPolygon;
     selectedPolygon = feature;
+    store.updatePolygonOfMap(prevPolygon, feature);
   }
 
   const handleFeatureDeleteVertex = (e) => {
