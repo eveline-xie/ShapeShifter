@@ -303,11 +303,10 @@ function sendCollaboratorEmail(email) {
   });
 
   const mailOptions = {
-    from: "shapeshifter416@outlook.com",
+    from: "WeAreShapeShifter@outlook.com",
     to: `${email}`,
     subject: "Map Shared With You",
-    text:
-      "Someone has invited you to edit the map",
+    text: "Someone has invited you to edit the map",
   };
   console.log("sending mail");
 
