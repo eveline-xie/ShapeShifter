@@ -83,6 +83,7 @@ it('user goes to login page', () => {
     cy.get('input[type=file]').eq(1).selectFile('cypress/fixtures/USA_adm1.dbf', {force: true}).wait(200)
     //cy.get('#file-submit').click()
   })
+  
 /*
   it('the user deletes map', () => {
     cy.visit('https://shapershifter.onrender.com')
