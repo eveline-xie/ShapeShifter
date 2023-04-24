@@ -44,6 +44,7 @@ export default function CreateMap() {
   //   }
   // });
   let navigate = useNavigate();
+  
   async function handleExport(event, id) {
     event.stopPropagation();
     setOpenExport(true);

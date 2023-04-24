@@ -23,6 +23,6 @@ router.get("/map/:id", auth.verify, MapController.getMapById);
 router.post("/duplicate-map", auth.verify, MapController.duplicateMapById);
 router.delete("/map/:id", auth.verify, MapController.deleteMapById);
 router.put("/map/:id", auth.verify, MapController.addPolygonToMap);
-
-
+router.put("/update-polygon-of-map/:id", auth.verify, MapController.updatePolygonOfMap);
+router.put("/delete-polygon-of-map/:id", auth.verify, MapController.deletePolygonOfMap);
 module.exports = router;

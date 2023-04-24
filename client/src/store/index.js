@@ -89,6 +89,7 @@ function GlobalStoreContextProvider(props) {
         let top2 = topoSimplify.presimplify(top);
         let top3 = topoSimplify.simplify(top2, .005);
         let feature = topoClient.feature(top3, "foo");
+        console.log("test2", feature);
 
 console.log("feature", feature);
 var mapOptions = {
@@ -151,7 +152,12 @@ map.removeLayer(geojsonLayer);
         let featureCollection = JSON.parse(jsonString);
         console.log("featurecollection", featureCollection);
 
-        const response = await api.createNewMap({ map: featureCollection });
+        let top = topoServer.topology({foo: featureCollection});
+        let top2 = topoSimplify.presimplify(top);
+        let top3 = topoSimplify.simplify(top2, .005);
+        let feature = topoClient.feature(top3, "foo");
+
+        const response = await api.createNewMap({ map: feature });
         console.log("createNewMap response: " + response);
         if (response.status === 201) {
             //tps.clearAllTransactions();
@@ -306,7 +312,23 @@ map.removeLayer(geojsonLayer);
             console.log("success");
             const map = response.data.map;
             console.log(map.geoJsonMap.features.length);
-            store.loadUserMaps();
+        }
+    }
+    store.updatePolygonOfMap = async function (prevPolygon, updatedPolygon) {
+        const response = await api.updatePolygonOfMap(store.currentMap._id, prevPolygon, updatedPolygon);
+        if (response.status === 201) {
+            console.log("success");
+            const map = response.data.map;
+            console.log(map.geoJsonMap.features.length);
+        }
+    }
+
+    store.deletePolygonOfMap = async function (feature) {
+        const response = await api.deletePolygonOfMap(store.currentMap._id, feature);
+        if (response.status === 201) {
+            console.log("ww");
+            const map = response.data.map;
+            console.log(map.geoJsonMap.features.length);
         }
     }
 

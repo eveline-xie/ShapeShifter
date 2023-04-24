@@ -12,8 +12,8 @@
 import axios from "axios";
 axios.defaults.withCredentials = true;
 const api = axios.create({
-  //baseURL: "https://shapeshifter-api.onrender.com"
-   baseURL: "http://localhost:5000"
+  baseURL: "https://shapeshifter-api.onrender.com"
+  // baseURL: "http://localhost:5000"
 });
 
 export const createNewMap = (payload) => {
@@ -53,6 +53,19 @@ export const addPolygonToMap = (id, feature) => {
   })
 }
 
+export const updatePolygonOfMap = (id, prevPolygon ,updatedPolygon) => {
+  return api.put(`/update-polygon-of-map/${id}`, {
+    prevPolygon: prevPolygon,
+    updatedPolygon: updatedPolygon
+  })
+}
+
+export const deletePolygonOfMap = (id, feature) => {
+  return api.put(`/delete-polygon-of-map/${id}`, {
+    feature: feature
+  })
+}
+
 const apis = {
   createNewMap,
   updateMapCustomProperties,
@@ -61,7 +74,9 @@ const apis = {
   getMapById,
   duplicateMapById,
   deleteMapById,
-  addPolygonToMap
+  addPolygonToMap,
+  updatePolygonOfMap,
+  deletePolygonOfMap
 };
 
 export default apis;
