@@ -16,10 +16,12 @@ import * as topoClient from 'topojson-client';
 import * as topoSimplify from 'topojson-simplify';
 import L from 'leaflet';
 import leafletImage from 'leaflet-image';
+import mapboxgl from 'mapbox-gl';
 
 
 export const GlobalStoreContext = createContext({});
 console.log("create GlobalStoreContext");
+
 
 export const GlobalStoreActionType = {
     CREATE_NEW_MAP: "CREATE_NEW_MAP",
@@ -92,41 +94,27 @@ function GlobalStoreContextProvider(props) {
         console.log("test2", feature);
 
 console.log("feature", feature);
-var mapOptions = {
-    center: [0, 0],
-    zoom: 1,
-    layers: [
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
-      })
-    ]
-  };
-  var map = new L.Map(document.createElement('div'), mapOptions);
-  
-  // Create a new L.GeoJSON instance and add it to the map
-  var geojsonLayer = L.geoJSON(feature);
-  geojsonLayer.addTo(map);
-  
-  // Get the bounds of the GeoJSON layer
-  var bounds = geojsonLayer.getBounds();
-  
-  // Generate the thumbnail image using leafletImage
-  leafletImage(map, function(err, canvas) {
-    if (err) {
-      console.error(err);
-      return;
-    }
-    // Convert the canvas to a data URI and display it
-    var thumbnailDataUri = canvas.toDataURL();
-    console.log(thumbnailDataUri);
-  });
-  
-  // Remove the GeoJSON layer from the map
-  geojsonLayer.remove();
 
-// Remove the GeoJSON layer from the map
-map.removeLayer(geojsonLayer);
+let map = L.map('map').setView([37.776, -122.414], 10);
+
+// Add a TileLayer to the map
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
+}).addTo(map);
+
+// Add a GeoJSON layer to the map
+const geojsonLayer = L.geoJSON(feature).addTo(map);
+
+// Generate the thumbnail
+const canvas = document.createElement('canvas');
+const context = canvas.getContext('2d');
+canvas.width = 800;
+canvas.height = 600;
+context.fillStyle = '#fff';
+context.fillRect(0, 0, canvas.width, canvas.height);
+context.drawImage(map.getRenderer().canvas, 0, 0, canvas.width, canvas.height);
+const thumbnail = canvas.toDataURL('image/png');
+console.log(thumbnail);
 
         const response = await api.createNewMap({ map: feature });
         console.log("createNewMap response: " + response);
