@@ -12,6 +12,7 @@ import { useContext, useEffect } from "react";
 import api from "../api";
 import AuthContext from "../auth";
 
+
 /*
     This React component lets us create and attach custom properties to a map, which only
     happens when we are on the proper route.

@@ -15,6 +15,7 @@ import * as topoServer from 'topojson-server';
 import * as topoClient from 'topojson-client';
 import * as topoSimplify from 'topojson-simplify';
 import L from 'leaflet';
+import leafletImage from 'leaflet-image';
 
 
 export const GlobalStoreContext = createContext({});
@@ -90,22 +91,41 @@ function GlobalStoreContextProvider(props) {
         let feature = topoClient.feature(top3, "foo");
 
 console.log("feature", feature);
-
-var map = L.map(document.createElement('div'));
-        var geojsonLayer = L.geoJSON(feature).addTo(map);
-        var bounds = geojsonLayer.getBounds();
-
-// Generate a thumbnail image of your GeoJSON data
-L.imageOverlay(geojsonLayer.toGeoJSON(), map.getBounds(), function(err, canvas) {
-    if (err) throw err;
+var mapOptions = {
+    center: [0, 0],
+    zoom: 1,
+    layers: [
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
+      })
+    ]
+  };
+  var map = new L.Map(document.createElement('div'), mapOptions);
   
-    // Get the thumbnail image data URI
+  // Create a new L.GeoJSON instance and add it to the map
+  var geojsonLayer = L.geoJSON(feature);
+  geojsonLayer.addTo(map);
+  
+  // Get the bounds of the GeoJSON layer
+  var bounds = geojsonLayer.getBounds();
+  
+  // Generate the thumbnail image using leafletImage
+  leafletImage(map, function(err, canvas) {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    // Convert the canvas to a data URI and display it
     var thumbnailDataUri = canvas.toDataURL();
     console.log(thumbnailDataUri);
-  
-    // Use thumbnailDataUri as the src for your thumbnail image
-    // e.g. document.getElementById('thumbnail').src = thumbnailDataUri;
   });
+  
+  // Remove the GeoJSON layer from the map
+  geojsonLayer.remove();
+
+// Remove the GeoJSON layer from the map
+map.removeLayer(geojsonLayer);
 
         const response = await api.createNewMap({ map: feature });
         console.log("createNewMap response: " + response);
