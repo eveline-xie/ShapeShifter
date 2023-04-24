@@ -300,6 +300,20 @@ auth.verifycode = async function (email, code) {
     });
   };
 
+  auth.getUserByEmail = async function (payload) {
+    try {
+      const response = await api.getUserByEmail(payload);
+      console.log(response);
+      if (response.data.success) {
+        console.log("true")
+       return true;
+      }else{
+        return false
+      }
+    } catch (err) {
+      console.log(err.response.data.errorMessage);
+    }
+  };
   return (
     <AuthContext.Provider
       value={{

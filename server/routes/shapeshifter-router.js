@@ -11,6 +11,7 @@ router.get("/auth/forgotpassword", UserController.forgotPassword);
 router.get("/auth/logout", UserController.logout);
 router.get("/auth/verifypassword", UserController.verifyPassword);
 router.put("/auth/updatepassword", UserController.updatePassword);
+router.get("/auth/user", UserController.getUserByEmail);
 
 
 

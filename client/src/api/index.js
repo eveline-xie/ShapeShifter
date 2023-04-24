@@ -12,8 +12,8 @@
 import axios from "axios";
 axios.defaults.withCredentials = true;
 const api = axios.create({
-  //baseURL: "https://shapeshifter-api.onrender.com"
-  baseURL: "http://localhost:5000"
+  baseURL: "https://shapeshifter-api.onrender.com"
+  // baseURL: "http://localhost:5000"
 });
 
 export const getLoggedIn = () => api.get(`/auth/loggedIn`);
@@ -26,7 +26,8 @@ export const verifyPassword = (email, token) =>
   api.get(`/auth/verifypassword?email=${email}&token=${token}`);
 export const updatePassword = (payload) =>
   api.put(`/auth/updatepassword`, payload);
-
+export const getUserByEmail = (payload) =>
+  api.get(`/auth/user?email=${payload}`);
 const apis = {
   getLoggedIn,
   signup,
@@ -35,6 +36,7 @@ const apis = {
   forgotPassword,
   verifyPassword,
   updatePassword,
+  getUserByEmail,
 };
 
 export default apis;
