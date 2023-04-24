@@ -51,13 +51,18 @@ export default function CreateMap() {
   let navigate = useNavigate();
 
   const geojsonData = store.currentMap.geojsonMap;
-
+  const map = L.map(document.createElement('div'), {
+    center: [0, 0],
+    zoom: 0,
+    zoomControl: false,
+    attributionControl: false,
+  });
 const canvas = createCanvas(800, 600);
 const ctx = canvas.getContext('2d');
 const geojsonLayer = L.geoJson(geojsonData);
 geojsonLayer.eachLayer(function (layer) {
   //console.log(layer);
-  layer.addTo(canvas);
+  layer.addTo(map);
 })
 //geojsonLayer.addTo(canvas);
 
@@ -73,7 +78,7 @@ geojsonLayer.eachLayer(layer => {
     });
   });
 });
-
+map.remove();
 var thumbnail = canvas.toDataURL("image/jpeg", 0.5);
 //const thumbnail = 'data:image/png;base64,' + thumbnailBuffer.toString('base64');
 //thumbnail = 'data:image/png;base64,' + thumbnail.toString('base64');
