@@ -114,7 +114,6 @@ export default function CreateMap() {
   const handleKeyDown = async (evt) => {
     if (["Enter", "Tab", ","].includes(evt.key)) {
       evt.preventDefault();
-
       // var value = value.trim();
       // collaborators.map((item) => (console.log(item+"\n")))
       const isValidValue = await isValid(value);
