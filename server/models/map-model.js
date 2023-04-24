@@ -12,6 +12,8 @@ const MapSchema = new Schema(
         collaborators: [{type: [String], required: false}],
         keywords: [{type: [String], required: false}],
         published: {type: {isPublished: Boolean, publishedDate: Date}, required: true}
+        //,
+        //thumbnail: {type:String, required:true}
     },
     { timestamps: true },
 )

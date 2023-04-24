@@ -9,6 +9,11 @@ import { useNavigate } from "react-router-dom";
 import { FormControl, FormLabel, TextField, Box } from "@mui/material";
 import GlobalStoreContext from "../store";
 import { useContext } from 'react'
+import L from 'leaflet';
+import 'leaflet-editable'
+import "leaflet/dist/leaflet.css";
+//import 'leaflet-canvaslayer-field';
+import 'leaflet-image';
 
 /*
     This React component lets us create and attach custom properties to a map, which only
@@ -47,6 +52,7 @@ export default function CreateMap() {
   const handleEdit = (event) => {
     navigate("/editmap");
   };
+
 
   return (
     <div id="main-screen">
@@ -107,7 +113,7 @@ export default function CreateMap() {
               //   maxWidth: { xs: 350, md: 250 },
             }}
             alt="Map Preview"
-            src="map.png"
+            src={"map.png"}
           />
           <div>
             <Button

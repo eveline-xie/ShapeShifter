@@ -14,6 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import * as topoServer from 'topojson-server';
 import * as topoClient from 'topojson-client';
 import * as topoSimplify from 'topojson-simplify';
+import L from 'leaflet';
 
 
 export const GlobalStoreContext = createContext({});
@@ -87,6 +88,24 @@ function GlobalStoreContextProvider(props) {
         let top2 = topoSimplify.presimplify(top);
         let top3 = topoSimplify.simplify(top2, .005);
         let feature = topoClient.feature(top3, "foo");
+
+console.log("feature", feature);
+
+var map = L.map(document.createElement('div'));
+        var geojsonLayer = L.geoJSON(feature).addTo(map);
+        var bounds = geojsonLayer.getBounds();
+
+// Generate a thumbnail image of your GeoJSON data
+L.imageOverlay(geojsonLayer.toGeoJSON(), map.getBounds(), function(err, canvas) {
+    if (err) throw err;
+  
+    // Get the thumbnail image data URI
+    var thumbnailDataUri = canvas.toDataURL();
+    console.log(thumbnailDataUri);
+  
+    // Use thumbnailDataUri as the src for your thumbnail image
+    // e.g. document.getElementById('thumbnail').src = thumbnailDataUri;
+  });
 
         const response = await api.createNewMap({ map: feature });
         console.log("createNewMap response: " + response);
