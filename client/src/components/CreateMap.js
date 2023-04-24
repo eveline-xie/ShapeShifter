@@ -74,12 +74,13 @@ geojsonLayer.eachLayer(layer => {
   });
 });
 
-var thumbnail = canvas.toDataURL('image/png');
+var thumbnail = canvas.toDataURL("image/jpeg", 0.5);
 //const thumbnail = 'data:image/png;base64,' + thumbnailBuffer.toString('base64');
-thumbnail = 'data:image/png;base64,' + thumbnail.toString('base64');
+//thumbnail = 'data:image/png;base64,' + thumbnail.toString('base64');
 
 
 console.log(thumbnail);
+
 
 
 /*
@@ -254,6 +255,7 @@ console.log(thumbnail);
             </Button>
           </div>
           <Box
+            id = "img"
             component="img"
             sx={{
               height: 500,
