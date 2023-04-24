@@ -81,7 +81,7 @@ export default function EditMap() {
     });
     layer.selected = true;
     selectedRegions.push(layer);
-    setRenameButtonEnabled(true)
+    //setRenameButtonEnabled(true)
     //console.log(selectedRegions.toString())
   }
   function deSelect(layer) {
@@ -91,7 +91,7 @@ export default function EditMap() {
     layer.selected = false;
     const index = selectedRegions.indexOf(layer);
     selectedRegions.splice(index, 1);
-    setRenameButtonEnabled(false)
+    //setRenameButtonEnabled(false)
     //console.log(selectedRegions.toString())
   }
 
@@ -122,29 +122,22 @@ export default function EditMap() {
     layer.on("click", function () {
       if (layer.editEnabled()) {
         layer.disableEdit();
+        deSelect(layer);
         selectedPolygon = null;
         selectedLayer = null;
       }
       else {
         layer.enableEdit();
+        selectRegion(layer);
         prevPolygon = selectedPolygon;
         prevLayer = selectedLayer;
         if (prevPolygon !== null) {
           prevLayer.disableEdit();
+          deSelect(prevLayer);
         }
         selectedPolygon = layer.toGeoJSON();
         selectedLayer = layer;
         console.log(selectedPolygon);
-      }
-      if (layer.selected == true) {
-        deSelect(layer);
-        setSelectedLayer(null);
-        setSelectedCountry(null);
-      }
-      else {
-        selectRegion(layer);
-        setSelectedLayer(layer);
-        setSelectedCountry(country);
       }
     })
   }
