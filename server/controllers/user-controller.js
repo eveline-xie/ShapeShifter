@@ -186,7 +186,7 @@ function sendRecoveryEmail(email, token) {
   });
 
   const mailOptions = {
-    from: "shapeshifter416@outlook.com",
+    from: "WeAreShapeShifter@outlook.com",
     to: `${email}`,
     subject: "Reset Password Verification Code",
     text:

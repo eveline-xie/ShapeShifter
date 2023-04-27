@@ -32,7 +32,8 @@ export default function CreateMap() {
 
   const [name, setName] = useState(store.currentMap.name);
   const [keywords, setKeywords] = useState(
-    store.currentMap.keywords.toString()
+    // store.currentMap.keywords.toString()
+    store.currentMap.keywords
   );
   // const [collaborators, setCollaborators] = useState(
   //   store.currentMap.collaborators.toString()
@@ -41,6 +42,7 @@ export default function CreateMap() {
     store.currentMap.collaborators
   );
   const [value, setValue] = useState("");
+  const [keyword, setKeyword] = useState("");
   const [error, setError] = useState(null);
   // useEffect(() => {
   //   if (auth.error) {
@@ -51,44 +53,42 @@ export default function CreateMap() {
   let navigate = useNavigate();
 
   const geojsonData = store.currentMap.geojsonMap;
-  const map = L.map(document.createElement('div'), {
+  const map = L.map(document.createElement("div"), {
     center: [0, 0],
     zoom: 0,
     zoomControl: false,
     attributionControl: false,
   });
-const canvas = createCanvas(800, 600);
-const ctx = canvas.getContext('2d');
-const geojsonLayer = L.geoJson(geojsonData);
-geojsonLayer.eachLayer(function (layer) {
-  //console.log(layer);
-  layer.addTo(map);
-})
-//geojsonLayer.addTo(canvas);
+  const canvas = createCanvas(800, 600);
+  const ctx = canvas.getContext("2d");
+  const geojsonLayer = L.geoJson(geojsonData);
+  geojsonLayer.eachLayer(function (layer) {
+    //console.log(layer);
+    layer.addTo(map);
+  });
+  //geojsonLayer.addTo(canvas);
 
-ctx.fillStyle = '#FFFFFF'; // set canvas background color
-ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "#FFFFFF"; // set canvas background color
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-geojsonLayer.eachLayer(layer => {
-  layer.eachLayer(subLayer => {
-    subLayer.setStyle({ // set sublayer style
-      color: '#FF0000', // red line color
-      weight: 3, // line weight
-      opacity: 1, // line opacity
+  geojsonLayer.eachLayer((layer) => {
+    layer.eachLayer((subLayer) => {
+      subLayer.setStyle({
+        // set sublayer style
+        color: "#FF0000", // red line color
+        weight: 3, // line weight
+        opacity: 1, // line opacity
+      });
     });
   });
-});
-map.remove();
-var thumbnail = canvas.toDataURL("image/jpeg", 0.5);
-//const thumbnail = 'data:image/png;base64,' + thumbnailBuffer.toString('base64');
-//thumbnail = 'data:image/png;base64,' + thumbnail.toString('base64');
+  map.remove();
+  var thumbnail = canvas.toDataURL("image/jpeg", 0.5);
+  //const thumbnail = 'data:image/png;base64,' + thumbnailBuffer.toString('base64');
+  //thumbnail = 'data:image/png;base64,' + thumbnail.toString('base64');
 
+  console.log(thumbnail);
 
-console.log(thumbnail);
-
-
-
-/*
+  /*
   useEffect(() =>{
     const geojsonLayer = new L.geoJSON(store.currentMap.geoJsonMap);
     const map = new L.map('map', { zoomControl: false });
@@ -124,7 +124,7 @@ console.log(thumbnail);
     };
   }, []);
   */
-  
+
   async function handleExport(event, id) {
     event.stopPropagation();
     setOpenExport(true);
@@ -146,7 +146,7 @@ console.log(thumbnail);
   const handleEdit = (event) => {
     navigate("/editmap");
   };
- 
+
   async function isValid(email) {
     let error = null;
     if (email === "") {
@@ -181,17 +181,21 @@ console.log(thumbnail);
     return /[\w\d\.-]+@[\w\d\.-]+\.[\w\d\.-]+/.test(email);
   }
 
-  function handleDelete(item){
-    console.log("item: "+item)
+  function handleDelete(item) {
+    console.log("item: " + item);
     let temp_collab = collaborators.filter((i) => i !== item);
     console.log("after delete: " + temp_collab);
     setCollaborators(temp_collab);
-  };
+  }
 
-  function handleChange(evt){
+  function handleChange(evt) {
     setValue(evt.target.value);
     setError(null);
-  };
+  }
+
+  function handleKeywords(evt) {
+    setKeyword(evt.target.value);
+  }
 
   const handleKeyDown = async (evt) => {
     if (["Enter", "Tab", ","].includes(evt.key)) {
@@ -209,6 +213,22 @@ console.log(thumbnail);
     }
   };
 
+
+  const handleKeywordKeyDown = async (evt) => {
+    if (["Enter", "Tab", ","].includes(evt.key)) {
+      evt.preventDefault();
+      if(keyword){
+        keywords.push(keyword);
+        setKeywords(keywords);
+        setKeyword("")
+      }  
+    }
+  };
+
+   function handleKeywordDelete(item) {
+     let temp_key = keywords.filter((i) => i !== item);
+     setKeywords(temp_key);
+   }
 
   return (
     <div id="main-screen">
@@ -260,7 +280,7 @@ console.log(thumbnail);
             </Button>
           </div>
           <Box
-            id = "img"
+            id="img"
             component="img"
             sx={{
               height: 500,
@@ -319,9 +339,24 @@ console.log(thumbnail);
               variant="outlined"
               // color="secondary"
               focused
+              placeholder="Type keywords and press `Enter`"
+              value={keyword}
               defaultValue={store.currentMap.keywords.toString()}
-              onChange={(e) => setKeywords(e.target.value)}
+              onChange={handleKeywords}
+              onKeyDown={handleKeywordKeyDown}
             />
+            {keywords.map((item) => (
+              <div className="tag-item" key={item}>
+                {item}
+                <button
+                  type="button"
+                  className="button"
+                  onClick={() => handleKeywordDelete(item)}
+                >
+                  &times;
+                </button>
+              </div>
+            ))}
             <TextField
               margin="normal"
               fullWidth
@@ -333,6 +368,7 @@ console.log(thumbnail);
               focused
               // defaultValue={store.currentMap.collaborators.toString()}
               value={value}
+              placeholder="Type email addresses and press `Enter`"
               // onChange={(e) => setValue(e.target.value)}
               onKeyDown={handleKeyDown}
               onChange={handleChange}

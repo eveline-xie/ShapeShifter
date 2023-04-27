@@ -149,8 +149,9 @@ console.log("feature", feature);
     }
 
     store.updateMapCustomProperties = async function (name, keywords, collaborators) {
-        let keywordsArray = keywords.split(/[\s,]+/);
+        // let keywordsArray = keywords.split(/[\s,]+/);
         // let collaboratorsArray = collaborators.split((/[\s,]+/))
+        let keywordsArray = keywords;
         let collaboratorsArray = collaborators;
         let payload = {
             name: name,
