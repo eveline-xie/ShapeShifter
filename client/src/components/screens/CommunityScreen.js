@@ -12,12 +12,13 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Button from "@mui/material/Button";
 import { Container, InputAdornment, TextField, List, Grid} from "@mui/material";
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import DeleteModal from "../modals/DeleteModal";
 import ExportModal from "../modals/ExportModal";
 import ForkModal from "../modals/ForkModal";
 import ExpandedMapcard from "../ExpandedMapcard";
+import GlobalStoreContext from "../../store";
 
 /*
 This screen lists all the maps that are published and actions allowed by a logged in user.
@@ -26,12 +27,16 @@ This screen lists all the maps that are published and actions allowed by a logge
 export default function CommunityScreen() {
     //   const theme = useTheme();
     //   const [dropdown, setDropdown] = React.useState("");
+      const { store } = useContext(GlobalStoreContext);
       const [searchTerm, setSearchTerm] = useState("");
       const [openDelete, setOpenDelete] = useState(false);
       const [openExport, setOpenExport] = useState(false);
       const [openFork, setOpenFork] = useState(false);
       const [openView, setOpenView] = useState(false);
 
+       useEffect(() => {
+         store.loadPublishedMaps();
+       }, []);
 
       const handleSearch = (event) => {
         setSearchTerm(event.target.value);
@@ -56,16 +61,36 @@ export default function CommunityScreen() {
 
     let mapcards = "";
     // if(store)
-    mapcards = (
+    // mapcards = (
+    //     <List id="mapcards">
+    //         <MapCard
+    //             setOpenDelete={openDeleteModal}
+    //             setOpenExport={openExportModal}
+    //             setOpenFork={openForkModal}
+    //             setOpenView={openViewModal}
+    //         ></MapCard>
+    //     </List>
+    // );
+
+    if (store.publishedMaps) {
+      console.log("JIIIII"+store.publishedMaps.length);
+      mapcards = (
         <List id="mapcards">
+          {store.publishedMaps.map((map) => (
             <MapCard
-                setOpenDelete={openDeleteModal}
-                setOpenExport={openExportModal}
-                setOpenFork={openForkModal}
-                setOpenView={openViewModal}
-            ></MapCard>
+              id={map._id}
+              mapName={map.name}
+              ownerUsername={map.ownerUsername}
+              published={map.published.isPublished}
+              setOpenDelete={openDeleteModal}
+              setOpenExport={openExportModal}
+              setOpenFork={openForkModal}
+              setOpenView={openViewModal}
+            />
+          ))}
         </List>
-    );
+      );
+    }
 
     let searchResult = ""
     if(searchTerm){
@@ -106,21 +131,21 @@ export default function CommunityScreen() {
             </Button>
           </Grid>
 
-                <Grid item xs={2}>
-                    <Button
-                        variant="contained"
-                        style={{
-                            borderRadius: 40,
-                            backgroundColor: "rgba(255, 255, 255, .4)",
-                            padding: "13px 34px",
-                            margin: "10px 10px",
-                            fontSize: "10px",
-                            color: "#000000",
-                        }}
-                    >
-                        Key Word
-                    </Button>
-                </Grid>
+          <Grid item xs={2}>
+            <Button
+              variant="contained"
+              style={{
+                borderRadius: 40,
+                backgroundColor: "rgba(255, 255, 255, .4)",
+                padding: "13px 34px",
+                margin: "10px 10px",
+                fontSize: "10px",
+                color: "#000000",
+              }}
+            >
+              Key Word
+            </Button>
+          </Grid>
 
           <Grid item xs={6}>
             <TextField
@@ -146,7 +171,7 @@ export default function CommunityScreen() {
 
         <br></br>
         {searchResult}
-        <Grid container spacing={1}>
+        {/* <Grid container spacing={1}>
           <Grid item xs={4}>
             {mapcards}
 
@@ -155,18 +180,14 @@ export default function CommunityScreen() {
             <ForkModal open={openFork} setOpen={setOpenFork} />
             <ExpandedMapcard open={openView} setOpen={setOpenView} />
           </Grid>
-
-          <Grid item xs={4}>
-            {mapcards}
-
-                    <DeleteModal open={openDelete} setOpen={setOpenDelete} />
-                    <ExportModal open={openExport} setOpen={setOpenExport} />
-                    <ForkModal open={openFork} setOpen={setOpenFork} />
-
-                </Grid>
-
-            </Grid>
-
+        </Grid> */}
+        <div>
+          {mapcards}
+          <DeleteModal open={openDelete} setOpen={setOpenDelete} />
+          <ExportModal open={openExport} setOpen={setOpenExport} />
+          <ForkModal open={openFork} setOpen={setOpenFork} />
+          <ExpandedMapcard open={openView} setOpen={setOpenView} />
         </div>
+      </div>
     );
 }

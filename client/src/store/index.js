@@ -24,17 +24,19 @@ console.log("create GlobalStoreContext");
 
 
 export const GlobalStoreActionType = {
-    CREATE_NEW_MAP: "CREATE_NEW_MAP",
-    LOAD_USER_MAPS: "LOAD_USER_MAPS",
-    LOAD_CURRENT_MAP: "LOAD_CURRENT_MAP",
-    MARK_MAP_FOR_DELETION: "MARK_MAP_FOR_DELETION",
-    MARK_MAP_FOR_EXPORT: "MARK_MAP_FOR_EXPORT"
-}
+  CREATE_NEW_MAP: "CREATE_NEW_MAP",
+  LOAD_USER_MAPS: "LOAD_USER_MAPS",
+  LOAD_CURRENT_MAP: "LOAD_CURRENT_MAP",
+  MARK_MAP_FOR_DELETION: "MARK_MAP_FOR_DELETION",
+  MARK_MAP_FOR_EXPORT: "MARK_MAP_FOR_EXPORT",
+  LOAD_PUBLISHED_MAPS: "LOAD_PUBLISHED_MAPS",
+};
 
 function GlobalStoreContextProvider(props) {
     const [store, setStore] = useState({
         currentMap: null,
         userMaps: null,
+        publishedMaps: null,
         mapIdMarkedForDeletion: null,
         mapIdMarkedForExport: null,
     })
@@ -46,37 +48,42 @@ function GlobalStoreContextProvider(props) {
     const storeReducer = (action) => {
         const { type, payload } = action;
         switch (type) {
-            case GlobalStoreActionType.CREATE_NEW_MAP: {
-                return setStore({
-                    currentMap: payload,
-                    userMaps: store.userMaps
-                })
-            }
-            case GlobalStoreActionType.LOAD_USER_MAPS: {
-                return setStore({
-                    currentMap: store.currentMap,
-                    userMaps: payload
-                })
-            }
-            case GlobalStoreActionType.LOAD_CURRENT_MAP: {
-                return setStore({
-                    currentMap: payload,
-                    userMaps: store.userMaps
-                })
-            }
-            case GlobalStoreActionType.MARK_MAP_FOR_DELETION: {
-                return setStore({
-                    userMaps: store.userMaps,
-                    mapIdMarkedForDeletion: payload
-                })
-            }
-            case GlobalStoreActionType.MARK_MAP_FOR_EXPORT: {
-                return setStore({
-                    currentMap: store.currentMap,
-                    userMaps: store.userMaps,
-                    mapIdMarkedForExport: payload
-                })
-            }
+          case GlobalStoreActionType.CREATE_NEW_MAP: {
+            return setStore({
+              currentMap: payload,
+              userMaps: store.userMaps,
+            });
+          }
+          case GlobalStoreActionType.LOAD_USER_MAPS: {
+            return setStore({
+              currentMap: store.currentMap,
+              userMaps: payload,
+            });
+          }
+          case GlobalStoreActionType.LOAD_CURRENT_MAP: {
+            return setStore({
+              currentMap: payload,
+              userMaps: store.userMaps,
+            });
+          }
+          case GlobalStoreActionType.MARK_MAP_FOR_DELETION: {
+            return setStore({
+              userMaps: store.userMaps,
+              mapIdMarkedForDeletion: payload,
+            });
+          }
+          case GlobalStoreActionType.MARK_MAP_FOR_EXPORT: {
+            return setStore({
+              currentMap: store.currentMap,
+              userMaps: store.userMaps,
+              mapIdMarkedForExport: payload,
+            });
+          }
+          case GlobalStoreActionType.LOAD_PUBLISHED_MAPS: {
+            return setStore({
+              publishedMaps: payload,
+            });
+          }
         }
     }
 
@@ -312,6 +319,17 @@ console.log("feature", feature);
             navigate("/home");
          }
        };
+
+     store.loadPublishedMaps = async function (id) {
+       const response = await api.loadPublishedMaps();
+       if (response.status === 201) {
+        console.log(response.data.publishedMaps);
+         storeReducer({
+           type: GlobalStoreActionType.LOAD_PUBLISHED_MAPS,
+           payload: response.data.publishedMaps,
+         });
+       }
+     };
 
     return (
         <GlobalStoreContext.Provider value={{

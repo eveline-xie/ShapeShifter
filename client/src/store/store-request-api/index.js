@@ -72,6 +72,10 @@ export const publishMap = (id) => {
   });
 };
 
+export const loadPublishedMaps = () => {
+  return api.get("/load-published-maps");
+};
+
 const apis = {
   createNewMap,
   updateMapCustomProperties,
@@ -84,6 +88,7 @@ const apis = {
   updatePolygonOfMap,
   deletePolygonOfMap,
   publishMap,
+  loadPublishedMaps,
 };
 
 export default apis;

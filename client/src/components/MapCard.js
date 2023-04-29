@@ -86,7 +86,7 @@ export default function MapCard(props) {
   // }
 
   if (window.location.pathname == '/community' || window.location.pathname == '/communityguest') {
-    owner = <div style={{ color: 'white' }}> JoeShmo</div>;
+    owner = <div style={{ color: "white" }}> {props.ownerUsername}</div>;
     editButton = "";
     deleteButton = <Button variant="contained" sx={{ maxWidth: 100 }} style={{
       borderRadius: 50,

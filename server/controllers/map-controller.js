@@ -314,7 +314,26 @@ async function publishMap(req, res) {
   });
 }
 
-
+async function loadPublishedMaps(req, res) {
+  const maps = await Map.find({ "published.isPublished": true });
+  let mapsNoGeoJson = [];
+  for (let i = 0; i < maps.length; i++) {
+    mapsNoGeoJson.push({
+      _id: maps[i]._id,
+      name: maps[i].name,
+      ownerUsername: maps[i].ownerUsername,
+      ownerEmail: maps[i].ownerEmail,
+      comments: maps[i].comments,
+      collaborators: maps[i].collaborators,
+      keywords: maps[i].keywords,
+      published: maps[i].published,
+    });
+  }
+  return res.status(201).json({
+    success: true,
+    publishedMaps: maps,
+  });
+}
 
 module.exports = {
   createNewMap,
@@ -328,4 +347,5 @@ module.exports = {
   updatePolygonOfMap,
   deletePolygonOfMap,
   publishMap,
+  loadPublishedMaps,
 };
