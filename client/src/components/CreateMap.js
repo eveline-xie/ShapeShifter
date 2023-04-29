@@ -141,6 +141,7 @@ export default function CreateMap() {
   };
   const handlePublish = (event) => {
     console.log(store.currentMap);
+    store.publishMap();
     //navigate("/home");
   };
   const handleEdit = (event) => {

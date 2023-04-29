@@ -303,6 +303,16 @@ console.log("feature", feature);
         }
     }
 
+       store.publishMap = async function () {
+         const response = await api.publishMap(
+           store.currentMap._id
+         );
+         if (response.status === 201) {
+           console.log("published");
+            navigate("/home");
+         }
+       };
+
     return (
         <GlobalStoreContext.Provider value={{
             store
