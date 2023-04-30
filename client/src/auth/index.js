@@ -300,9 +300,9 @@ auth.verifycode = async function (email, code) {
     });
   };
 
-  auth.getUserByEmail = async function (payload) {
+  auth.getUserByEmail = async function (email,mapid) {
     try {
-      const response = await api.getUserByEmail(payload);
+      const response = await api.getUserByEmail(email, mapid);
       console.log(response);
       if (response.data.success) {
         console.log("true")
