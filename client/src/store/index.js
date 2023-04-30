@@ -30,6 +30,7 @@ export const GlobalStoreActionType = {
   MARK_MAP_FOR_DELETION: "MARK_MAP_FOR_DELETION",
   MARK_MAP_FOR_EXPORT: "MARK_MAP_FOR_EXPORT",
   LOAD_PUBLISHED_MAPS: "LOAD_PUBLISHED_MAPS",
+  LOAD_SHARED_MAPS: "LOAD_SHARED_MAPS"
 };
 
 function GlobalStoreContextProvider(props) {
@@ -39,6 +40,7 @@ function GlobalStoreContextProvider(props) {
         publishedMaps: null,
         mapIdMarkedForDeletion: null,
         mapIdMarkedForExport: null,
+        sharedMaps: null,
     })
 
     const navigate = useNavigate();
@@ -82,6 +84,11 @@ function GlobalStoreContextProvider(props) {
           case GlobalStoreActionType.LOAD_PUBLISHED_MAPS: {
             return setStore({
               publishedMaps: payload,
+            });
+          }
+          case GlobalStoreActionType.LOAD_SHARED_MAPS: {
+            return setStore({
+              sharedMaps: payload,
             });
           }
         }
@@ -330,6 +337,17 @@ console.log("feature", feature);
          });
        }
      };
+
+      store.loadSharedMaps = async function () {
+        const response = await api.loadSharedMaps();
+        if (response.status === 201) {
+          console.log("shared: "+response.data.sharedMaps);
+          storeReducer({
+            type: GlobalStoreActionType.LOAD_SHARED_MAPS,
+            payload: response.data.sharedMaps,
+          });
+        }
+      };
 
     return (
         <GlobalStoreContext.Provider value={{

@@ -43,6 +43,7 @@ export default function HomeScreen() {
 
   useEffect(() => {
     store.loadUserMapsNoGeoJson();
+    store.loadSharedMaps();
   }, []);
 
   const handleSearch = (event) => {

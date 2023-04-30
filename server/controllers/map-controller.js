@@ -335,6 +335,34 @@ async function loadPublishedMaps(req, res) {
   });
 }
 
+async function loadSharedMaps(req, res) {
+  const loggedInUser = await User.findOne({ _id: req.userId });
+  console.log("logged in user: "+loggedInUser);
+  //   const maps = await Map.find({ ownerEmail: loggedInUser.email });
+  let maps = [];
+  const sharedMaps = loggedInUser.sharedWithMe;
+  console.log("SharedMaps: " + sharedMaps);
+  for (let i = 0; i < sharedMaps.length; i++) {
+    console.log(sharedMaps[i]);
+    const map = await Map.findOne({ _id: sharedMaps[i] });
+    console.log(map.name);
+    maps.push({
+      _id: map._id,
+      name: map.name,
+      ownerUsername: map.ownerUsername,
+      ownerEmail: map.ownerEmail,
+      comments: map.comments,
+      collaborators: map.collaborators,
+      keywords: maps.keywords,
+      published: maps.published,
+    });
+  }
+  return res.status(201).json({
+    success: true,
+    sharedMaps: maps,
+  });
+}
+
 module.exports = {
   createNewMap,
   updateMapCustomProperties,
@@ -348,4 +376,5 @@ module.exports = {
   deletePolygonOfMap,
   publishMap,
   loadPublishedMaps,
+  loadSharedMaps,
 };

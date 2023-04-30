@@ -76,6 +76,10 @@ export const loadPublishedMaps = () => {
   return api.get("/load-published-maps");
 };
 
+export const loadSharedMaps = (userId) => {
+  return api.get("/load-shared-maps");
+};
+
 const apis = {
   createNewMap,
   updateMapCustomProperties,
@@ -89,6 +93,7 @@ const apis = {
   deletePolygonOfMap,
   publishMap,
   loadPublishedMaps,
+  loadSharedMaps,
 };
 
 export default apis;
