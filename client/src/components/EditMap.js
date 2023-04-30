@@ -41,9 +41,7 @@ export default function EditMap() {
   let prevLayer = null;
   let selectedLayer = null;
   let featuresLength = store.currentMap.geoJsonMap.features.length;
-  let defaultColor = '#3388FF';
-  let changedColor ='';
-  let colorBoolean = false;
+  let changedColor = '';
 
   useEffect(() => {
     console.log("created map");
@@ -80,28 +78,50 @@ export default function EditMap() {
   }, []);
 
   function selectRegion(layer) {
-    layer.setStyle({
-      color: 'yellow'
-    });
-    layer.selected = true;
-    selectedRegions.push(layer);
-    //setRenameButtonEnabled(true)
-    //console.log(selectedRegions.toString())
+    // console.log("1:" + layer.color);
+    if (layer.color == undefined) {
+      // console.log("2:" + layer.color);
+      layer.setStyle({
+        color: 'yellow'
+      });
+      layer.selected = true;
+      selectedRegions.push(layer);
+      //setRenameButtonEnabled(true)
+      //console.log(selectedRegions.toString())
+    } else {
+      // console.log("3:" + layer.color);
+      layer.setStyle({
+        color: layer.color
+      });
+      layer.selected = true;
+      selectedRegions.push(layer);
+      //setRenameButtonEnabled(true)
+      //console.log(selectedRegions.toString())
+    }
   }
   function deSelect(layer) {
-    let tempColor = defaultColor;
-    if(colorBoolean){
-      tempColor = changedColor;
+    // console.log("1:" + layer.color);
+    if (layer.color == undefined) {
+      // console.log("2:" + layer.color);
+      layer.setStyle({
+        color: '#3388FF'
+      });
+      layer.selected = false;
+      const index = selectedRegions.indexOf(layer);
+      selectedRegions.splice(index, 1);
+      //setRenameButtonEnabled(false)
+      //console.log(selectedRegions.toString())
+    } else {
+      // console.log("3:" + layer.color);
+      layer.setStyle({
+        color: layer.color
+      });
+      layer.selected = false;
+      const index = selectedRegions.indexOf(layer);
+      selectedRegions.splice(index, 1);
+      //setRenameButtonEnabled(false)
+      //console.log(selectedRegions.toString())
     }
-    layer.setStyle({
-      color: tempColor
-    });
-    layer.selected = false;
-    const index = selectedRegions.indexOf(layer);
-    selectedRegions.splice(index, 1);
-    colorBoolean = false;
-    //setRenameButtonEnabled(false)
-    //console.log(selectedRegions.toString())
   }
 
   function onEachRegion(country, layer) {
@@ -185,11 +205,11 @@ export default function EditMap() {
         changedColor = colorPicker.value;
         console.log("Selected color:", changedColor);
 
+        selectedLayer.color = changedColor;
         selectedLayer.setStyle({
           color: changedColor
-        });     
+        });
       });
-      colorBoolean = true;
       document.body.appendChild(colorPicker);
       colorPicker.click();
     }
