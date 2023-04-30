@@ -86,7 +86,7 @@ export default function MapCard(props) {
   // }
 
   if (window.location.pathname == '/community' || window.location.pathname == '/communityguest') {
-    owner = <div style={{ color: 'white' }}> JoeShmo</div>;
+    owner = <div style={{ color: "white" }}> {props.ownerUsername}</div>;
     editButton = "";
     deleteButton = <Button variant="contained" sx={{ maxWidth: 100 }} style={{
       borderRadius: 50,
@@ -127,14 +127,40 @@ export default function MapCard(props) {
     deleteButton = ""
   }
 
+  let publishedButton=""
+
+  if(props.published){
+    editButton="";
+    publishedButton = (
+      <Button
+        variant="contained"
+        sx={{ maxWidth: 100 }}
+        style={{
+          borderRadius: 50,
+          backgroundColor: "rgba(174,175,255, 0.4)",
+          padding: "7px 34px",
+          margin: "10px 10px",
+          fontSize: "13px",
+          color: "rgba(174,175,255)",
+        }}
+      >
+        Published
+      </Button>
+    );
+  }
+
   return (
-    <Card sx={{
-      maxWidth: 325, borderRadius: "30px",
-      backgroundColor: 'grey',
-      backgroundImage: `url(${"cardBackground.png"})`,
-      backgroundSize: 'cover',
-      left: 0
-    }} id="mapcard">
+    <Card
+      sx={{
+        maxWidth: 325,
+        borderRadius: "30px",
+        backgroundColor: "grey",
+        backgroundImage: `url(${"cardBackground.png"})`,
+        backgroundSize: "cover",
+        left: 0,
+      }}
+      id="mapcard"
+    >
       <CardMedia
         component="img"
         alt="green iguana"
@@ -142,8 +168,14 @@ export default function MapCard(props) {
         image="logo.png"
       />
       <CardContent>
-        <Typography gutterBottom variant="h5" component="div"
-          color="white" fontFamily="Kadwa" sx={{ fontSize: 30, fontWeight: 'bold' }}>
+        <Typography
+          gutterBottom
+          variant="h5"
+          component="div"
+          color="white"
+          fontFamily="Kadwa"
+          sx={{ fontSize: 30, fontWeight: "bold" }}
+        >
           {props.mapName}
         </Typography>
         {/* if published, add owner */}
@@ -152,6 +184,7 @@ export default function MapCard(props) {
       <CardActions>
         <div>
           {editButton}
+          {publishedButton}
           {deleteButton}
         </div>
         <div>

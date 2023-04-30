@@ -332,16 +332,52 @@ async function deletePolygonOfMap(req, res) {
     })
 }
 
+async function publishMap(req, res) {
+  const id = req.body.id;
+  console.log("publishMap: " + JSON.stringify(id));
+
+  const map = await Map.findOne({ _id: id });
+  map.published.isPublished = true;
+  map.published.publishedDate = Date.now()
+  map.save();
+  return res.status(201).json({
+    success: true,
+    map: map,
+  });
+}
+
+async function loadPublishedMaps(req, res) {
+  const maps = await Map.find({ "published.isPublished": true });
+  let mapsNoGeoJson = [];
+  for (let i = 0; i < maps.length; i++) {
+    mapsNoGeoJson.push({
+      _id: maps[i]._id,
+      name: maps[i].name,
+      ownerUsername: maps[i].ownerUsername,
+      ownerEmail: maps[i].ownerEmail,
+      comments: maps[i].comments,
+      collaborators: maps[i].collaborators,
+      keywords: maps[i].keywords,
+      published: maps[i].published,
+    });
+  }
+  return res.status(201).json({
+    success: true,
+    publishedMaps: maps,
+  });
+}
 
 module.exports = {
-    createNewMap,
-    updateMapCustomProperties,
-    loadUserMaps,
-    loadUserMapsNoGeoJson,
-    getMapById,
-    duplicateMapById,
-    deleteMapById,
-    addPolygonToMap,
-    updatePolygonOfMap,
-    deletePolygonOfMap
-}
+  createNewMap,
+  updateMapCustomProperties,
+  loadUserMaps,
+  loadUserMapsNoGeoJson,
+  getMapById,
+  duplicateMapById,
+  deleteMapById,
+  addPolygonToMap,
+  updatePolygonOfMap,
+  deletePolygonOfMap,
+  publishMap,
+  loadPublishedMaps,
+};

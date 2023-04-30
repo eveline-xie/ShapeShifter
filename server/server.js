@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
     origin: "https://shapershifter.onrender.com",
-    //origin: "http://localhost:3000",
+    // origin: "http://localhost:3000",
     credentials: true,
   })
 );

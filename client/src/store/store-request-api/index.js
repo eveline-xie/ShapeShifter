@@ -13,7 +13,7 @@ import axios from "axios";
 axios.defaults.withCredentials = true;
 const api = axios.create({
   baseURL: "https://shapeshifter-api.onrender.com"
-  //baseURL: "http://localhost:5000"
+  // baseURL: "http://localhost:5000"
 });
 
 export const createNewMap = (payload) => {
@@ -66,6 +66,16 @@ export const deletePolygonOfMap = (id, feature) => {
   })
 }
 
+export const publishMap = (id) => {
+  return api.put(`/publish-map`, {
+    id: id
+  });
+};
+
+export const loadPublishedMaps = () => {
+  return api.get("/load-published-maps");
+};
+
 const apis = {
   createNewMap,
   updateMapCustomProperties,
@@ -76,7 +86,9 @@ const apis = {
   deleteMapById,
   addPolygonToMap,
   updatePolygonOfMap,
-  deletePolygonOfMap
+  deletePolygonOfMap,
+  publishMap,
+  loadPublishedMaps,
 };
 
 export default apis;

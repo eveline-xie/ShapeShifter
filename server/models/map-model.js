@@ -9,8 +9,8 @@ const MapSchema = new Schema(
         ownerEmail: { type: String, required: true },
         comments: {type:[[{String, String}]], required: false},
         geoJsonMap: {type: Object, required: true},
-        collaborators: [{type: [String], required: false}],
-        keywords: [{type: [String], required: false}],
+        collaborators: [{type: String, required: false}],
+        keywords: [{type: String, required: false}],
         published: {type: {isPublished: Boolean, publishedDate: Date}, required: true}
         ,
         thumbnail: {type:String, required:true}

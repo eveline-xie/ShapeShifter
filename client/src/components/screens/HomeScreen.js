@@ -131,6 +131,7 @@ export default function HomeScreen() {
             id={map._id}
             mapName={map.name}
             ownerUsername={map.ownerUsername}
+            published = {map.published.isPublished}
             setOpenDelete={openDeleteModal}
             setOpenExport={openExportModal}
             setOpenFork={openForkModal}
