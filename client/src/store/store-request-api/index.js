@@ -76,7 +76,7 @@ export const loadPublishedMaps = () => {
   return api.get("/load-published-maps");
 };
 
-export const loadSharedMaps = (userId) => {
+export const loadSharedMaps = () => {
   return api.get("/load-shared-maps");
 };
 

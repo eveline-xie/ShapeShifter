@@ -337,7 +337,7 @@ async function loadPublishedMaps(req, res) {
 
 async function loadSharedMaps(req, res) {
   const loggedInUser = await User.findOne({ _id: req.userId });
-  console.log("logged in user: "+loggedInUser);
+  console.log("logged in user for share: "+loggedInUser.username);
   //   const maps = await Map.find({ ownerEmail: loggedInUser.email });
   let maps = [];
   const sharedMaps = loggedInUser.sharedWithMe;
@@ -345,7 +345,7 @@ async function loadSharedMaps(req, res) {
   for (let i = 0; i < sharedMaps.length; i++) {
     console.log(sharedMaps[i]);
     const map = await Map.findOne({ _id: sharedMaps[i] });
-    console.log(map.name);
+    console.log(map);
     maps.push({
       _id: map._id,
       name: map.name,
@@ -353,10 +353,11 @@ async function loadSharedMaps(req, res) {
       ownerEmail: map.ownerEmail,
       comments: map.comments,
       collaborators: map.collaborators,
-      keywords: maps.keywords,
-      published: maps.published,
+      keywords: map.keywords,
+      published: map.published,
     });
   }
+    // console.log(maps);
   return res.status(201).json({
     success: true,
     sharedMaps: maps,

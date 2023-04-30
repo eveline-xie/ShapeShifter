@@ -341,7 +341,7 @@ console.log("feature", feature);
       store.loadSharedMaps = async function () {
         const response = await api.loadSharedMaps();
         if (response.status === 201) {
-          console.log("shared: "+response.data.sharedMaps);
+          console.log(response.data.sharedMaps);
           storeReducer({
             type: GlobalStoreActionType.LOAD_SHARED_MAPS,
             payload: response.data.sharedMaps,
