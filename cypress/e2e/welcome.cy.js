@@ -52,7 +52,7 @@ it('user goes to login page', () => {
   cy.url().should('include','/login')
 })
 
-  it('the user logs in to an account', () => {
+  it.only('the user logs in to an account', () => {
     cy.visit('https://shapershifter.onrender.com')
     //cy.get('form')
     cy.contains('Login').click()
@@ -65,8 +65,8 @@ it('user goes to login page', () => {
     //cy.url().should('include', '/login')
     cy.url().should('include', '/home')
   })
-/*
-  it('the user uploads a new map', () => {
+
+  it.only('the user uploads a new map', () => {
     cy.visit('https://shapershifter.onrender.com')
     cy.contains('Login')
       .click()
@@ -74,16 +74,16 @@ it('user goes to login page', () => {
     cy.get('[id=password]').type('thisisapassword123')
     cy.get('button')
       .contains('Log In')
-      .click()
-    cy.get('[id=create-map]').children()
-      cy.contains('SHP').click()
-      cy.get('input[type=file]').eq(0).selectFile('cypress/fixtures/USA_adm1.shp', {force: true}).wait(200)
-    cy.get('[id=create-map]').children()
+      .click().wait(4000)
+    //cy.get('[id=create-map]').children()
+    cy.contains('SHP').click()
+      cy.get('input[type=file]').first().selectFile('cypress/fixtures/USA_adm1.shp', {force: true}).wait(200)
+    //cy.get('[id=create-map]').children()
     cy.contains('DBF').click()
-    cy.get('input[type=file]').eq(1).selectFile('cypress/fixtures/USA_adm1.dbf', {force: true}).wait(200)
+    cy.get('input[type=file]').last().selectFile('cypress/fixtures/USA_adm1.dbf', {force: true}).wait(200)
     //cy.get('#file-submit').click()
   })
-  */
+
 /*
   it('the user deletes map', () => {
     cy.visit('https://shapershifter.onrender.com')

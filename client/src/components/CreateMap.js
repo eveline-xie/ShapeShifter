@@ -12,8 +12,9 @@ import { useContext, useEffect } from "react";
 import api from "../api";
 import AuthContext from "../auth";
 import L from 'leaflet';
-import { createCanvas, Image } from 'canvas';
-import { GeoJSON } from 'leaflet';
+import { createCanvas, canvas } from 'canvas';
+import { geoMercator, geoPath } from 'd3-geo';
+
 
 
 
@@ -48,46 +49,41 @@ export default function CreateMap() {
   //     setError(auth.errMessage);
   //   }
   // });
+
+
   let navigate = useNavigate();
+  //let thumbnail = 'map.png';
+  /*
+  let thumbnail;
 
-  const geojsonData = store.currentMap.geojsonMap;
-  const map = L.map(document.createElement('div'), {
-    center: [0, 0],
-    zoom: 0,
-    zoomControl: false,
-    attributionControl: false,
-  });
-const canvas = createCanvas(800, 600);
-const ctx = canvas.getContext('2d');
-const geojsonLayer = L.geoJson(geojsonData);
-geojsonLayer.eachLayer(function (layer) {
-  //console.log(layer);
-  layer.addTo(map);
-})
-//geojsonLayer.addTo(canvas);
-
-ctx.fillStyle = '#FFFFFF'; // set canvas background color
-ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-geojsonLayer.eachLayer(layer => {
-  layer.eachLayer(subLayer => {
-    subLayer.setStyle({ // set sublayer style
-      color: '#FF0000', // red line color
-      weight: 3, // line weight
-      opacity: 1, // line opacity
-    });
-  });
-});
-map.remove();
-var thumbnail = canvas.toDataURL("image/jpeg", 0.5);
-//const thumbnail = 'data:image/png;base64,' + thumbnailBuffer.toString('base64');
-//thumbnail = 'data:image/png;base64,' + thumbnail.toString('base64');
-
-
-console.log(thumbnail);
-
-
-
+  (async () => {
+    // Create a new Puppeteer browser instance
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+  
+    // Create a new div element to hold the GeoJSON map
+    await page.setContent(`
+      <div id="map" style="width: 500px; height: 500px; border: 1px solid black;"></div>
+    `);
+  
+    // Add the GeoJSON data to the map div using JavaScript
+    await page.evaluate((geojsonString) => {
+      const geojsonObject = JSON.parse(geojsonString);
+      const geojsonLayer = L.geoJson(geojsonObject).addTo(document.getElementById('map'));
+    }, JSON.stringify(store.currentMap.geoJsonMap));
+  
+    // Use html2canvas to create a canvas element from the map div
+    const canvas = await html2canvas(page.$('#map'));
+  
+    // Convert canvas to PNG image URL
+    thumbnail = canvas.toDataURL('image/png');
+  
+    // Close the Puppeteer browser instance
+    await browser.close();
+  
+    console.log('Thumbnail URL:', thumbnail);
+  })();
+*/
 /*
   useEffect(() =>{
     const geojsonLayer = new L.geoJSON(store.currentMap.geoJsonMap);
@@ -270,8 +266,10 @@ console.log(thumbnail);
               //   maxWidth: { xs: 350, md: 250 },
             }}
             alt="Map Preview"
-            src={thumbnail}
+            src={store.currentMap.thumbnail}
           />
+          <div id="map-container" style={{display: 'none'}}></div>
+<canvas id="map-canvas"></canvas>
           <div>
             <Button
               variant="contained"

@@ -1,5 +1,10 @@
 const Map = require('../models/map-model')
 const User = require('../models/user-model');
+const puppeteer = require('puppeteer');
+const html2canvas = require('html2canvas');
+const { createCanvas, loadImage } = require('canvas');
+const d3 = require('d3');
+
 
 async function createNewMap(req, res) {
     const body = req.body;
@@ -19,7 +24,33 @@ async function createNewMap(req, res) {
         return feature;
     })
     body.map.features = mapWithIdentifiers;
-
+    //let thumbnailUrl;
+    const canvas = createCanvas(1000, 1000);
+    const ctx = canvas.getContext('2d');
+    
+    // Render the GeoJSON layer onto the canvas using a library like d3.js or topojson.js
+    // For example, if using d3.js:
+     const path = d3.geoPath().projection(d3.geoMercator().fitSize([1000, 1000], body.map));
+     ctx.fillStyle = '#fff';
+     ctx.fillRect(0, 0, 1000, 1000);
+     ctx.strokeStyle = '#000';
+     ctx.lineWidth = 1;
+     ctx.beginPath();
+     path.context(ctx)(body.map);
+     ctx.stroke();
+    
+    // Convert the canvas to a PNG buffer using a library like canvas-to-buffer or node-canvas-to-buffer
+    const { createCanvas } = require('canvas');
+    const canvasToBuffer = require('canvas-to-buffer');
+    const buffer = canvasToBuffer(canvas, 'image/png');
+    
+    // Convert the PNG buffer to a data URL using the sharp library
+    const sharp = require('sharp');
+    const thumbnailUrl = await sharp(buffer).toFormat('png').toBuffer().then((data) => {
+      return `data:image/png;base64,${data.toString('base64')}`;
+    });
+    
+    console.log(thumbnailUrl);
     const map = new Map({
         name: "Untitled",
         ownerUsername: loggedInUser.username,
@@ -28,7 +59,8 @@ async function createNewMap(req, res) {
         geoJsonMap: body.map,
         collaborators: [],
         keywords: [],
-        published: { isPublished: false, publishedDate: new Date() }
+        published: { isPublished: false, publishedDate: new Date(),
+        thumbnail: thumbnailUrl }
     })
     if (!map) {
         return res.status(400).json({ success: false, error: err })
