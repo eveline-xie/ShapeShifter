@@ -32,6 +32,8 @@ export default function HomeScreen() {
   const [openDelete, setOpenDelete] = useState(false);
   const [openExport, setOpenExport] = useState(false);
   const [openFork, setOpenFork] = useState(false);
+  const [exportName, setExportName] = useState("");
+  const [forkName, setForkName] = useState("");
 
   const [shpFile, setShpFile] = useState(null);
   const [dbfFile, setDbfFile] = useState(null);
@@ -71,6 +73,12 @@ export default function HomeScreen() {
   };
   const openForkModal = (show) => {
     setOpenFork(show);
+  };
+  const exportNameSet = (show) => {
+    setExportName(show);
+  };
+  const forkNameSet = (show) => {
+    setForkName(show);
   };
 
   const handleUploadSHP = () => {
@@ -133,18 +141,18 @@ export default function HomeScreen() {
   if (store.userMaps) {
 
     mapcards = (
-      <List
-        id="mapcards"
-      >
+      <List id="mapcards">
         {store.userMaps.map((map) => (
           <MapCard
             id={map._id}
             mapName={map.name}
             ownerUsername={map.ownerUsername}
-            published = {map.published.isPublished}
+            published={map.published.isPublished}
             setOpenDelete={openDeleteModal}
             setOpenExport={openExportModal}
             setOpenFork={openForkModal}
+            setExportName={exportNameSet}
+            setForkName={forkNameSet}
             dropdown={dropdown}
           />
         ))}
@@ -200,7 +208,7 @@ export default function HomeScreen() {
                     ref={shpInputRef}
                     onChange={handleShpFileChange}
                     accept=".shp"
-                    style={{ display: 'none' }}
+                    style={{ display: "none" }}
                   />
                 </div>
                 <div>
@@ -223,7 +231,7 @@ export default function HomeScreen() {
                     ref={dbfInputRef}
                     onChange={handleDbfFileChange}
                     accept=".dbf"
-                    style={{ display: 'none' }}
+                    style={{ display: "none" }}
                   />
                 </div>
                 <div>
@@ -246,7 +254,7 @@ export default function HomeScreen() {
                     ref={geoJsonInputRef}
                     accept=".json"
                     onChange={handleGeoJsonFileChange}
-                    style={{ display: 'none' }}
+                    style={{ display: "none" }}
                   />
                 </div>
               </Box>
@@ -310,8 +318,12 @@ export default function HomeScreen() {
       <div>{mapcards}</div>
 
       <DeleteModal open={openDelete} setOpen={setOpenDelete} />
-      <ExportModal open={openExport} setOpen={setOpenExport} />
-      <ForkModal open={openFork} setOpen={setOpenFork} />
+      <ExportModal
+        open={openExport}
+        setOpen={setOpenExport}
+        name={exportName}
+      />
+      <ForkModal open={openFork} setOpen={setOpenFork} name={forkName} />
     </div>
   );
 }

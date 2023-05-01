@@ -183,317 +183,315 @@ export default function ExpandedMapcard(props) {
     }
 
     return (
-        <div>
-            <Modal
-                id="view-modal"
-                open={props.open}
-                onClose={handleClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
+      <div>
+        <Modal
+          id="view-modal"
+          open={props.open}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style}>
+            <Button
+              variant="contained"
+              sx={{ maxWidth: 20 }}
+              style={{
+                borderRadius: 50,
+                backgroundColor: "#AEAFFF",
+                padding: "7px 10px",
+                margin: "0px 0px 8px",
+                fontSize: "13px",
+                color: "#000000",
+              }}
+              onClick={handleClose}
             >
-                <Box sx={style}>
-                    <Button
-                        variant="contained"
-                        sx={{ maxWidth: 20 }}
-                        style={{
-                            borderRadius: 50,
-                            backgroundColor: "#AEAFFF",
-                            padding: "7px 10px",
-                            margin: "0px 0px 8px",
-                            fontSize: "13px",
-                            color: "#000000",
-                        }}
-                        onClick={handleClose}
-                    >
-                        X
-                    </Button>
+              X
+            </Button>
 
+            <Grid
+              container
+              direction="row"
+              justifyContent="space-between"
+              alignItems="stretch"
+            >
+              {/* left */}
+              <Grid item xs={6}>
+                <Grid
+                  container
+                  direction="column"
+                  justifyContent="space-between"
+                  alignItems="stretch"
+                >
+                  {/* name and comment box */}
+                  <Grid item>
                     <Grid
-                        container
-                        direction="row"
-                        justifyContent="space-between"
-                        alignItems="stretch"
+                      container
+                      direction="column"
+                      justifyContent="space-between"
+                      alignItems="stretch"
                     >
-                        {/* left */}
-                        <Grid item xs={6}>
-                            <Grid
-                                container
-                                direction="column"
-                                justifyContent="space-between"
-                                alignItems="stretch"
+                      <Grid item>
+                        <Grid
+                          container
+                          direction="row"
+                          justifyContent="space-between"
+                          alignItems="stretch"
+                        >
+                          <Grid item xs={8}>
+                            <Typography
+                              id="mapcard-name"
+                              variant="h3"
+                              component="h2"
+                              style={{
+                                color: "#AEAFFF",
+                              }}
                             >
-                                {/* name and comment box */}
-                                <Grid item>
-                                    <Grid
-                                        container
-                                        direction="column"
-                                        justifyContent="space-between"
-                                        alignItems="stretch"
-                                    >
-                                        <Grid item>
-                                            <Grid
-                                                container
-                                                direction="row"
-                                                justifyContent="space-between"
-                                                alignItems="stretch"
-                                            >
-                                                <Grid item xs={8}>
-                                                    <Typography
-                                                        id="mapcard-name"
-                                                        variant="h3"
-                                                        component="h2"
-                                                        style={{
-                                                            color: "#AEAFFF",
-                                                        }}
-                                                    >
-                                                        North America
-                                                    </Typography>
+                              {props.name}
+                            </Typography>
 
-                                                    <Typography
-                                                        id="mapcard-owner"
-                                                        variant="h6"
-                                                        component="h2"
-                                                        style={{
-                                                            color: "#B3B3B3",
-                                                        }}
-                                                    >
-                                                        Lucas Shmo
-                                                    </Typography>
-                                                </Grid>
+                            <Typography
+                              id="mapcard-owner"
+                              variant="h6"
+                              component="h2"
+                              style={{
+                                color: "#B3B3B3",
+                              }}
+                            >
+                              {props.ownername}
+                            </Typography>
+                          </Grid>
 
-                                                <Grid item xs={3}>
-                                                    {forkButton}
+                          <Grid item xs={3}>
+                            {forkButton}
 
-                                                    <Button
-                                                        variant="contained"
-                                                        style={{
-                                                            borderRadius: 50,
-                                                            backgroundColor: "rgba(255, 255, 255, .2)",
-                                                            padding: "13px 34px",
-                                                            margin: "10px 10px",
-                                                            fontSize: "10px",
-                                                            color: "#ffffff",
-                                                        }}
-                                                        sx={{ maxWidth: 100 }}
-                                                        onClick={(event) => {
-                                                            handleExport(event);
-                                                        }}
-                                                    >
-                                                        Export
-                                                    </Button>
-                                                    <ExportModal
-                                                        open={openExport}
-                                                        setOpen={setOpenExport}
-                                                    />
-                                                    <ForkModal open={openFork} setOpen={setOpenFork} />
-                                                </Grid>
-                                            </Grid>
-
-                                            {commentBox}
-                                        </Grid>
-                                    </Grid>
-
-                                    {/* Comments */}
-                                    <Grid item>
-                                        <Box
-                                            sx={{
-                                                height: "250px",
-                                                width: "500px",
-                                                marginLeft: "20px",
-                                                marginTop: "20px",
-                                            }}
-                                        >
-                                            <Grid
-                                                container
-                                                direction="column"
-                                                justifyContent="space-between"
-                                                alignItems="stretch"
-                                            >
-                                                <Grid item>
-                                                    <Grid
-                                                        container
-                                                        direction="column"
-                                                        justifyContent="space-between"
-                                                        alignItems="stretch"
-                                                    >
-                                                        <Grid item>
-                                                            <Grid
-                                                                container
-                                                                direction="row"
-                                                                alignItems="stretch"
-                                                            >
-                                                                <Grid item xs={1}>
-                                                                    <Avatar>P</Avatar>
-                                                                </Grid>
-
-                                                                <Grid item xs={4}>
-                                                                    <Typography
-                                                                        component="div"
-                                                                        variant="h6"
-                                                                        style={{
-                                                                            color: "#ffffff",
-                                                                        }}
-                                                                    >
-                                                                        Peter Pan
-                                                                    </Typography>
-                                                                </Grid>
-
-                                                                <Grid item xs={6}>
-                                                                    {replyButton}
-                                                                </Grid>
-                                                            </Grid>
-                                                        </Grid>
-                                                        <Grid item>
-                                                            {replyTextbox}
-                                                        </Grid>
-                                                        <Grid item>
-                                                            <Box
-                                                                sx={{
-                                                                    height: "60px",
-                                                                    width: "300px",
-                                                                    marginLeft: "50px",
-                                                                }}
-                                                            >
-                                                                <Typography
-                                                                    // mt={2}
-                                                                    component="div"
-                                                                    variant="subtitle1"
-                                                                    style={{
-                                                                        color: "#ffffff",
-                                                                    }}
-                                                                >
-                                                                    Really nice map! I love Geography!!! Can I
-                                                                    collaborate with you on this map?
-                                                                </Typography>
-                                                            </Box>
-                                                            {replyText}
-                                                        </Grid>
-                                                    </Grid>
-                                                </Grid>
-
-                                                <Grid item>
-                                                    <Grid
-                                                        container
-                                                        direction="column"
-                                                        justifyContent="space-between"
-                                                        alignItems="stretch"
-                                                    >
-                                                        <Grid item>
-                                                            <Grid
-                                                                container
-                                                                direction="row"
-                                                                alignItems="stretch"
-                                                            >
-                                                                <Grid item xs={1}>
-                                                                    <Avatar>C</Avatar>
-                                                                </Grid>
-
-                                                                <Grid item xs={4}>
-                                                                    <Typography
-                                                                        component="div"
-                                                                        variant="h6"
-                                                                        style={{
-                                                                            color: "#ffffff",
-                                                                        }}
-                                                                    >
-                                                                        Chandler Bing
-                                                                    </Typography>
-                                                                </Grid>
-
-                                                                <Grid item xs={6}>
-                                                                    {replyButton}
-                                                                </Grid>
-                                                            </Grid>
-                                                        </Grid>
-
-                                                        <Grid item>
-                                                            <Box
-                                                                sx={{
-                                                                    height: "60px",
-                                                                    width: "300px",
-                                                                    marginLeft: "50px",
-                                                                }}
-                                                            >
-                                                                <Typography
-                                                                    // mt={2}
-                                                                    component="div"
-                                                                    variant="subtitle1"
-                                                                    style={{
-                                                                        color: "#ffffff",
-                                                                    }}
-                                                                >
-                                                                    EWWWWWWWW
-                                                                </Typography>
-                                                            </Box>
-                                                        </Grid>
-                                                    </Grid>
-                                                </Grid>
-                                            </Grid>
-                                        </Box>
-                                    </Grid>
-                                </Grid>
-                            </Grid>
+                            <Button
+                              variant="contained"
+                              style={{
+                                borderRadius: 50,
+                                backgroundColor: "rgba(255, 255, 255, .2)",
+                                padding: "13px 34px",
+                                margin: "10px 10px",
+                                fontSize: "10px",
+                                color: "#ffffff",
+                              }}
+                              sx={{ maxWidth: 100 }}
+                              onClick={(event) => {
+                                handleExport(event);
+                              }}
+                            >
+                              Export
+                            </Button>
+                            <ExportModal
+                              open={openExport}
+                              setOpen={setOpenExport}
+                            />
+                            <ForkModal open={openFork} setOpen={setOpenFork} />
+                          </Grid>
                         </Grid>
 
-                        {/* right */}
-                        <Grid item xs={6}>
-                            <Box sx={{ marginLeft: "30px", marginTop: "10px" }}>
-                                <Card sx={{ borderRadius: "30px" }}>
-                                    <CardMedia
-                                        component="img"
-                                        alt="green iguana"
-                                        height="410"
-                                        image="cardBackground.png"
-                                        style={{ objectFit: "cover" }}
-                                    />
-                                </Card>
-                            </Box>
-
-                            <Button
-                                variant="contained"
-                                style={{
-                                    borderRadius: 50,
-                                    backgroundColor: "rgba(255, 255, 255, .2)",
-                                    padding: "7px 14px",
-                                    margin: "20px 30px",
-                                    fontSize: "10px",
-                                    color: "#ffffff",
-                                }}
-                            >
-                                Keyword
-                            </Button>
-
-                            <Button
-                                variant="contained"
-                                style={{
-                                    borderRadius: 50,
-                                    backgroundColor: "rgba(255, 255, 255, .2)",
-                                    padding: "7px 14px",
-                                    margin: "20px 30px",
-                                    fontSize: "10px",
-                                    color: "#ffffff",
-                                }}
-                            >
-                                Keyword
-                            </Button>
-
-                            <Button
-                                variant="contained"
-                                style={{
-                                    borderRadius: 50,
-                                    backgroundColor: "rgba(255, 255, 255, .2)",
-                                    padding: "7px 14px",
-                                    margin: "20px 30px",
-                                    fontSize: "10px",
-                                    color: "#ffffff",
-                                }}
-                            >
-                                Keyword
-                            </Button>
-                        </Grid>
+                        {commentBox}
+                      </Grid>
                     </Grid>
+
+                    {/* Comments */}
+                    <Grid item>
+                      <Box
+                        sx={{
+                          height: "250px",
+                          width: "500px",
+                          marginLeft: "20px",
+                          marginTop: "20px",
+                        }}
+                      >
+                        <Grid
+                          container
+                          direction="column"
+                          justifyContent="space-between"
+                          alignItems="stretch"
+                        >
+                          <Grid item>
+                            <Grid
+                              container
+                              direction="column"
+                              justifyContent="space-between"
+                              alignItems="stretch"
+                            >
+                              <Grid item>
+                                <Grid
+                                  container
+                                  direction="row"
+                                  alignItems="stretch"
+                                >
+                                  <Grid item xs={1}>
+                                    <Avatar>P</Avatar>
+                                  </Grid>
+
+                                  <Grid item xs={4}>
+                                    <Typography
+                                      component="div"
+                                      variant="h6"
+                                      style={{
+                                        color: "#ffffff",
+                                      }}
+                                    >
+                                      Peter Pan
+                                    </Typography>
+                                  </Grid>
+
+                                  <Grid item xs={6}>
+                                    {replyButton}
+                                  </Grid>
+                                </Grid>
+                              </Grid>
+                              <Grid item>{replyTextbox}</Grid>
+                              <Grid item>
+                                <Box
+                                  sx={{
+                                    height: "60px",
+                                    width: "300px",
+                                    marginLeft: "50px",
+                                  }}
+                                >
+                                  <Typography
+                                    // mt={2}
+                                    component="div"
+                                    variant="subtitle1"
+                                    style={{
+                                      color: "#ffffff",
+                                    }}
+                                  >
+                                    Really nice map! I love Geography!!! Can I
+                                    collaborate with you on this map?
+                                  </Typography>
+                                </Box>
+                                {replyText}
+                              </Grid>
+                            </Grid>
+                          </Grid>
+
+                          <Grid item>
+                            <Grid
+                              container
+                              direction="column"
+                              justifyContent="space-between"
+                              alignItems="stretch"
+                            >
+                              <Grid item>
+                                <Grid
+                                  container
+                                  direction="row"
+                                  alignItems="stretch"
+                                >
+                                  <Grid item xs={1}>
+                                    <Avatar>C</Avatar>
+                                  </Grid>
+
+                                  <Grid item xs={4}>
+                                    <Typography
+                                      component="div"
+                                      variant="h6"
+                                      style={{
+                                        color: "#ffffff",
+                                      }}
+                                    >
+                                      Chandler Bing
+                                    </Typography>
+                                  </Grid>
+
+                                  <Grid item xs={6}>
+                                    {replyButton}
+                                  </Grid>
+                                </Grid>
+                              </Grid>
+
+                              <Grid item>
+                                <Box
+                                  sx={{
+                                    height: "60px",
+                                    width: "300px",
+                                    marginLeft: "50px",
+                                  }}
+                                >
+                                  <Typography
+                                    // mt={2}
+                                    component="div"
+                                    variant="subtitle1"
+                                    style={{
+                                      color: "#ffffff",
+                                    }}
+                                  >
+                                    EWWWWWWWW
+                                  </Typography>
+                                </Box>
+                              </Grid>
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                      </Box>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
+
+              {/* right */}
+              <Grid item xs={6}>
+                <Box sx={{ marginLeft: "30px", marginTop: "10px" }}>
+                  <Card sx={{ borderRadius: "30px" }}>
+                    <CardMedia
+                      component="img"
+                      alt="green iguana"
+                      height="410"
+                      image="cardBackground.png"
+                      style={{ objectFit: "cover" }}
+                    />
+                  </Card>
                 </Box>
-            </Modal>
-        </div>
+
+                <Button
+                  variant="contained"
+                  style={{
+                    borderRadius: 50,
+                    backgroundColor: "rgba(255, 255, 255, .2)",
+                    padding: "7px 14px",
+                    margin: "20px 30px",
+                    fontSize: "10px",
+                    color: "#ffffff",
+                  }}
+                >
+                  Keyword
+                </Button>
+
+                <Button
+                  variant="contained"
+                  style={{
+                    borderRadius: 50,
+                    backgroundColor: "rgba(255, 255, 255, .2)",
+                    padding: "7px 14px",
+                    margin: "20px 30px",
+                    fontSize: "10px",
+                    color: "#ffffff",
+                  }}
+                >
+                  Keyword
+                </Button>
+
+                <Button
+                  variant="contained"
+                  style={{
+                    borderRadius: 50,
+                    backgroundColor: "rgba(255, 255, 255, .2)",
+                    padding: "7px 14px",
+                    margin: "20px 30px",
+                    fontSize: "10px",
+                    color: "#ffffff",
+                  }}
+                >
+                  Keyword
+                </Button>
+              </Grid>
+            </Grid>
+          </Box>
+        </Modal>
+      </div>
     );
 }

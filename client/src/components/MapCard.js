@@ -45,11 +45,13 @@ export default function MapCard(props) {
   async function handleExport(event) {
     event.stopPropagation();
     props.setOpenExport(true);
+    props.setExportName(props.mapName);
     store.markMapForExport(props.id);
   }
   async function handleFork(event) {
     event.stopPropagation();
     props.setOpenFork(true);
+    props.setForkName(props.mapName);
     store.duplicateMapById(props.id);
   }
 
@@ -60,6 +62,8 @@ export default function MapCard(props) {
   async function handleViewMap(event, id) {
     event.stopPropagation();
     props.setOpenView(true);
+    props.setExpandName(props.mapName);
+    props.setExpandOwnerName(props.ownerUsername);
   }
 
   var editButton = <Button variant="contained" sx={{ maxWidth: 100 }} style={{

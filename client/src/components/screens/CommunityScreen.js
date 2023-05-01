@@ -33,7 +33,10 @@ export default function CommunityScreen() {
       const [openExport, setOpenExport] = useState(false);
       const [openFork, setOpenFork] = useState(false);
       const [openView, setOpenView] = useState(false);
-
+      const [exportName, setExportName] = useState("");
+      const [forkName, setForkName] = useState("");
+      const [expandName, setExpandName] = useState("");
+      const [expandOwnerName, setExpandOwnerName] = useState("");
        useEffect(() => {
          store.loadPublishedMaps();
        }, []);
@@ -57,6 +60,18 @@ export default function CommunityScreen() {
       };
       const openViewModal = (show) => {
         setOpenView(show);
+      };
+       const exportNameSet = (show) => {
+         setExportName(show);
+       };
+       const forkNameSet = (show) => {
+         setForkName(show);
+       };
+      const expandNameSet = (show) => {
+        setExpandName(show);
+      };
+      const expandOwnerNameSet = (show) => {
+         setExpandOwnerName(show);
       };
 
     let mapcards = "";
@@ -86,6 +101,10 @@ export default function CommunityScreen() {
               setOpenExport={openExportModal}
               setOpenFork={openForkModal}
               setOpenView={openViewModal}
+              setExportName={exportNameSet}
+              setForkName={forkNameSet}
+              setExpandName={expandNameSet}
+              setExpandOwnerName={expandOwnerNameSet}
             />
           ))}
         </List>
@@ -184,9 +203,18 @@ export default function CommunityScreen() {
         <div>
           {mapcards}
           <DeleteModal open={openDelete} setOpen={setOpenDelete} />
-          <ExportModal open={openExport} setOpen={setOpenExport} />
-          <ForkModal open={openFork} setOpen={setOpenFork} />
-          <ExpandedMapcard open={openView} setOpen={setOpenView} />
+          <ExportModal
+            open={openExport}
+            setOpen={setOpenExport}
+            name={exportName}
+          />
+          <ForkModal open={openFork} setOpen={setOpenFork} name={forkName} />
+          <ExpandedMapcard
+            open={openView}
+            setOpen={setOpenView}
+            name={expandName}
+            ownername={expandOwnerName}
+          />
         </div>
       </div>
     );
