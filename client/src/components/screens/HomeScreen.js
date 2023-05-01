@@ -155,6 +155,7 @@ export default function HomeScreen() {
             setForkName={forkNameSet}
             dropdown={dropdown}
             key={map._id}
+            thumbnail={map.thumbnail}
           />
         ))}
       </List>

@@ -43,7 +43,6 @@ export default function EditMap() {
   let selectedPolygon = null;
   let prevLayer = null;
   let selectedLayer = null;
-  let featuresLength = store.currentMap.geoJsonMap.features.length;
   let changedColor = '';
   let regionsToMerge = [];
   let mergeEnabled = false;
@@ -246,9 +245,6 @@ export default function EditMap() {
   const handleStartPolygon = (e) => {
     if (map.editTools) {
       let polygon = map.editTools.startPolygon();
-      polygon.options.properties = {
-        myId: featuresLength
-      }
     }
   }
 
@@ -256,7 +252,6 @@ export default function EditMap() {
     console.log(e);
 
     const feature = e.layer.toGeoJSON();
-    feature.properties.myId = featuresLength++;
     onEachRegion(feature, e.layer);
 
     console.log("adding", feature);
@@ -278,7 +273,6 @@ export default function EditMap() {
     if (selectedLayer !== null) {
       store.deletePolygonOfMap(selectedPolygon);
 
-      featuresLength -= 1;
       map.removeLayer(selectedLayer);
       prevPolygon = null;
       prevLayer = null;

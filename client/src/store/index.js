@@ -20,7 +20,6 @@ import leafletImage from 'leaflet-image';
 const shpwrite = require('shp-write');
 //const dbfwrite = require('dbf-write');
 
-
 export const GlobalStoreContext = createContext({});
 console.log("create GlobalStoreContext");
 
@@ -143,25 +142,96 @@ function GlobalStoreContextProvider(props) {
     let top3 = topoSimplify.simplify(top2, .005);
     let feature = topoClient.feature(top3, "foo");
 
-    const response = await api.createNewMap({ map: feature });
-    console.log("createNewMap response: " + response);
-    if (response.status === 201) {
-      //tps.clearAllTransactions();
-      let newMap = response.data.map;
-      console.log(newMap);
-      storeReducer({
-        type: GlobalStoreActionType.CREATE_NEW_MAP,
-        payload: newMap
-      }
-      );
+    var container = document.createElement('div');
+    container.style.height = '500px';
+    container.style.width = '500px';
+    document.body.appendChild(container);
 
-      // IF IT'S A VALID LIST THEN LET'S START EDITING IT
-      //history.push("/playlist/" + newList._id);
-      navigate("/createmap");
-    }
-    else {
-      console.log("API FAILED TO CREATE A NEW LIST");
-    }
+    let map = L.map(container).setView([0, 0], 1);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    var geojsonMap =
+      L.geoJson(feature, {
+      });
+    geojsonMap.eachLayer(function (layer) {
+      //console.log(layer);
+      layer.addTo(map);
+    })
+
+    let format = 'image';
+    var screenshot = L.simpleMapScreenshoter().addTo(map);
+
+    screenshot.takeScreen(format).then(async image => {
+      map.remove();
+      container.parentNode.removeChild(container);
+      const response = await api.createNewMap({ map: feature, thumbnail: image});
+      console.log("createNewMap response: " + response);
+      if (response.status === 201) {
+        //tps.clearAllTransactions();
+        let newMap = response.data.map;
+        console.log(newMap);
+        storeReducer({
+          type: GlobalStoreActionType.CREATE_NEW_MAP,
+          payload: newMap
+        }
+        );
+
+        // IF IT'S A VALID LIST THEN LET'S START EDITING IT
+        //history.push("/playlist/" + newList._id);
+        navigate("/createmap");
+      }
+      else {
+        console.log("API FAILED TO CREATE A NEW LIST");
+      }
+    })
+
+    // async function waitForLeafletImage() {
+    //   return new Promise((resolve, reject) => {
+    //     leafletImage(map, (err, canvas) => {
+    //       if (err) {
+    //         reject(err);
+    //       } else {
+    //         const image = canvas.toDataURL();
+    //         console.log(image);
+    //         resolve(image);
+    //       }
+    //     });
+    //   });
+    // }
+
+    // waitForLeafletImage()
+    //   .then(async (image) => {
+    //     console.log('Leaflet image created:', image);
+    //     // Continue with the rest of your code here
+    //     const response = await api.createNewMap({ map: feature, thumbnail: image });
+    //     console.log("createNewMap response: " + response);
+    //     if (response.status === 201) {
+    //       //tps.clearAllTransactions();
+    //       let newMap = response.data.map;
+    //       console.log(newMap);
+    //       storeReducer({
+    //         type: GlobalStoreActionType.CREATE_NEW_MAP,
+    //         payload: newMap
+    //       }
+    //       );
+
+    //       // IF IT'S A VALID LIST THEN LET'S START EDITING IT
+    //       //history.push("/playlist/" + newList._id);
+    //       navigate("/createmap");
+    //     }
+    //     else {
+    //       console.log("API FAILED TO CREATE A NEW LIST");
+    //     }
+
+    //   })
+    //   .catch((err) => {
+    //     console.error('Error creating Leaflet image:', err);
+    //   });
+
   }
 
   store.updateMapCustomProperties = async function (name, keywords, collaborators) {

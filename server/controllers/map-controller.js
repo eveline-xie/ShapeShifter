@@ -20,12 +20,6 @@ async function createNewMap(req, res) {
     }
     console.log("id:", req.userId);
     const loggedInUser = await User.findOne({ _id: req.userId });
-    console.log("features", body.map.features);
-    let mapWithIdentifiers = body.map.features.map(function (feature, index) {
-        feature.properties.myId = index;
-        return feature;
-    })
-    body.map.features = mapWithIdentifiers;
     //let thumbnailUrl;
     /*
     const canvas = createCanvas(1000, 1000);
@@ -55,6 +49,8 @@ async function createNewMap(req, res) {
     
     console.log(thumbnailUrl);
     */
+
+    console.log("hi", req.body.map, req.body.thumbnail);
     const map = new Map({
         name: "Untitled",
         ownerUsername: loggedInUser.username,
@@ -64,20 +60,18 @@ async function createNewMap(req, res) {
         collaborators: [],
         keywords: [],
         published: {
-            isPublished: false, publishedDate: new Date()
+            isPublished: false, publishedDate: new Date(),
             //   ,thumbnail: thumbnailUrl 
-        }
+        },
+        thumbnail: req.body.thumbnail
     })
 
     if (!map) {
         return res.status(400).json({ success: false, error: err })
     }
     loggedInUser.mapsIOwn.push(map._id);
-    console.log("e");
     await loggedInUser.save();
-    console.log("f");
     await map.save();
-    console.log("g");
     return res.status(201).json({
         map: map
     })
@@ -129,7 +123,8 @@ async function loadUserMapsNoGeoJson(req, res) {
                 comments: maps[i].comments,
                 collaborators: maps[i].collaborators,
                 keywords: maps[i].keywords,
-                published: maps[i].published
+                published: maps[i].published,
+                thumbnail: maps[i].thumbnail
             }
         )
     }

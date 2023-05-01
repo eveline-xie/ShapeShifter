@@ -22,10 +22,12 @@
     "html2canvas": "^1.4.1",
     "jsonwebtoken": "^9.0.0",
     "leaflet": "^1.9.3",
+    "leaflet-simple-map-screenshoter": "^0.5.0",
     "mongodb": "^5.1.0",
     "mongoose": "^7.0.3",
     "nodemailer": "^6.9.1",
     "puppeteer": "^19.11.0",
+    "react-leaflet": "^4.2.1",
     "shp-write": "^0.3.2",
     "togeojson": "^0.16.0"
   },

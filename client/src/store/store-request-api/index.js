@@ -17,6 +17,7 @@ const api = axios.create({
 });
 
 export const createNewMap = (payload) => {
+    console.log("The payload",payload.map, payload.thumbnail);
     return api.post('/map', payload);
 }
 
@@ -98,7 +99,7 @@ const apis = {
   loadUserMapsNoGeoJson,
   getMapById,
   getShpDbfFileById,
-  
+
   duplicateMapById,
   deleteMapById,
   addPolygonToMap,

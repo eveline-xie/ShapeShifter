@@ -333,11 +333,12 @@ export default function CreateMap() {
               height: 500,
               width: 700,
               mr: 5,
+
               //   maxHeight: { xs: 233, md: 167 },
               //   maxWidth: { xs: 350, md: 250 },
             }}
             alt="Map Preview"
-            // src={store.currentMap.thumbnail}
+            src={store.currentMap.thumbnail}
           />
           
           <div>

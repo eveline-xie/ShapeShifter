@@ -159,7 +159,7 @@ export default function MapCard(props) {
         maxWidth: 325,
         borderRadius: "30px",
         backgroundColor: "grey",
-        backgroundImage: `url(${"cardBackground.png"})`,
+        backgroundImage: `url(${props.thumbnail})`,
         backgroundSize: "cover",
         left: 0,
       }}

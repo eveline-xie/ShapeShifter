@@ -11,9 +11,8 @@ const MapSchema = new Schema(
         geoJsonMap: {type: Object, required: true},
         collaborators: [{type: String, required: false}],
         keywords: [{type: String, required: false}],
-        published: {type: {isPublished: Boolean, publishedDate: Date}, required: true}
-        ,
-        // thumbnail: {type:String, required:true}
+        published: {type: {isPublished: Boolean, publishedDate: Date}, required: true},
+        thumbnail: {type:String, required:true}
     },
     { timestamps: true },
 )
