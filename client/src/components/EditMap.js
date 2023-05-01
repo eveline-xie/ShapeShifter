@@ -298,35 +298,44 @@ export default function EditMap() {
     console.log(store.currentMap.geoJsonMap)
     const feature = turf.feature(store.currentMap.geoJsonMap);
     console.log(feature)
-    
+
     console.log("leaflet map: ")
     console.log(map)
     //console.log(feature)
-  // Simplify the feature using the Turf simplify() function
-  const simplified = turf.simplify(feature, 0.01);
-console.log(simplified)
-  const simplifiedFeature = turf.featureCollection(simplified).features.geometry.geometry;
-  console.log(simplifiedFeature)
-  //L.geoJSON().clearLayers();
+    // Simplify the feature using the Turf simplify() function
+    const simplified = turf.simplify(feature, 0.01);
+    console.log(simplified)
+    const simplifiedFeature = turf.featureCollection(simplified).features.geometry.geometry;
+    console.log(simplifiedFeature)
+    //L.geoJSON().clearLayers();
 
- // map.removeLayer(L.geoJSON(store.currentMap.geoJsonMap));
-  /*map.eachLayer(function (layer) {
-    if (layer instanceof L.GeoJSON) {
-      layer.remove();
-    }
-  });
-  */
+    // map.removeLayer(L.geoJSON(store.currentMap.geoJsonMap));
+    /*map.eachLayer(function (layer) {
+      if (layer instanceof L.GeoJSON) {
+        layer.remove();
+      }
+    });
+    */
 
-  var simplifiedGeojsonMapLayer = L.geoJson(simplifiedFeature, {
-    onEachFeature: onEachRegion
-  });
-  simplifiedGeojsonMapLayer.eachLayer(function (layer) {
-    layer.addTo(map);
-  });
+    var simplifiedGeojsonMapLayer = L.geoJson(simplifiedFeature, {
+      onEachFeature: onEachRegion
+    });
+    simplifiedGeojsonMapLayer.eachLayer(function (layer) {
+      layer.addTo(map);
+    });
 
-  store.currentMap.geoJsonMap = simplifiedFeature;
-  console.log("current map: ")
-  console.log(store.currentMap.geoJsonMap)
+    store.currentMap.geoJsonMap = simplifiedFeature;
+    console.log("current map: ")
+    console.log(store.currentMap.geoJsonMap)
+  }
+
+  const handleInfo = (e) => {
+    // var text = document.getElementById("infoText");
+    // if (text.style.display == "none") {
+    //   text.style.display = "block";
+    // } else {
+    //   text.style.display = "none";
+    // }
   }
 
   return (
@@ -461,7 +470,7 @@ console.log(simplified)
                   color="inherit"
                   aria-label="menu"
                   sx={{ mr: 2 }}
-                  onClick = {handleCompressMap}
+                  onClick={handleCompressMap}
                 >
                   <CompressIcon />
                 </IconButton>
@@ -474,6 +483,7 @@ console.log(simplified)
                   color="inherit"
                   aria-label="menu"
                   sx={{ mr: 2 }}
+                  onClick={handleInfo}
                 >
                   <InfoIcon />
                 </IconButton>
@@ -483,6 +493,15 @@ console.log(simplified)
           </AppBar>
         </Box>
       </div>
+      {/* <div id="infoText" padding-left='100px' style={{ color: 'white' }} >
+        <p>Rename Button: Select a subregion and name or modify the subregion's name</p>
+        <p>Change Color Button: Select a subregion and fill or modify the subregion's highlighted color</p>
+        <p>Add Subregion Button: </p>
+        <p>Delete Subregion Button: </p>
+        <p>Merge Subregion Button: </p>
+        <p>Split Subregion Button: </p>
+        <p>Compress Subregion Button: </p>
+      </div> */}
       <div>
         {/* <Box
           component="img"

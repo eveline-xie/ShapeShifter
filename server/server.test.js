@@ -101,6 +101,46 @@ describe("Auth Tests", () => {
           // Even more logic goes here
       });
 
+      test("POST `/duplicate-map", (done) => {
+        request(server)
+          .post("`/duplicate-map")
+          // .expect("Content-Type", /json/)
+          .send({
+            id: "1",
+          })
+          //.expect(200)
+          // .expect((res) => {
+          //     res.data.message = "Success"
+          // })
+          .end((err, res) => {
+              if (err) return done(err);
+             
+              return done();
+            });
+      
+          // Even more logic goes here
+      });
+
+      test("PUT `/publish-map`", (done) => {
+        request(server)
+          .put("`/publish-map`")
+          // .expect("Content-Type", /json/)
+          .send({
+            id: "1",
+          })
+          //.expect(200)
+          // .expect((res) => {
+          //     res.data.message = "Success"
+          // })
+          .end((err, res) => {
+              if (err) return done(err);
+             
+              return done();
+            });
+      
+          // Even more logic goes here
+      });
+
       afterAll( async () =>{
         await mongoose.connection.close()
     })
