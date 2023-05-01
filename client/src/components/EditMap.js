@@ -7,6 +7,7 @@ import { Button, Typography, Toolbar, Box, AppBar, Tooltip } from "@mui/material
 import UndoIcon from "@mui/icons-material/Undo";
 import RedoIcon from "@mui/icons-material/Redo";
 import AddIcon from "@mui/icons-material/Add";
+import CompressIcon from '@mui/icons-material/Compress';
 import FormatColorFillIcon from "@mui/icons-material/FormatColorFill";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import MergeIcon from "@mui/icons-material/Merge";
@@ -21,6 +22,8 @@ import L from 'leaflet';
 import 'leaflet-editable'
 import "leaflet/dist/leaflet.css";
 import { feature } from "topojson-client";
+import * as turf from 'turf';
+
 
 /*
     This React component lets us edit the properties of a map, which only
@@ -240,6 +243,42 @@ export default function EditMap() {
     store.updatePolygonOfMap(prevPolygon, feature);
   }
 
+  const handleCompressMap = (e) => {
+    console.log("current map: ")
+    console.log(store.currentMap.geoJsonMap)
+    const feature = turf.feature(store.currentMap.geoJsonMap);
+    console.log(feature)
+    
+    console.log("leaflet map: ")
+    console.log(map)
+    //console.log(feature)
+  // Simplify the feature using the Turf simplify() function
+  const simplified = turf.simplify(feature, 0.01);
+console.log(simplified)
+  const simplifiedFeature = turf.featureCollection(simplified).features.geometry.geometry;
+  console.log(simplifiedFeature)
+  //L.geoJSON().clearLayers();
+
+ // map.removeLayer(L.geoJSON(store.currentMap.geoJsonMap));
+  /*map.eachLayer(function (layer) {
+    if (layer instanceof L.GeoJSON) {
+      layer.remove();
+    }
+  });
+  */
+
+  var simplifiedGeojsonMapLayer = L.geoJson(simplifiedFeature, {
+    onEachFeature: onEachRegion
+  });
+  simplifiedGeojsonMapLayer.eachLayer(function (layer) {
+    layer.addTo(map);
+  });
+
+  store.currentMap.geoJsonMap = simplifiedFeature;
+  console.log("current map: ")
+  console.log(store.currentMap.geoJsonMap)
+  }
+
   return (
     <div>
       <div id="create-map-screen">
@@ -362,6 +401,19 @@ export default function EditMap() {
                   sx={{ mr: 2 }}
                 >
                   <CallSplitIcon />
+                </IconButton>
+              </Tooltip>
+
+              <Tooltip title="Compress Map">
+                <IconButton
+                  size="large"
+                  edge="start"
+                  color="inherit"
+                  aria-label="menu"
+                  sx={{ mr: 2 }}
+                  onClick = {handleCompressMap}
+                >
+                  <CompressIcon />
                 </IconButton>
               </Tooltip>
 
