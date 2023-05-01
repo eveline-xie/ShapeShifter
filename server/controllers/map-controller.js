@@ -417,14 +417,15 @@ async function loadPublishedMaps(req, res) {
     let mapsNoGeoJson = [];
     for (let i = 0; i < maps.length; i++) {
         mapsNoGeoJson.push({
-            _id: maps[i]._id,
-            name: maps[i].name,
-            ownerUsername: maps[i].ownerUsername,
-            ownerEmail: maps[i].ownerEmail,
-            comments: maps[i].comments,
-            collaborators: maps[i].collaborators,
-            keywords: maps[i].keywords,
-            published: maps[i].published,
+          _id: maps[i]._id,
+          name: maps[i].name,
+          ownerUsername: maps[i].ownerUsername,
+          ownerEmail: maps[i].ownerEmail,
+          comments: maps[i].comments,
+          collaborators: maps[i].collaborators,
+          keywords: maps[i].keywords,
+          published: maps[i].published,
+          thumbnail: maps[i].thumbnail,
         });
     }
     return res.status(201).json({
