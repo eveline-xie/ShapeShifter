@@ -8,6 +8,7 @@ import Typography from '@mui/material/Typography';
 import { useNavigate } from 'react-router-dom';
 import { useContext } from 'react'
 import GlobalStoreContext from '../store';
+import { makeStyles } from '@material-ui/core/styles';
 
 /*
     This React component represents a single map item in our
@@ -16,10 +17,17 @@ import GlobalStoreContext from '../store';
     
 */
 
+const useStyles = makeStyles({
+  media: {
+    filter: 'brightness(0.7)', // adjust the brightness as needed
+  },
+});
+
 export default function MapCard(props) {
   const { store } = useContext(GlobalStoreContext);
   let navigate = useNavigate();
   let owner = "";
+  const classes = useStyles();
   // if(published){
   //   owner = <Typography variant="body2" color="text.secondary">
   //         owner name
@@ -68,20 +76,20 @@ export default function MapCard(props) {
 
   var editButton = <Button variant="contained" sx={{ maxWidth: 100 }} style={{
     borderRadius: 50,
-    backgroundColor: "rgba(255,228,132, 0.4)",
+    backgroundColor: "rgba(255,228,132, 0.8)",
     padding: "7px 34px",
     margin: "10px 10px",
     fontSize: "13px",
-    color: "#FFE484",
+    color: "gray",
   }} onClick={handleEditMap}>Edit</Button>
 
   var deleteButton = <Button variant="contained" sx={{ maxWidth: 100 }} style={{
     borderRadius: 50,
-    backgroundColor: "rgba(255,228,132, 0.4)",
+    backgroundColor: "rgba(255,228,132, 0.8)",
     padding: "7px 34px",
     margin: "10px 10px",
     fontSize: "13px",
-    color: "#FFE484"
+    color: "gray"
   }} onClick={(event) => {
     handleDeleteList(event)
   }}>Delete</Button>
@@ -90,15 +98,15 @@ export default function MapCard(props) {
   // }
 
   if (window.location.pathname == '/community' || window.location.pathname == '/communityguest') {
-    owner = <div style={{ color: "white" }}> {props.ownerUsername}</div>;
+    owner = <div style={{ color: "gray" }}> {props.ownerUsername}</div>;
     editButton = "";
     deleteButton = <Button variant="contained" sx={{ maxWidth: 100 }} style={{
       borderRadius: 50,
-      backgroundColor: "rgba(255,228,132, 0.4)",
+      backgroundColor: "rgba(255,228,132, 0.8)",
       padding: "7px 34px",
       margin: "10px 10px",
       fontSize: "13px",
-      color: "#FFE484"
+      color: "gray"
     }} onClick={(event) => {
       handleViewMap(event)
     }}>View</Button>
@@ -109,11 +117,11 @@ export default function MapCard(props) {
     sx={{ maxWidth: 100 }}
     style={{
       borderRadius: 50,
-      backgroundColor: "rgba(255,228,132, 0.4)",
+      backgroundColor: "rgba(255,228,132, 0.8)",
       padding: "7px 34px",
       margin: "10px 10px",
       fontSize: "13px",
-      color: "#FFE484",
+      color: "gray",
     }}
     onClick={(event) => {
       handleFork(event);
@@ -153,6 +161,8 @@ export default function MapCard(props) {
     );
   }
 
+  
+
   return (
     <Card
       sx={{
@@ -166,6 +176,7 @@ export default function MapCard(props) {
       id="mapcard"
     >
       <CardMedia
+        className={classes.media}
         component="img"
         alt="green iguana"
         height="140"
@@ -176,7 +187,7 @@ export default function MapCard(props) {
           gutterBottom
           variant="h5"
           component="div"
-          color="white"
+          color="gray"
           fontFamily="Kadwa"
           sx={{ fontSize: 30, fontWeight: "bold" }}
         >
@@ -198,11 +209,11 @@ export default function MapCard(props) {
             sx={{ maxWidth: 100 }}
             style={{
               borderRadius: 50,
-              backgroundColor: "rgba(255,228,132, 0.4)",
+              backgroundColor: "rgba(255,228,132, 0.8)",
               padding: "7px 34px",
               margin: "10px 10px",
               fontSize: "13px",
-              color: "#FFE484",
+              color: "gray",
             }}
             onClick={(event) => {
               handleExport(event);
