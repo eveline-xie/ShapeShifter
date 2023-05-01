@@ -135,7 +135,7 @@ function NavBar() {
   }
 
   let homeCommunity = ""
-  if (window.location.pathname == "/home") {
+  if (window.location.pathname == "/home" || window.location.pathname == "/shared") {
     homeCommunity =
     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
         <Button
