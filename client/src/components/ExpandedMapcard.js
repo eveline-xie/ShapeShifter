@@ -446,7 +446,7 @@ export default function ExpandedMapcard(props) {
                       component="img"
                       alt="green iguana"
                       height="410"
-                      image="cardBackground.png"
+                      image={props.thumbnail}
                       style={{ objectFit: "cover" }}
                     />
                   </Card>
