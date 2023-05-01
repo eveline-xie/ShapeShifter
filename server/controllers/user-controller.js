@@ -267,7 +267,7 @@ async function updatePassword(req, res) {
 
 async function getUserByEmail(req, res){
   try {
-    const { email} = req.query;
+    const { email, mapid } = req.query;
     const savedUser = await User.findOne({
       email: email,
     });
@@ -277,6 +277,8 @@ async function getUserByEmail(req, res){
     }
     else{
       sendCollaboratorEmail(email);
+        savedUser.sharedWithMe.push(mapid);
+        savedUser.save();
       return res
         .status(200)
         .json({

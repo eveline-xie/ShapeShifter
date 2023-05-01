@@ -14,26 +14,28 @@ import CommunityScreen from "./screens/CommunityScreen";
 import ExpandedMapcard from "./ExpandedMapcard"
 import CommunityGuestScreen from "./screens/CommunityGuestScreen";
 import HomeWrapper from "./HomeWrapper";
+import SharedScreen from "./screens/SharedScreen"
 /*
     This serves as a module so that we can import
     all the other components as we wish.
 */
 
-export{
-    HomeWrapper,
-    WelcomeScreen,
-    NavBar,
-    HomeScreen,
-    LoginScreen,
-    MapCard,
-    DeleteModal,
-    ExportModal,
-    SignupScreen,
-    CreateMap,
-    EditMap,
-    ForgotPassword,
-    ResetPassword,
-    CommunityScreen,
-    ExpandedMapcard,
-    CommunityGuestScreen
-}
+export {
+  HomeWrapper,
+  WelcomeScreen,
+  NavBar,
+  HomeScreen,
+  LoginScreen,
+  MapCard,
+  DeleteModal,
+  ExportModal,
+  SignupScreen,
+  CreateMap,
+  EditMap,
+  ForgotPassword,
+  ResetPassword,
+  CommunityScreen,
+  ExpandedMapcard,
+  CommunityGuestScreen,
+  SharedScreen,
+};

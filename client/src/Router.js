@@ -15,7 +15,8 @@ import {
   CommunityScreen,
   CreateMap,
   EditMap,
-  CommunityGuestScreen
+  CommunityGuestScreen,
+  SharedScreen
 } from "./components";
 /*
     This is our application's top-level component.
@@ -46,6 +47,7 @@ const Router = () => {
             <Route path="/resetpassword" element={<ResetPassword />} />
             <Route path="/community" element={<CommunityScreen />} />
             <Route path="/communityguest" element={<CommunityGuestScreen />} />
+            <Route path="/shared" element={<SharedScreen />} />
           </Routes>
         </GlobalStoreContextProvider>
       </AuthContextProvider>

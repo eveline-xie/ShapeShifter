@@ -17,17 +17,17 @@ import DeleteModal from "../modals/DeleteModal";
 import ExportModal from "../modals/ExportModal";
 import ForkModal from "../modals/ForkModal";
 import { useNavigate } from "react-router-dom";
-import { useContext, useEffect } from 'react'
+import { useContext, useEffect } from "react";
 import GlobalStoreContext from "../../store";
 
 /*
 This screen lists all the maps that the logged in user owns and all the maps that have been shared with the user.
 */
 
-export default function HomeScreen() {
+export default function SharedScreen() {
   const { store } = useContext(GlobalStoreContext);
 
-  const [dropdown, setDropdown] = React.useState(10);
+  const [dropdown, setDropdown] = React.useState(20);
   const [searchTerm, setSearchTerm] = useState("");
   const [openDelete, setOpenDelete] = useState(false);
   const [openExport, setOpenExport] = useState(false);
@@ -43,7 +43,7 @@ export default function HomeScreen() {
   let navigate = useNavigate();
 
   useEffect(() => {
-    store.loadUserMapsNoGeoJson();
+    store.loadSharedMaps();
     // store.loadSharedMaps();
   }, []);
 
@@ -55,11 +55,10 @@ export default function HomeScreen() {
     let n = event.target.value;
     setDropdown(n);
     console.log(n);
-    if(n === 20){
-      navigate("/shared");
-    }else{
-      navigate("/home");
-
+    if (n === 20) {
+        navigate("/shared");
+    } else {
+        navigate("/home");
     }
   };
   const openDeleteModal = (show) => {
@@ -79,7 +78,7 @@ export default function HomeScreen() {
 
   const handleUploadDBF = () => {
     dbfInputRef.current.click();
-  }
+  };
 
   const handleUploadGeoJson = () => {
     geoJsonInputRef.current.click();
@@ -116,7 +115,6 @@ export default function HomeScreen() {
   };
 
   const handleGeoJsonFileChange = (event) => {
-
     var reader = new FileReader();
     reader.onload = function (buffer) {
       console.log("geojson", buffer.target.result);
@@ -128,20 +126,17 @@ export default function HomeScreen() {
     reader.readAsArrayBuffer(event.target.files[0]);
   };
 
-
   let mapcards = "";
-  if (store.userMaps) {
-
+  if (store.sharedMaps) {
+    console.log("sharedmaps loading")
     mapcards = (
-      <List
-        id="mapcards"
-      >
-        {store.userMaps.map((map) => (
+      <List id="mapcards">
+        {store.sharedMaps.map((map) => (
           <MapCard
             id={map._id}
             mapName={map.name}
             ownerUsername={map.ownerUsername}
-            published = {map.published.isPublished}
+            published={map.published.isPublished}
             setOpenDelete={openDeleteModal}
             setOpenExport={openExportModal}
             setOpenFork={openForkModal}
@@ -200,7 +195,7 @@ export default function HomeScreen() {
                     ref={shpInputRef}
                     onChange={handleShpFileChange}
                     accept=".shp"
-                    style={{ display: 'none' }}
+                    style={{ display: "none" }}
                   />
                 </div>
                 <div>
@@ -223,7 +218,7 @@ export default function HomeScreen() {
                     ref={dbfInputRef}
                     onChange={handleDbfFileChange}
                     accept=".dbf"
-                    style={{ display: 'none' }}
+                    style={{ display: "none" }}
                   />
                 </div>
                 <div>
@@ -246,7 +241,7 @@ export default function HomeScreen() {
                     ref={geoJsonInputRef}
                     accept=".json"
                     onChange={handleGeoJsonFileChange}
-                    style={{ display: 'none' }}
+                    style={{ display: "none" }}
                   />
                 </div>
               </Box>

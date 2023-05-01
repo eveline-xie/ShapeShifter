@@ -210,7 +210,7 @@ export default function CreateMap() {
       setError(error);
       return false;
     }
-    const response = await auth.getUserByEmail(email);
+    const response = await auth.getUserByEmail(email, store.currentMap._id);
     if (!response) {
       error = `${email} is not registered.`;
       setError(error);
