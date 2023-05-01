@@ -284,8 +284,13 @@ export default function ExpandedMapcard(props) {
                             <ExportModal
                               open={openExport}
                               setOpen={setOpenExport}
+                              name={props.name}
                             />
-                            <ForkModal open={openFork} setOpen={setOpenFork} />
+                            <ForkModal
+                              open={openFork}
+                              setOpen={setOpenFork}
+                              name={props.name}
+                            />
                           </Grid>
                         </Grid>
 

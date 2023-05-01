@@ -154,6 +154,7 @@ export default function HomeScreen() {
             setExportName={exportNameSet}
             setForkName={forkNameSet}
             dropdown={dropdown}
+            key={map._id}
           />
         ))}
       </List>

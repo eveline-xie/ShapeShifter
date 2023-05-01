@@ -105,6 +105,7 @@ export default function CommunityScreen() {
               setForkName={forkNameSet}
               setExpandName={expandNameSet}
               setExpandOwnerName={expandOwnerNameSet}
+              key={map._id}
             />
           ))}
         </List>
