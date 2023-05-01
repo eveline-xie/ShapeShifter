@@ -12,8 +12,8 @@
 import axios from "axios";
 axios.defaults.withCredentials = true;
 const api = axios.create({
-  baseURL: "https://shapeshifter-api.onrender.com"
-  // baseURL: "http://localhost:5000"
+  //baseURL: "https://shapeshifter-api.onrender.com"
+  baseURL: "http://localhost:5000"
 });
 
 export const createNewMap = (payload) => {
@@ -37,6 +37,10 @@ export const loadUserMapsNoGeoJson = () => {
 
 export const getMapById = (id) => {
   return api.get(`/map/${id}`);
+}
+
+export const getShpDbfFileById = (id) => {
+  return api.get(`/shpdbfmap/${id}`);
 }
 
 export const duplicateMapById = (id) => {
@@ -66,6 +70,13 @@ export const deletePolygonOfMap = (id, feature) => {
   })
 }
 
+export const mergePolygonsOfMap = (id, polygonsToMerge, mergedPolygon) => {
+  return api.put(`/merge-polygons-of-map/${id}`, {
+    polygonsToMerge: polygonsToMerge,
+    mergedPolygon: mergedPolygon
+  })
+}
+
 export const publishMap = (id) => {
   return api.put(`/publish-map`, {
     id: id
@@ -86,11 +97,14 @@ const apis = {
   loadUserMaps,
   loadUserMapsNoGeoJson,
   getMapById,
+  getShpDbfFileById,
+  
   duplicateMapById,
   deleteMapById,
   addPolygonToMap,
   updatePolygonOfMap,
   deletePolygonOfMap,
+  mergePolygonsOfMap,
   publishMap,
   loadPublishedMaps,
   loadSharedMaps,

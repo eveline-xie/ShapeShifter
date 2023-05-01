@@ -45,6 +45,9 @@ export default function EditMap() {
   let selectedLayer = null;
   let featuresLength = store.currentMap.geoJsonMap.features.length;
   let changedColor = '';
+  let regionsToMerge = [];
+  let mergeEnabled = false;
+  let splitEnabled = false;
 
   useEffect(() => {
     console.log("created map");
@@ -152,27 +155,49 @@ export default function EditMap() {
     }
 
     layer.on("click", function () {
-      if (layer.editEnabled()) {
-        layer.disableEdit();
-        //setDeleteButtonEnabled(false);
-
-        deSelect(layer);
-        selectedPolygon = null;
-        selectedLayer = null;
+      if (mergeEnabled) {
+        layer.setStyle({
+          color: 'red'
+        });
+        if (regionsToMerge.indexOf(layer) == -1) {
+          regionsToMerge.push(layer);
+        }
+        if (regionsToMerge.length == 2) {
+          console.log(regionsToMerge[0].feature);
+          console.log(regionsToMerge[1].feature);
+          let merged = turf.union(regionsToMerge[0].feature, regionsToMerge[1].feature);
+          map.removeLayer(regionsToMerge[0]);
+          map.removeLayer(regionsToMerge[1]);
+          console.log(store.currentMap.geoJsonMap);
+          //store.currentMap.geoJsonMap.push(merged);
+          L.geoJSON(merged, {onEachFeature: onEachRegion}).addTo(map);
+          store.mergePolygonsOfMap([regionsToMerge[0].feature, regionsToMerge[1].feature], merged);
+          handleEnableMerge();
+        }
       }
       else {
-        layer.enableEdit();
-        selectRegion(layer);
-        prevPolygon = selectedPolygon;
-        prevLayer = selectedLayer;
-        if (prevPolygon !== null) {
-          prevLayer.disableEdit();
-          deSelect(prevLayer);
+        if (layer.editEnabled()) {
+          layer.disableEdit();
+          //setDeleteButtonEnabled(false);
+  
+          deSelect(layer);
+          selectedPolygon = null;
+          selectedLayer = null;
         }
-        selectedPolygon = layer.toGeoJSON();
-        selectedLayer = layer;
-        console.log(selectedPolygon);
-        //setDeleteButtonEnabled(true);
+        else {
+          layer.enableEdit();
+          selectRegion(layer);
+          prevPolygon = selectedPolygon;
+          prevLayer = selectedLayer;
+          if (prevPolygon !== null) {
+            prevLayer.disableEdit();
+            deSelect(prevLayer);
+          }
+          selectedPolygon = layer.toGeoJSON();
+          selectedLayer = layer;
+          console.log(selectedPolygon);
+          //setDeleteButtonEnabled(true);
+        }
       }
     })
   }
@@ -338,6 +363,27 @@ export default function EditMap() {
     // }
   }
 
+  const handleEnableMerge = () => {
+    mergeEnabled = !mergeEnabled;
+    console.log(mergeEnabled);
+    //console.log(regionsToMerge.length);
+    if (!mergeEnabled) {
+      console.log(regionsToMerge.length);
+      for (let i = 0; i < regionsToMerge.length; i++) {
+        regionsToMerge[i].setStyle({
+          color: '#3388FF'
+        });
+      }
+      regionsToMerge = [];
+    }
+  }
+
+  const handleEnableSplit = () => {
+    if (selectedLayer) {
+      console.log("Ff");
+    }
+  }
+
   return (
     <div>
       <div id="create-map-screen">
@@ -439,12 +485,12 @@ export default function EditMap() {
 
               <Tooltip title="Merge Subregions">
                 <IconButton
-                  disabled
                   size="large"
                   edge="start"
                   color="inherit"
                   aria-label="menu"
                   sx={{ mr: 2 }}
+                  onClick = {handleEnableMerge}
                 >
                   <MergeIcon />
                 </IconButton>
@@ -452,12 +498,12 @@ export default function EditMap() {
 
               <Tooltip title="Split Subregions">
                 <IconButton
-                  disabled
                   size="large"
                   edge="start"
                   color="inherit"
                   aria-label="menu"
                   sx={{ mr: 2 }}
+                  onClick = {handleEnableSplit}
                 >
                   <CallSplitIcon />
                 </IconButton>

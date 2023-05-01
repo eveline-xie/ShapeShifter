@@ -20,12 +20,17 @@ router.put("/update-map-props", auth.verify, MapController.updateMapCustomProper
 router.get("/load-user-maps", auth.verify, MapController.loadUserMaps);
 router.get("/load-user-maps-no-geojson", auth.verify, MapController.loadUserMapsNoGeoJson);
 router.get("/map/:id", auth.verify, MapController.getMapById);
+router.get("/shpdbfmap/:id", auth.verify, MapController.getShpDbfFileById);
+
 router.post("/duplicate-map", auth.verify, MapController.duplicateMapById);
 router.delete("/map/:id", auth.verify, MapController.deleteMapById);
 router.put("/map/:id", auth.verify, MapController.addPolygonToMap);
 router.put("/update-polygon-of-map/:id", auth.verify, MapController.updatePolygonOfMap);
 router.put("/delete-polygon-of-map/:id", auth.verify, MapController.deletePolygonOfMap);
+router.put("/merge-polygons-of-map/:id", auth.verify, MapController.mergePolygonsOfMap);
+
 router.put("/publish-map", auth.verify, MapController.publishMap);
 router.get("/load-published-maps", auth.verify, MapController.loadPublishedMaps);
 router.get("/load-shared-maps", auth.verify, MapController.loadSharedMaps);
+
 module.exports = router;

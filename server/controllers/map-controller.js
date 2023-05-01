@@ -4,7 +4,9 @@ const User = require('../models/user-model');
 // const html2canvas = require('html2canvas');
 // const { createCanvas, loadImage } = require('canvas');
 // const d3 = require('d3');
-
+const shpwrite = require('shp-write');
+const toGeoJSON = require('togeojson');
+const fs = require('fs');
 
 async function createNewMap(req, res) {
     const body = req.body;
@@ -61,11 +63,12 @@ async function createNewMap(req, res) {
         geoJsonMap: body.map,
         collaborators: [],
         keywords: [],
-        published: { isPublished: false, publishedDate: new Date()
-         //   ,thumbnail: thumbnailUrl 
-    }
+        published: {
+            isPublished: false, publishedDate: new Date()
+            //   ,thumbnail: thumbnailUrl 
+        }
     })
-    
+
     if (!map) {
         return res.status(400).json({ success: false, error: err })
     }
@@ -144,6 +147,19 @@ async function getMapById(req, res) {
     })
 }
 
+async function getShpDbfFileById(req, res) {
+    const map = await Map.findById({ _id: req.params.id });
+    const shp = shpwrite.zip(map.geoJsonMap);
+    fs.writeFileSync('data.shp', shp.shp);
+    //fs.writeFileSync('data.shx', shp.shx);
+    fs.writeFileSync('data.dbf', shp.dbf);
+    //fs.writeFileSync('data.prj', shp.prj);
+    return res.status(201).json({
+        success: true,
+        currentMap: shp
+    })
+}
+
 async function duplicateMapById(req, res) {
     const body = req.body;
     console.log("createMap body: " + JSON.stringify(body));
@@ -208,19 +224,6 @@ async function updatePolygonOfMap(req, res) {
     const map = await Map.findOne({ _id: req.params.id });
     let newgeojson = map.geoJsonMap;
     var index;
-
-    // if (req.body.prevPolygon.properties) {
-    //     if (req.body.prevPolygon.properties.myId) {
-    //         index = req.body.prevPolygon.properties.myId;
-    //     }
-    // }
-    // else {
-        // for (let i = 0; i < newgeojson.features.length; i++) {
-        //     if (JSON.stringify(newgeojson.features[i].geometry.coordinates[0][0]) == JSON.stringify(req.body.prevPolygon.geometry.coordinates[0][0])) {
-        //         index = i;
-        //     }
-        // }
-    // }
 
     for (let i = 0; i < newgeojson.features.length; i++) {
         if (newgeojson.features[i].geometry.type == "Polygon" &&
@@ -336,82 +339,140 @@ async function deletePolygonOfMap(req, res) {
     })
 }
 
-async function publishMap(req, res) {
-  const id = req.body.id;
-  console.log("publishMap: " + JSON.stringify(id));
+async function mergePolygonsOfMap(req, res) {
+    const map = await Map.findOne({ _id: req.params.id });
+    let newgeojson = map.geoJsonMap;
+    var index;
+    console.log(req.body.polygonsToMerge);
 
-  const map = await Map.findOne({ _id: id });
-  map.published.isPublished = true;
-  map.published.publishedDate = Date.now()
-  map.save();
-  return res.status(201).json({
-    success: true,
-    map: map,
-  });
+    for (let j = 0; j < req.body.polygonsToMerge.length; j++) {
+        for (let i = 0; i < newgeojson.features.length; i++) {
+            if (newgeojson.features[i].geometry.type == "Polygon" &&
+                req.body.polygonsToMerge[j].geometry.type == "Polygon") {
+                console.log(newgeojson.features[i].geometry.coordinates[0][0]);
+                console.log(req.body.polygonsToMerge[j].geometry.coordinates[0][0]);
+                if (((Math.abs(newgeojson.features[i].geometry.coordinates[0][0][0] -
+                    req.body.polygonsToMerge[j].geometry.coordinates[0][0][0]) <= .00001) &&
+                    (Math.abs(newgeojson.features[i].geometry.coordinates[0][0][1] -
+                        req.body.polygonsToMerge[j].geometry.coordinates[0][0][1]) <= .00001)) &&
+                    ((Math.abs(newgeojson.features[i].geometry.coordinates[0][1][0] -
+                        req.body.polygonsToMerge[j].geometry.coordinates[0][1][0]) <= .00001) &&
+                        (Math.abs(newgeojson.features[i].geometry.coordinates[0][1][1] -
+                            req.body.polygonsToMerge[j].geometry.coordinates[0][1][1]) <= .00001))) {
+                    index = i;
+                    break;
+                }
+            }
+            else if (newgeojson.features[i].geometry.type == "MultiPolygon" &&
+                req.body.polygonsToMerge[j].geometry.type == "MultiPolygon") {
+                console.log(newgeojson.features[i].geometry.coordinates[1][0][0]);
+                console.log(req.body.polygonsToMerge[j].geometry.coordinates[1][0][0]);
+                if ((Math.abs(newgeojson.features[i].geometry.coordinates[0][0][0][0] -
+                    req.body.polygonsToMerge[j].geometry.coordinates[0][0][0][0]) <= .00001 &&
+                    (Math.abs(newgeojson.features[i].geometry.coordinates[0][0][0][1] -
+                        req.body.polygonsToMerge[j].geometry.coordinates[0][0][0][1]) <= .00001)) &&
+                    (Math.abs(newgeojson.features[i].geometry.coordinates[1][0][0][0] -
+                        req.body.polygonsToMerge[j].geometry.coordinates[1][0][0][0]) <= .00001 &&
+                        (Math.abs(newgeojson.features[i].geometry.coordinates[1][0][0][1] -
+                            req.body.polygonsToMerge[j].geometry.coordinates[1][0][0][1]) <= .00001))) {
+                    index = i;
+                    break;
+                }
+            }
+        }
+        newgeojson.features.splice(index, 1);
+    }
+    newgeojson.features.push(req.body.mergedPolygon);
+
+    map.geoJsonMap = "";
+    map.geoJsonMap = newgeojson;
+    map.save().then(() => {
+        return res.status(201).json({
+            map: map
+        });
+    })
+}
+
+async function publishMap(req, res) {
+    const id = req.body.id;
+    console.log("publishMap: " + JSON.stringify(id));
+
+    const map = await Map.findOne({ _id: id });
+    map.published.isPublished = true;
+    map.published.publishedDate = Date.now()
+    map.save();
+    return res.status(201).json({
+        success: true,
+        map: map,
+    });
 }
 
 async function loadPublishedMaps(req, res) {
-  const maps = await Map.find({ "published.isPublished": true });
-  let mapsNoGeoJson = [];
-  for (let i = 0; i < maps.length; i++) {
-    mapsNoGeoJson.push({
-      _id: maps[i]._id,
-      name: maps[i].name,
-      ownerUsername: maps[i].ownerUsername,
-      ownerEmail: maps[i].ownerEmail,
-      comments: maps[i].comments,
-      collaborators: maps[i].collaborators,
-      keywords: maps[i].keywords,
-      published: maps[i].published,
+    const maps = await Map.find({ "published.isPublished": true });
+    let mapsNoGeoJson = [];
+    for (let i = 0; i < maps.length; i++) {
+        mapsNoGeoJson.push({
+            _id: maps[i]._id,
+            name: maps[i].name,
+            ownerUsername: maps[i].ownerUsername,
+            ownerEmail: maps[i].ownerEmail,
+            comments: maps[i].comments,
+            collaborators: maps[i].collaborators,
+            keywords: maps[i].keywords,
+            published: maps[i].published,
+        });
+    }
+    return res.status(201).json({
+        success: true,
+        publishedMaps: maps,
     });
-  }
-  return res.status(201).json({
-    success: true,
-    publishedMaps: maps,
-  });
 }
 
 async function loadSharedMaps(req, res) {
-  const loggedInUser = await User.findOne({ _id: req.userId });
-  console.log("logged in user for share: "+loggedInUser.username);
-  //   const maps = await Map.find({ ownerEmail: loggedInUser.email });
-  let maps = [];
-  const sharedMaps = loggedInUser.sharedWithMe;
-  console.log("SharedMaps: " + sharedMaps);
-  for (let i = 0; i < sharedMaps.length; i++) {
-    console.log(sharedMaps[i]);
-    const map = await Map.findOne({ _id: sharedMaps[i] });
-    console.log(map);
-    maps.push({
-      _id: map._id,
-      name: map.name,
-      ownerUsername: map.ownerUsername,
-      ownerEmail: map.ownerEmail,
-      comments: map.comments,
-      collaborators: map.collaborators,
-      keywords: map.keywords,
-      published: map.published,
-    });
-  }
+    const loggedInUser = await User.findOne({ _id: req.userId });
+    console.log("logged in user for share: " + loggedInUser.username);
+    //   const maps = await Map.find({ ownerEmail: loggedInUser.email });
+    let maps = [];
+    const sharedMaps = loggedInUser.sharedWithMe;
+    console.log("SharedMaps: " + sharedMaps);
+    for (let i = 0; i < sharedMaps.length; i++) {
+        console.log(sharedMaps[i]);
+        const map = await Map.findOne({ _id: sharedMaps[i] });
+        console.log(map);
+        maps.push({
+            _id: map._id,
+            name: map.name,
+            ownerUsername: map.ownerUsername,
+            ownerEmail: map.ownerEmail,
+            comments: map.comments,
+            collaborators: map.collaborators,
+            keywords: map.keywords,
+            published: map.published,
+        });
+    }
     // console.log(maps);
-  return res.status(201).json({
-    success: true,
-    sharedMaps: maps,
-  });
+    return res.status(201).json({
+        success: true,
+        sharedMaps: maps,
+    });
 }
 
 module.exports = {
-  createNewMap,
-  updateMapCustomProperties,
-  loadUserMaps,
-  loadUserMapsNoGeoJson,
-  getMapById,
-  duplicateMapById,
-  deleteMapById,
-  addPolygonToMap,
-  updatePolygonOfMap,
-  deletePolygonOfMap,
-  publishMap,
-  loadPublishedMaps,
-  loadSharedMaps,
+    createNewMap,
+    updateMapCustomProperties,
+    loadUserMaps,
+    loadUserMapsNoGeoJson,
+    getMapById,
+    getShpDbfFileById,
+
+
+    duplicateMapById,
+    deleteMapById,
+    addPolygonToMap,
+    updatePolygonOfMap,
+    deletePolygonOfMap,
+    mergePolygonsOfMap,
+    publishMap,
+    loadPublishedMaps,
+    loadSharedMaps,
 };
