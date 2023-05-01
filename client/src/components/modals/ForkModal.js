@@ -56,7 +56,7 @@ export default function ForkModal(props) {
             X
           </Button>
           <Typography id="modal-modal-title" variant="h6" component="h2">
-            “Copy of North America” has been added to your home page.
+            “Copy of {props.name}” has been added to your home page.
           </Typography>
         </Box>
       </Modal>
