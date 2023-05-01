@@ -52,7 +52,7 @@ it('user goes to login page', () => {
   cy.url().should('include','/login')
 })
 
-  it.only('the user logs in to an account', () => {
+  it('the user logs in to an account', () => {
     cy.visit('https://shapershifter.onrender.com')
     //cy.get('form')
     cy.contains('Login').click()
@@ -66,7 +66,7 @@ it('user goes to login page', () => {
     cy.url().should('include', '/home')
   })
 
-  it.only('the user uploads a new map', () => {
+  it('the user uploads a new map', () => {
     cy.visit('https://shapershifter.onrender.com')
     cy.contains('Login')
       .click()
@@ -74,29 +74,62 @@ it('user goes to login page', () => {
     cy.get('[id=password]').type('thisisapassword123')
     cy.get('button')
       .contains('Log In')
-      .click().wait(4000)
+      .click()
+    cy.wait(4000)
     //cy.get('[id=create-map]').children()
     cy.contains('SHP').click()
-      cy.get('input[type=file]').first().selectFile('cypress/fixtures/USA_adm1.shp', {force: true}).wait(200)
+      cy.get('input[type=file]').eq(0).selectFile('cypress/fixtures/USA_adm1.shp', {force: true})
+      cy.wait(4000)
     //cy.get('[id=create-map]').children()
     cy.contains('DBF').click()
-    cy.get('input[type=file]').last().selectFile('cypress/fixtures/USA_adm1.dbf', {force: true}).wait(200)
+    cy.get('input[type=file]').eq(1).selectFile('cypress/fixtures/USA_adm1.dbf', {force: true})
+    cy.wait(4000)
+    //cy.wait(4000)
+    //cy.url().should('include', '/createmap')
+    //cy.get('#file-submit').click()
+  })
+  it('the user edits map', () => {
+    cy.visit('https://shapershifter.onrender.com')
+    cy.contains('Login').click()
+      cy.get('[id=username]').type('smithy')
+      cy.get('[id=password]').type('thisisapassword123')
+    cy.get('button').contains('Log In').click()
+    cy.wait(8000)
+    cy.get('[id=mapcards]').eq(0).contains('Edit').click()
+    cy.contains('Edit Map Properties').click()
+    //cy.get('[id=mapcards]').eq(0).should('eq', 'USA States Map')
+    //cy.get('#file-submit').click()
+  })
+  it('the user renames map', () => {
+    cy.visit('https://shapershifter.onrender.com')
+    cy.contains('Login').click()
+      cy.get('[id=username]').type('smithy')
+      cy.get('[id=password]').type('thisisapassword123')
+    cy.get('button').contains('Log In').click()
+    cy.wait(8000)
+    cy.get('[id=mapcards]').eq(0).contains('Edit').click()
+    cy.get('[name=Name]').clear()
+    cy.get('[name=Name]').type('USA States Map')
+    cy.contains('Save').click()
+    //cy.get('[id=mapcards]').eq(0).should('eq', 'USA States Map')
     //cy.get('#file-submit').click()
   })
 
-/*
   it('the user deletes map', () => {
     cy.visit('https://shapershifter.onrender.com')
     cy.contains('Login').click()
       cy.get('[id=username]').type('smithy')
       cy.get('[id=password]').type('thisisapassword123')
     cy.get('button').contains('Log In').click()
+    cy.wait(6000)
+    //cy.wait(12000)
     cy.get('[id=mapcards]').eq(0).contains('Delete').click()
+    
     cy.get(['id=delete-modal']).get('button').contains('Confirm').click()
     //cy.get('#file-submit').click()
   })
-  */
-/*
+  
+
   it('the logged in user wants to view community', () => {
     cy.visit('https://shapershifter.onrender.com')
     cy.contains('Login').click()
@@ -108,7 +141,7 @@ it('user goes to login page', () => {
     cy.get('[id=mapcards]').eq(0).contains('View').click()
     
   })
-*/
+
 
 
   it('the guest user wants to view community', () => {
