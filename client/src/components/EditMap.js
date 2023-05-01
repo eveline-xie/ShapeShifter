@@ -384,8 +384,7 @@ export default function EditMap() {
         <IconButton
           aria-label="back"
           onClick={(event) => {
-            store.loadMapById(store.currentMap._id);
-            navigate("/createmap");
+            store.updateThumbnailOfMap(store.currentMap._id);
           }}
         >
           <ArrowBackIosIcon />

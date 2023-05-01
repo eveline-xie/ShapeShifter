@@ -15,10 +15,8 @@ import * as topoServer from 'topojson-server';
 import * as topoClient from 'topojson-client';
 import * as topoSimplify from 'topojson-simplify';
 import L from 'leaflet';
-import leafletImage from 'leaflet-image';
 //import  useEffect from 'react';
 const shpwrite = require('shp-write');
-//const dbfwrite = require('dbf-write');
 
 export const GlobalStoreContext = createContext({});
 console.log("create GlobalStoreContext");
@@ -136,7 +134,7 @@ function GlobalStoreContextProvider(props) {
     screenshot.takeScreen(format).then(async image => {
       map.remove();
       container.parentNode.removeChild(container);
-      const response = await api.createNewMap({ map: feature, thumbnail: image});
+      const response = await api.createNewMap({ map: feature, thumbnail: image });
       console.log("createNewMap response: " + response);
       if (response.status === 201) {
         //tps.clearAllTransactions();
@@ -195,7 +193,7 @@ function GlobalStoreContextProvider(props) {
     screenshot.takeScreen(format).then(async image => {
       map.remove();
       container.parentNode.removeChild(container);
-      const response = await api.createNewMap({ map: feature, thumbnail: image});
+      const response = await api.createNewMap({ map: feature, thumbnail: image });
       console.log("createNewMap response: " + response);
       if (response.status === 201) {
         //tps.clearAllTransactions();
@@ -440,6 +438,61 @@ function GlobalStoreContextProvider(props) {
       const map = response.data.map;
       console.log(map.geoJsonMap.features.length);
     }
+  }
+
+
+  store.updateThumbnailOfMap = async function (id) {
+    const response = await api.getMapById(id);
+    if (response.status === 201) {
+      let features = response.data.currentMap.geoJsonMap;
+      var container = document.createElement('div');
+      container.style.height = '500px';
+      container.style.width = '500px';
+      document.body.appendChild(container);
+      let map = L.map(container).setView([0, 0], 1);
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(map);
+
+      var geojsonMap =
+        L.geoJson(features, {
+        });
+      geojsonMap.eachLayer(function (layer) {
+        //console.log(layer);
+        layer.addTo(map);
+      })
+
+      let format = 'image';
+      var screenshot = L.simpleMapScreenshoter().addTo(map);
+
+      screenshot.takeScreen(format).then(async image => {
+        map.remove();
+        container.parentNode.removeChild(container);
+        const response = await api.updateThumbnailOfMap(id, image);
+        console.log("updatedMap response: " + response);
+        if (response.status === 201) {
+          //tps.clearAllTransactions();
+          let updatedMap = response.data.map;
+          console.log(updatedMap);
+          storeReducer({
+            type: GlobalStoreActionType.LOAD_CURRENT_MAP,
+            payload: updatedMap
+          }
+          );
+
+          // IF IT'S A VALID LIST THEN LET'S START EDITING IT
+          //history.push("/playlist/" + newList._id);
+          navigate("/createmap");
+        }
+        else {
+          console.log("API FAILED TO CREATE A NEW LIST");
+        }
+      })
+
+    }
+
   }
 
   store.publishMap = async function () {

@@ -388,6 +388,16 @@ async function mergePolygonsOfMap(req, res) {
     })
 }
 
+async function updateThumbnailOfMap(req, res) {
+    const map = await Map.findOne({ _id: req.params.id });
+    map.thumbnail = req.body.thumbnail;
+    map.save().then(() => {
+        return res.status(201).json({
+            map: map
+        });
+    })
+}
+
 async function publishMap(req, res) {
     const id = req.body.id;
     console.log("publishMap: " + JSON.stringify(id));
@@ -460,13 +470,14 @@ module.exports = {
     getMapById,
     getShpDbfFileById,
 
-
     duplicateMapById,
     deleteMapById,
     addPolygonToMap,
     updatePolygonOfMap,
     deletePolygonOfMap,
     mergePolygonsOfMap,
+    updateThumbnailOfMap,
+
     publishMap,
     loadPublishedMaps,
     loadSharedMaps,

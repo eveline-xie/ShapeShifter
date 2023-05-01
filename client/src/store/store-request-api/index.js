@@ -78,6 +78,12 @@ export const mergePolygonsOfMap = (id, polygonsToMerge, mergedPolygon) => {
   })
 }
 
+export const updateThumbnailOfMap = (id, thumbnail) => {
+  return api.put(`/update-thumbnail-of-map/${id}`, {
+    thumbnail: thumbnail
+  })
+}
+
 export const publishMap = (id) => {
   return api.put(`/publish-map`, {
     id: id
@@ -106,6 +112,8 @@ const apis = {
   updatePolygonOfMap,
   deletePolygonOfMap,
   mergePolygonsOfMap,
+  updateThumbnailOfMap,
+
   publishMap,
   loadPublishedMaps,
   loadSharedMaps,

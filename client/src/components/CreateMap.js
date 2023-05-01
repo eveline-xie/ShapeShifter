@@ -54,121 +54,6 @@ export default function CreateMap() {
 
 
   let navigate = useNavigate();
-  // store.currentMap.thumbnail = 'map.png';
-  //let thumbnail = 'map.png';
-/*
-  const geojsonData = store.currentMap.geojsonMap;
-  const map = L.map(document.createElement('div'));
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-  //const canvas = createCanvas(800, 600);
-  //const ctx = canvas.getContext("2d");
-  const geojsonLayer = L.geoJson(geojsonData);
-  geojsonLayer.eachLayer(function (layer) {
-    //console.log(layer);
-    layer.addTo(map);
-  });
-  //geojsonLayer.addTo(canvas);
-  let format = 'image';
-  var screenshot = L.simpleMapScreenshoter().addTo(map);
-  const bounds = map.getBounds();
-
-  // Get pixel position on screen of top left and bottom right
-  // of the bounds of the feature
-  const nw = bounds.getNorthWest();
-  const se = bounds.getSouthEast();
-  const topLeft = map.latLngToContainerPoint(nw);
-  const bottomRight = map.latLngToContainerPoint(se);
-
-  // Get the resulting image size that contains the feature
-  const imageSize = bottomRight.subtract(topLeft);
-  screenshot.takeScreen(format).then(image=> {
-    const canvas = document.createElement("canvas");
-        const ctx = canvas.getContext("2d");
-
-        // Set canvas size to the size of your resultant image
-        canvas.width = image.x;
-        canvas.height = image.y;
-
-        // Draw just the portion of the whole map image that contains
-        // your feature to the canvas
-        // from https://stackoverflow.com/questions/26015497/how-to-resize-then-crop-an-image-with-canvas
-        ctx.drawImage(
-          image,
-          topLeft.x,
-          topLeft.y,
-          imageSize.x,
-          imageSize.y,
-          0,
-          0,
-          image.x,
-          image.y
-        );
-
-        // Create URL for resultant png
-        var imageurl = canvas.toDataURL("image/png");
-        console.log(imageurl);
-    store.currentMap.thumbnail=imageurl;
-    console.log(store.currentMap.thumbnail)
-  });
-  map.remove();
-  //document.getElementById('my-map').style.display='none';
-  //ctx.fillStyle = "#FFFFFF"; // set canvas background color
-  //ctx.fillRect(0, 0, canvas.width, canvas.height);
-/*
-  geojsonLayer.eachLayer((layer) => {
-    layer.eachLayer((subLayer) => {
-      subLayer.setStyle({
-        // set sublayer style
-        color: "#FF0000", // red line color
-        weight: 3, // line weight
-        opacity: 1, // line opacity
-      });
-    });
-  });
-  
-  /*
-  var thumbnail = canvas.toDataURL("image/jpeg", 0.5);
-  //const thumbnail = 'data:image/png;base64,' + thumbnailBuffer.toString('base64');
-  //thumbnail = 'data:image/png;base64,' + thumbnail.toString('base64');
-
-  console.log(thumbnail);
-
-  /*
-  useEffect(() =>{
-    const geojsonLayer = new L.geoJSON(store.currentMap.geoJsonMap);
-    const map = new L.map('map', { zoomControl: false });
-    geojsonLayer.addTo(map);
-    
-    const canvas = document.createElement('canvas');
-    canvas.width = 800;
-    canvas.height = 600;
-    
-    const bounds = geojsonLayer.getBounds();
-    const center = bounds.getCenter();
-    
-    const layer = geojsonLayer.getLayers()[0];
-    const topLeft = map.latLngToContainerPoint(layer.getBounds().getNorthWest());
-    
-    const ratio = Math.min(canvas.width / layer.getBounds().getSize().x, canvas.height / layer.getBounds().getSize().y);
-    const zoom = map.getBoundsZoom(bounds, false);
-    const zoomAdjusted = Math.floor(zoom + Math.log(ratio) / Math.log(2));
-    
-    const map2 = new L.Map(canvas, { zoomControl: false });
-    map2.setView(center, zoomAdjusted, false);
-    
-    const geojsonLayer2 = new L.geoJSON(store.currentMap.geoJsonMap);
-    geojsonLayer2.addTo(map2);
-    
-    const thumbnail = canvas.toDataURL();
-    console.log(thumbnail)
-    
-
-    return () => {
-      // Remove the map
-      map.remove();
-    };
-  }, []);
-  */
 
   async function handleExport(event, id) {
     event.stopPropagation();
@@ -187,7 +72,6 @@ export default function CreateMap() {
   const handlePublish = (event) => {
     console.log(store.currentMap);
     store.publishMap();
-    //navigate("/home");
   };
   const handleEdit = (event) => {
     navigate("/editmap");
