@@ -13,7 +13,7 @@ const MapSchema = new Schema(
         keywords: [{type: String, required: false}],
         published: {type: {isPublished: Boolean, publishedDate: Date}, required: true}
         ,
-        thumbnail: {type:String, required:true}
+        // thumbnail: {type:String, required:true}
     },
     { timestamps: true },
 )

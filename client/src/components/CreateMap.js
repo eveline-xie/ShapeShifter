@@ -54,7 +54,7 @@ export default function CreateMap() {
 
 
   let navigate = useNavigate();
-  store.currentMap.thumbnail = 'map.png';
+  // store.currentMap.thumbnail = 'map.png';
   //let thumbnail = 'map.png';
 /*
   const geojsonData = store.currentMap.geojsonMap;
@@ -337,7 +337,7 @@ export default function CreateMap() {
               //   maxWidth: { xs: 350, md: 250 },
             }}
             alt="Map Preview"
-            src={store.currentMap.thumbnail}
+            // src={store.currentMap.thumbnail}
           />
           
           <div>
