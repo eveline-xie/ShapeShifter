@@ -25,6 +25,7 @@ async function createNewMap(req, res) {
     })
     body.map.features = mapWithIdentifiers;
     //let thumbnailUrl;
+    /*
     const canvas = createCanvas(1000, 1000);
     const ctx = canvas.getContext('2d');
     
@@ -51,6 +52,7 @@ async function createNewMap(req, res) {
     });
     
     console.log(thumbnailUrl);
+    */
     const map = new Map({
         name: "Untitled",
         ownerUsername: loggedInUser.username,
@@ -59,9 +61,11 @@ async function createNewMap(req, res) {
         geoJsonMap: body.map,
         collaborators: [],
         keywords: [],
-        published: { isPublished: false, publishedDate: new Date(),
-        thumbnail: thumbnailUrl }
+        published: { isPublished: false, publishedDate: new Date()
+         //   ,thumbnail: thumbnailUrl 
+    }
     })
+    
     if (!map) {
         return res.status(400).json({ success: false, error: err })
     }
