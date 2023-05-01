@@ -44,6 +44,7 @@ export default function EditMap() {
   let prevLayer = null;
   let selectedLayer = null;
   let featuresLength = store.currentMap.geoJsonMap.features.length;
+  let changedColor = '';
 
   useEffect(() => {
     console.log("created map");
@@ -71,7 +72,7 @@ export default function EditMap() {
     // console.log(window.createdMap[0]);
     // console.log(window.createdMap.length);
     map = newmap;
-    
+
     //setMap(newmap);
     return () => {
       // Remove the map
@@ -80,23 +81,50 @@ export default function EditMap() {
   }, []);
 
   function selectRegion(layer) {
-    layer.setStyle({
-      color: 'yellow'
-    });
-    layer.selected = true;
-    selectedRegions.push(layer);
-    //setRenameButtonEnabled(true)
-    //console.log(selectedRegions.toString())
+    // console.log("1:" + layer.color);
+    if (layer.color == undefined) {
+      // console.log("2:" + layer.color);
+      layer.setStyle({
+        color: 'yellow'
+      });
+      layer.selected = true;
+      selectedRegions.push(layer);
+      //setRenameButtonEnabled(true)
+      //console.log(selectedRegions.toString())
+    } else {
+      // console.log("3:" + layer.color);
+      layer.setStyle({
+        color: layer.color
+      });
+      layer.selected = true;
+      selectedRegions.push(layer);
+      //setRenameButtonEnabled(true)
+      //console.log(selectedRegions.toString())
+    }
   }
   function deSelect(layer) {
-    layer.setStyle({
-      color: '#3388FF'
-    });
-    layer.selected = false;
-    const index = selectedRegions.indexOf(layer);
-    selectedRegions.splice(index, 1);
-    //setRenameButtonEnabled(false)
-    //console.log(selectedRegions.toString())
+    // console.log("1:" + layer.color);
+    if (layer.color == undefined) {
+      // console.log("2:" + layer.color);
+      layer.setStyle({
+        color: '#3388FF'
+      });
+      layer.selected = false;
+      const index = selectedRegions.indexOf(layer);
+      selectedRegions.splice(index, 1);
+      //setRenameButtonEnabled(false)
+      //console.log(selectedRegions.toString())
+    } else {
+      // console.log("3:" + layer.color);
+      layer.setStyle({
+        color: layer.color
+      });
+      layer.selected = false;
+      const index = selectedRegions.indexOf(layer);
+      selectedRegions.splice(index, 1);
+      //setRenameButtonEnabled(false)
+      //console.log(selectedRegions.toString())
+    }
   }
 
   function onEachRegion(country, layer) {
@@ -157,14 +185,36 @@ export default function EditMap() {
       // Set up the click event listener on the layer
       var content = document.createElement("textarea");
       content.addEventListener("keyup", function (e) {
-      if (e.key === "Enter") {
-        selectedLayer.bindPopup(content.value);
-        regionName= content.value;
-        selectedLayer.setTooltipContent(content.value);
+        if (e.key === "Enter") {
+          selectedLayer.bindPopup(content.value);
+          regionName = content.value;
+          selectedLayer.setTooltipContent(content.value);
         }
       });
       selectedLayer.bindPopup(content).openPopup();
 
+    }
+  }
+
+  const handleChangeColor = (e) => {
+    console.log("changeColor");
+    if (selectedLayer) {
+      const colorPicker = document.createElement('input');
+      colorPicker.type = 'color';
+      colorPicker.id = 'colorpicker';
+
+      colorPicker.addEventListener("change", function () {
+
+        changedColor = colorPicker.value;
+        console.log("Selected color:", changedColor);
+
+        selectedLayer.color = changedColor;
+        selectedLayer.setStyle({
+          color: changedColor
+        });
+      });
+      document.body.appendChild(colorPicker);
+      colorPicker.click();
     }
   }
 
@@ -295,8 +345,8 @@ console.log(simplified)
         <Box sx={{ flexGrow: 1 }}>
           <AppBar position="static" color="">
             <Toolbar>
-            <Tooltip title="Undo">
-                <IconButton 
+              <Tooltip title="Undo">
+                <IconButton
                   disabled
                   size="large"
                   edge="start"
@@ -320,7 +370,7 @@ console.log(simplified)
                   <RedoIcon />
                 </IconButton>
               </Tooltip>
-              
+
               <Tooltip title="Rename">
                 <IconButton
                   //disabled={!renameButtonEnabled}
@@ -338,17 +388,17 @@ console.log(simplified)
 
               <Tooltip title="Change Color">
                 <IconButton
-                  disabled
+                  // disabled
                   size="large"
                   edge="start"
                   color="inherit"
                   aria-label="menu"
                   sx={{ mr: 2 }}
+                  onClick={handleChangeColor}
                 >
                   <FormatColorFillIcon />
                 </IconButton>
               </Tooltip>
-
 
               <Tooltip title="Add Subregion">
                 <IconButton
@@ -372,7 +422,7 @@ console.log(simplified)
                   color="inherit"
                   aria-label="menu"
                   sx={{ mr: 2 }}
-                  onClick = {handleFeatureDelete}
+                  onClick={handleFeatureDelete}
                 >
                   <DeleteIcon />
                 </IconButton>
@@ -390,7 +440,7 @@ console.log(simplified)
                   <MergeIcon />
                 </IconButton>
               </Tooltip>
-              
+
               <Tooltip title="Split Subregions">
                 <IconButton
                   disabled

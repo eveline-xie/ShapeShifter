@@ -1,9 +1,9 @@
 const Map = require('../models/map-model')
 const User = require('../models/user-model');
-const puppeteer = require('puppeteer');
-const html2canvas = require('html2canvas');
-const { createCanvas, loadImage } = require('canvas');
-const d3 = require('d3');
+// const puppeteer = require('puppeteer');
+// const html2canvas = require('html2canvas');
+// const { createCanvas, loadImage } = require('canvas');
+// const d3 = require('d3');
 
 
 async function createNewMap(req, res) {
