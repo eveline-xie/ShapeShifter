@@ -106,7 +106,7 @@ export default function EditMap() {
     return () => {
       // Remove the map
       newmap.remove();
-      if (window.location.href !== "http://localhost:3000/editmap") {
+      if (window.location.pathname !== "/editmap") {
         store.clearAllTransactions();
       }
     };
