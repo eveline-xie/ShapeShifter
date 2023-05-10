@@ -37,26 +37,58 @@ export default function EditMap() {
   let navigate = useNavigate();
 
   const { store } = useContext(GlobalStoreContext);
-  //const [selectedPolygon, setSelectedPolygon] = useState("");;
-  var map;
+
+  const [undoButtonEnabled, setUndoButtonEnabled] = useState(true);
+  const [redoButtonEnabled, setRedoButtonEnabled] = useState(true);
+  const [renameButtonEnabled, setRenameButtonEnabled] = useState(false);
+  const [colorButtonEnabled, setColorButtonEnabled] = useState(false);
+  const [addButtonEnabled, setAddButtonEnabled] = useState(true);
+  const [deleteButtonEnabled, setDeleteButtonEnabled] = useState(false);
+  const [mergeButtonEnabled, setMergeButtonEnabled] = useState(true);
+  const [splitButtonEnabled, setSplitButtonEnabled] = useState(false);
+
+
+
+  const [currentView, setCurrentView] = useState(null);
+  const [currentZoom, setCurrentZoom] = useState(null);
+
+  const [currentPolygon, setCurrentPolygon] = useState(null);
+
+  // const [prevPolygon, setPrevPolygon] = useState(null);
+  // const [selectedPolygon, setSelectedPolygon] = useState(null);
+  // const [prevLayer, setPrevLayer] = useState(null);
+  // const [selectedLayer, setSelectedLayer] = useState(null);
+
+
+  let map = null;
+  const [aMap, setAMap] = useState(null);
+  if (map == null) {
+    map = aMap;
+  }
   let prevPolygon = null;
   let selectedPolygon = null;
   let prevLayer = null;
   let selectedLayer = null;
   let changedColor = '';
   let regionsToMerge = [];
-  let mergeEnabled = false;
+
+  const [mergeEnabled, setMergeEnabled] = useState(false);
   let splitEnabled = false;
 
   useEffect(() => {
-    console.log("created map");
-    let newmap = L.map('my-map', { editable: true, }).setView([0, 0], 3);
-    console.log(newmap);
+    console.log("reloading map");
+    var newmap;
+    if (currentView) {
+      newmap = L.map('my-map', { editable: true, }).setView(currentView, currentZoom);
+    }
+    else {
+      newmap = L.map('my-map', { editable: true, }).setView([0, 0], 3);
+    }
     newmap.editTools.featuresLayer.addTo(newmap);
     newmap.on('editable:drawing:end', handleFeatureAdd);
-    newmap.on('editable:vertex:dragstart', handleFeatureStartMoveVertex);
+    //newmap.on('editable:vertex:dragstart', handleFeatureStartMoveVertex);
     newmap.on('editable:vertex:dragend', handleFeatureEndMoveVertex);
-    newmap.on('editable:vertex:new', handleFeatureAddVertex);
+    //newmap.on('editable:vertex:new', handleFeatureAddVertex);
     newmap.on('editable:vertex:deleted', handleFeatureDeleteVertex);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution:
@@ -67,45 +99,37 @@ export default function EditMap() {
         onEachFeature: onEachRegion
       });
     geojsonMap.eachLayer(function (layer) {
-      //console.log(layer);
       layer.addTo(newmap);
     })
-    // window.createdMap.push(newmap);
-    // console.log(window.createdMap[0]);
-    // console.log(window.createdMap.length);
     map = newmap;
-
-    //setMap(newmap);
+    setAMap(newmap);
     return () => {
       // Remove the map
       newmap.remove();
+      if (window.location.href !== "http://localhost:3000/editmap") {
+        store.clearAllTransactions();
+      }
     };
-  }, []);
+  }, [store.currentMap.geoJsonMap, mergeEnabled]);
 
   function selectRegion(layer) {
-    // console.log("1:" + layer.color);
     if (layer.color == undefined) {
-      // console.log("2:" + layer.color);
       layer.setStyle({
         color: 'yellow'
       });
       layer.selected = true;
       selectedRegions.push(layer);
       //setRenameButtonEnabled(true)
-      //console.log(selectedRegions.toString())
     } else {
-      // console.log("3:" + layer.color);
       layer.setStyle({
         color: layer.color
       });
       layer.selected = true;
       selectedRegions.push(layer);
       //setRenameButtonEnabled(true)
-      //console.log(selectedRegions.toString())
     }
   }
   function deSelect(layer) {
-    // console.log("1:" + layer.color);
     if (layer.color == undefined) {
       // console.log("2:" + layer.color);
       layer.setStyle({
@@ -115,9 +139,7 @@ export default function EditMap() {
       const index = selectedRegions.indexOf(layer);
       selectedRegions.splice(index, 1);
       //setRenameButtonEnabled(false)
-      //console.log(selectedRegions.toString())
     } else {
-      // console.log("3:" + layer.color);
       layer.setStyle({
         color: layer.color
       });
@@ -125,7 +147,6 @@ export default function EditMap() {
       const index = selectedRegions.indexOf(layer);
       selectedRegions.splice(index, 1);
       //setRenameButtonEnabled(false)
-      //console.log(selectedRegions.toString())
     }
   }
 
@@ -162,28 +183,42 @@ export default function EditMap() {
           regionsToMerge.push(layer);
         }
         if (regionsToMerge.length == 2) {
-          console.log(regionsToMerge[0].feature);
-          console.log(regionsToMerge[1].feature);
           let merged = turf.union(regionsToMerge[0].feature, regionsToMerge[1].feature);
           map.removeLayer(regionsToMerge[0]);
           map.removeLayer(regionsToMerge[1]);
-          console.log(store.currentMap.geoJsonMap);
-          //store.currentMap.geoJsonMap.push(merged);
-          L.geoJSON(merged, {onEachFeature: onEachRegion}).addTo(map);
-          store.mergePolygonsOfMap([regionsToMerge[0].feature, regionsToMerge[1].feature], merged);
+          L.geoJSON(merged, { onEachFeature: onEachRegion }).addTo(map);
+          setCurrentView(map.getCenter());
+          setCurrentZoom(map.getZoom());
+          store.addmergePolygonsOfMapTransaction([regionsToMerge[0].feature, regionsToMerge[1].feature], merged);
           handleEnableMerge();
         }
       }
       else {
         if (layer.editEnabled()) {
+          setRenameButtonEnabled(false);
+          setColorButtonEnabled(false);
+          setDeleteButtonEnabled(false);
+          setSplitButtonEnabled(false);
+
+          setAddButtonEnabled(true);
+          setMergeButtonEnabled(true);
+
           layer.disableEdit();
           //setDeleteButtonEnabled(false);
-  
+
           deSelect(layer);
           selectedPolygon = null;
           selectedLayer = null;
         }
         else {
+          setRenameButtonEnabled(true);
+          setColorButtonEnabled(true);
+          setDeleteButtonEnabled(true);
+          setSplitButtonEnabled(true);
+
+          setAddButtonEnabled(false);
+          setMergeButtonEnabled(false);
+
           layer.enableEdit();
           selectRegion(layer);
           prevPolygon = selectedPolygon;
@@ -194,8 +229,10 @@ export default function EditMap() {
           }
           selectedPolygon = layer.toGeoJSON();
           selectedLayer = layer;
-          console.log(selectedPolygon);
+          console.log("current polygon:", layer.toGeoJSON());
           //setDeleteButtonEnabled(true);
+
+          setCurrentPolygon(layer.toGeoJSON());
         }
       }
     })
@@ -243,19 +280,23 @@ export default function EditMap() {
   }
 
   const handleStartPolygon = (e) => {
+    setAddButtonEnabled(false);
     if (map.editTools) {
       let polygon = map.editTools.startPolygon();
     }
   }
 
   const handleFeatureAdd = (e) => {
-    console.log(e);
+    setAddButtonEnabled(true);
 
     const feature = e.layer.toGeoJSON();
     onEachRegion(feature, e.layer);
 
     console.log("adding", feature);
-    store.addPolygonToMap(feature);
+
+    setCurrentView(map.getCenter());
+    setCurrentZoom(map.getZoom());
+    store.addAddPolygonToMapTransaction(feature);
 
     prevLayer = selectedLayer;
     prevPolygon = selectedPolygon;
@@ -263,53 +304,98 @@ export default function EditMap() {
       selectedLayer.disableEdit();
       deSelect(selectedLayer);
     }
+    selectRegion(e.layer);
+
     selectedLayer = e.layer;
-    selectRegion(selectedLayer);
     selectedPolygon = feature;
     //setTransaction([...transaction, { type: 'delete', feature }]);
   };
 
   const handleFeatureDelete = (e) => {
-    if (selectedLayer !== null) {
-      store.deletePolygonOfMap(selectedPolygon);
+    console.log(selectedLayer);
+    console.log("curr poly", currentPolygon);
+    if (currentPolygon !== null) {
+      setCurrentView(map.getCenter());
+      setCurrentZoom(map.getZoom());
+      store.addDeletePolygonOfMapTransaction(currentPolygon);
 
-      map.removeLayer(selectedLayer);
       prevPolygon = null;
       prevLayer = null;
       selectedPolygon = null;
       selectedLayer = null;
+      setCurrentPolygon(null);
+
+      setRenameButtonEnabled(false);
+      setColorButtonEnabled(false);
+      setDeleteButtonEnabled(false);
+      setSplitButtonEnabled(false);
+
+      setAddButtonEnabled(true);
+      setMergeButtonEnabled(true);
+
     }
   }
 
-  const handleFeatureStartMoveVertex = (e) => {
-    const feature = e.layer.toGeoJSON();
-    prevPolygon = selectedPolygon;
-    selectedPolygon = feature;
-    //setTransaction([...transaction, { type: 'edit', feature }]);
-  };
+  // const handleFeatureStartMoveVertex = (e) => {
+  //   const feature = e.layer.toGeoJSON();
+  //   prevPolygon = selectedPolygon;
+  //   selectedPolygon = feature;
+
+  //   //setTransaction([...transaction, { type: 'edit', feature }]);
+  // };
 
   const handleFeatureEndMoveVertex = (e) => {
     const feature = e.layer.toGeoJSON();
-    console.log("prev", prevPolygon);
+    console.log("prev", selectedPolygon);
     console.log("updated", feature);
-    store.updatePolygonOfMap(prevPolygon, feature);
+    setCurrentView(map.getCenter());
+    setCurrentZoom(map.getZoom());
+    store.addUpdatePolygonToMapTransaction(selectedPolygon, feature);
+
     prevPolygon = null;
     selectedPolygon = feature;
+
+    setRenameButtonEnabled(false);
+    setColorButtonEnabled(false);
+    setDeleteButtonEnabled(false);
+    setSplitButtonEnabled(false);
+
+    setAddButtonEnabled(true);
+    setMergeButtonEnabled(true);
     //setTransaction([...transaction, { type: 'edit', feature }]);
   };
 
-  const handleFeatureAddVertex = (e) => {
-    const feature = e.layer.toGeoJSON();
-    prevPolygon = selectedPolygon;
-    selectedPolygon = feature;
-    store.updatePolygonOfMap(prevPolygon, feature);
-  }
+  // const handleFeatureAddVertex = (e) => {
+  //   if (newPolygon !== true) {
+  //     const feature = e.layer.toGeoJSON();
+  //     prevPolygon = selectedPolygon;
+  //     selectedPolygon = feature;
+  //     setCurrentView(map.getCenter());
+  //     setCurrentZoom(map.getZoom());
+  //     store.updatePolygonOfMap(prevPolygon, feature);
+  //   }
+  // }
 
   const handleFeatureDeleteVertex = (e) => {
     const feature = e.layer.toGeoJSON();
+    console.log("prev", selectedPolygon);
+    console.log("updated", feature);
+
+    setCurrentView(map.getCenter());
+    setCurrentZoom(map.getZoom());
+    store.addUpdatePolygonToMapTransaction(selectedPolygon, feature);
+
+    setRenameButtonEnabled(false);
+    setColorButtonEnabled(false);
+    setDeleteButtonEnabled(false);
+    setSplitButtonEnabled(false);
+
+    setAddButtonEnabled(true);
+    setMergeButtonEnabled(true);
+
     prevPolygon = selectedPolygon;
     selectedPolygon = feature;
-    store.updatePolygonOfMap(prevPolygon, feature);
+
   }
 
   const handleCompressMap = (e) => {
@@ -358,10 +444,8 @@ export default function EditMap() {
   }
 
   const handleEnableMerge = () => {
-    mergeEnabled = !mergeEnabled;
-    console.log(mergeEnabled);
-    //console.log(regionsToMerge.length);
-    if (!mergeEnabled) {
+    console.log("merge enabled:", !mergeEnabled);
+    if (mergeEnabled) {
       console.log(regionsToMerge.length);
       for (let i = 0; i < regionsToMerge.length; i++) {
         regionsToMerge[i].setStyle({
@@ -369,14 +453,68 @@ export default function EditMap() {
         });
       }
       regionsToMerge = [];
+
+      setRenameButtonEnabled(false);
+      setColorButtonEnabled(false);
+      setDeleteButtonEnabled(false);
+      setSplitButtonEnabled(false);
+
+      setAddButtonEnabled(true);
+
+      setUndoButtonEnabled(true);
+      setRedoButtonEnabled(true);
     }
+    else {
+      setRenameButtonEnabled(false);
+      setColorButtonEnabled(false);
+      setDeleteButtonEnabled(false);
+      setSplitButtonEnabled(false);
+      
+      setAddButtonEnabled(false);
+
+      setUndoButtonEnabled(false);
+      setRedoButtonEnabled(false);
+    }
+    setCurrentView(map.getCenter());
+    setCurrentZoom(map.getZoom());
+    setMergeEnabled(!mergeEnabled);
+
+
   }
 
   const handleEnableSplit = () => {
     if (selectedLayer) {
-      console.log("Ff");
     }
   }
+
+  function handleUndo() {
+    setCurrentView(map.getCenter());
+    setCurrentZoom(map.getZoom());
+    
+    store.undo();
+
+    setRenameButtonEnabled(false);
+    setColorButtonEnabled(false);
+    setDeleteButtonEnabled(false);
+    setSplitButtonEnabled(false);
+
+    setAddButtonEnabled(true);
+    setMergeButtonEnabled(true);
+  }
+  function handleRedo() {
+    setCurrentView(map.getCenter());
+    setCurrentZoom(map.getZoom());
+    store.redo();
+
+    setRenameButtonEnabled(false);
+    setColorButtonEnabled(false);
+    setDeleteButtonEnabled(false);
+    setSplitButtonEnabled(false);
+
+    setAddButtonEnabled(true);
+    setMergeButtonEnabled(true);
+  }
+
 
   return (
     <div>
@@ -395,12 +533,13 @@ export default function EditMap() {
             <Toolbar>
               <Tooltip title="Undo">
                 <IconButton
-                  disabled
+                  disabled={(!store.canUndo() || !undoButtonEnabled)}
                   size="large"
                   edge="start"
                   color="inherit"
                   aria-label="menu"
                   sx={{ mr: 2 }}
+                  onClick={handleUndo}
                 >
                   <UndoIcon />
                 </IconButton>
@@ -408,12 +547,13 @@ export default function EditMap() {
 
               <Tooltip title="Redo">
                 <IconButton
-                  disabled
+                  disabled={(!store.canRedo() || !redoButtonEnabled)}
                   size="large"
                   edge="start"
                   color="inherit"
                   aria-label="menu"
                   sx={{ mr: 2 }}
+                  onClick={handleRedo}
                 >
                   <RedoIcon />
                 </IconButton>
@@ -421,7 +561,7 @@ export default function EditMap() {
 
               <Tooltip title="Rename">
                 <IconButton
-                  //disabled={!renameButtonEnabled}
+                  disabled={!renameButtonEnabled}
                   size="large"
                   edge="start"
                   color="inherit"
@@ -436,7 +576,7 @@ export default function EditMap() {
 
               <Tooltip title="Change Color">
                 <IconButton
-                  // disabled
+                  disabled={!colorButtonEnabled}
                   size="large"
                   edge="start"
                   color="inherit"
@@ -450,7 +590,7 @@ export default function EditMap() {
 
               <Tooltip title="Add Subregion">
                 <IconButton
-                  //disabled={!addButtonEnabled}
+                  disabled={!addButtonEnabled}
                   size="large"
                   edge="start"
                   color="inherit"
@@ -464,7 +604,7 @@ export default function EditMap() {
 
               <Tooltip title="Delete Subregion">
                 <IconButton
-                  //disabled = {!deleteButtonEnabled}
+                  disabled={!deleteButtonEnabled}
                   size="large"
                   edge="start"
                   color="inherit"
@@ -478,12 +618,13 @@ export default function EditMap() {
 
               <Tooltip title="Merge Subregions">
                 <IconButton
+                  disabled={!mergeButtonEnabled}
                   size="large"
                   edge="start"
                   color="inherit"
                   aria-label="menu"
                   sx={{ mr: 2 }}
-                  onClick = {handleEnableMerge}
+                  onClick={handleEnableMerge}
                 >
                   <MergeIcon />
                 </IconButton>
@@ -491,12 +632,13 @@ export default function EditMap() {
 
               <Tooltip title="Split Subregions">
                 <IconButton
+                  disabled={!splitButtonEnabled}
                   size="large"
                   edge="start"
                   color="inherit"
                   aria-label="menu"
                   sx={{ mr: 2 }}
-                  onClick = {handleEnableSplit}
+                  onClick={handleEnableSplit}
                 >
                   <CallSplitIcon />
                 </IconButton>

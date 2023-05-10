@@ -12,8 +12,8 @@
 import axios from "axios";
 axios.defaults.withCredentials = true;
 const api = axios.create({
-  baseURL: "https://shapeshifter-api.onrender.com"
-  //baseURL: "http://localhost:5000"
+  //baseURL: "https://shapeshifter-api.onrender.com"
+  baseURL: "http://localhost:5000"
 });
 
 export const createNewMap = (payload) => {
@@ -78,6 +78,13 @@ export const mergePolygonsOfMap = (id, polygonsToMerge, mergedPolygon) => {
   })
 }
 
+export const undoMergePolygonsOfMap = (id, polygonsToMerge, mergedPolygon) => {
+  return api.put(`/undo-merge-polygons-of-map/${id}`, {
+    polygonsToMerge: polygonsToMerge,
+    mergedPolygon: mergedPolygon
+  })
+}
+
 export const updateThumbnailOfMap = (id, thumbnail) => {
   return api.put(`/update-thumbnail-of-map/${id}`, {
     thumbnail: thumbnail
@@ -112,6 +119,9 @@ const apis = {
   updatePolygonOfMap,
   deletePolygonOfMap,
   mergePolygonsOfMap,
+  undoMergePolygonsOfMap,
+
+  
   updateThumbnailOfMap,
 
   publishMap,

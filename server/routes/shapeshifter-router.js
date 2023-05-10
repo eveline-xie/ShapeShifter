@@ -28,6 +28,7 @@ router.put("/map/:id", auth.verify, MapController.addPolygonToMap);
 router.put("/update-polygon-of-map/:id", auth.verify, MapController.updatePolygonOfMap);
 router.put("/delete-polygon-of-map/:id", auth.verify, MapController.deletePolygonOfMap);
 router.put("/merge-polygons-of-map/:id", auth.verify, MapController.mergePolygonsOfMap);
+router.put("/undo-merge-polygons-of-map/:id", auth.verify, MapController.undoMergePolygonsOfMap);
 router.put("/update-thumbnail-of-map/:id", auth.verify, MapController.updateThumbnailOfMap);
 
 router.put("/publish-map", auth.verify, MapController.publishMap);
