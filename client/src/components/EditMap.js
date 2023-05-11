@@ -53,6 +53,7 @@ export default function EditMap() {
   const [currentZoom, setCurrentZoom] = useState(null);
 
   const [currentPolygon, setCurrentPolygon] = useState(null);
+  const [currentLayer, setCurrentLayer] = useState(null);
 
   // const [prevPolygon, setPrevPolygon] = useState(null);
   // const [selectedPolygon, setSelectedPolygon] = useState(null);
@@ -233,6 +234,7 @@ export default function EditMap() {
           //setDeleteButtonEnabled(true);
 
           setCurrentPolygon(layer.toGeoJSON());
+          setCurrentLayer(layer);
         }
       }
     })
@@ -240,26 +242,26 @@ export default function EditMap() {
 
   const handleEditSubregionName = (e) => {
     let regionName = "";
-    if (selectedLayer) {
+    if (currentLayer) {
       // Bind the tooltip to the layer and set its content
-      selectedLayer.bindTooltip(regionName, { permanent: true, direction: "center", fillColor: "blue" });
+      currentLayer.bindTooltip(regionName, { permanent: true, direction: "center", fillColor: "blue" });
       // Set up the click event listener on the layer
       var content = document.createElement("textarea");
       content.addEventListener("keyup", function (e) {
         if (e.key === "Enter") {
-          selectedLayer.bindPopup(content.value);
+          currentLayer.bindPopup(content.value);
           regionName = content.value;
-          selectedLayer.setTooltipContent(content.value);
+          currentLayer.setTooltipContent(content.value);
         }
       });
-      selectedLayer.bindPopup(content).openPopup();
+      currentLayer.bindPopup(content).openPopup();
 
     }
   }
 
   const handleChangeColor = (e) => {
     console.log("changeColor");
-    if (selectedLayer) {
+    if (currentLayer) {
       const colorPicker = document.createElement('input');
       colorPicker.type = 'color';
       colorPicker.id = 'colorpicker';
@@ -269,8 +271,8 @@ export default function EditMap() {
         changedColor = colorPicker.value;
         console.log("Selected color:", changedColor);
 
-        selectedLayer.color = changedColor;
-        selectedLayer.setStyle({
+        currentLayer.color = changedColor;
+        currentLayer.setStyle({
           color: changedColor
         });
       });
