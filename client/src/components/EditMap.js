@@ -471,7 +471,7 @@ export default function EditMap() {
       setColorButtonEnabled(false);
       setDeleteButtonEnabled(false);
       setSplitButtonEnabled(false);
-      
+
       setAddButtonEnabled(false);
 
       setUndoButtonEnabled(false);
@@ -492,7 +492,7 @@ export default function EditMap() {
   function handleUndo() {
     setCurrentView(map.getCenter());
     setCurrentZoom(map.getZoom());
-    
+
     store.undo();
 
     setRenameButtonEnabled(false);
@@ -534,142 +534,162 @@ export default function EditMap() {
           <AppBar position="static" color="">
             <Toolbar>
               <Tooltip title="Undo">
-                <IconButton
-                  disabled={(!store.canUndo() || !undoButtonEnabled)}
-                  size="large"
-                  edge="start"
-                  color="inherit"
-                  aria-label="menu"
-                  sx={{ mr: 2 }}
-                  onClick={handleUndo}
-                >
-                  <UndoIcon />
-                </IconButton>
+                <span>
+                  <IconButton
+                    disabled={(!store.canUndo() || !undoButtonEnabled)}
+                    size="large"
+                    edge="start"
+                    color="inherit"
+                    aria-label="menu"
+                    sx={{ mr: 2 }}
+                    onClick={handleUndo}
+                  >
+                    <UndoIcon />
+                  </IconButton>
+                </span>
               </Tooltip>
 
               <Tooltip title="Redo">
-                <IconButton
-                  disabled={(!store.canRedo() || !redoButtonEnabled)}
-                  size="large"
-                  edge="start"
-                  color="inherit"
-                  aria-label="menu"
-                  sx={{ mr: 2 }}
-                  onClick={handleRedo}
-                >
-                  <RedoIcon />
-                </IconButton>
+                <span>
+                  <IconButton
+                    disabled={(!store.canRedo() || !redoButtonEnabled)}
+                    size="large"
+                    edge="start"
+                    color="inherit"
+                    aria-label="menu"
+                    sx={{ mr: 2 }}
+                    onClick={handleRedo}
+                  >
+                    <RedoIcon />
+                  </IconButton>
+                </span>
               </Tooltip>
 
               <Tooltip title="Rename">
-                <IconButton
-                  disabled={!renameButtonEnabled}
-                  size="large"
-                  edge="start"
-                  color="inherit"
-                  aria-label="menu"
-                  sx={{ mr: 2 }}
-                  // onClick={this.handleEditSubregionName.bind(this,layer)}
-                  onClick={handleEditSubregionName}
-                >
-                  <BorderColorIcon />
-                </IconButton>
+                <span>
+                  <IconButton
+                    disabled={!renameButtonEnabled}
+                    size="large"
+                    edge="start"
+                    color="inherit"
+                    aria-label="menu"
+                    sx={{ mr: 2 }}
+                    // onClick={this.handleEditSubregionName.bind(this,layer)}
+                    onClick={handleEditSubregionName}
+                  >
+                    <BorderColorIcon />
+                  </IconButton>
+                </span>
               </Tooltip>
 
               <Tooltip title="Change Color">
-                <IconButton
-                  disabled={!colorButtonEnabled}
-                  size="large"
-                  edge="start"
-                  color="inherit"
-                  aria-label="menu"
-                  sx={{ mr: 2 }}
-                  onClick={handleChangeColor}
-                >
-                  <FormatColorFillIcon />
-                </IconButton>
+                <span>
+                  <IconButton
+                    disabled={!colorButtonEnabled}
+                    size="large"
+                    edge="start"
+                    color="inherit"
+                    aria-label="menu"
+                    sx={{ mr: 2 }}
+                    onClick={handleChangeColor}
+                  >
+                    <FormatColorFillIcon />
+                  </IconButton>
+                </span>
               </Tooltip>
 
               <Tooltip title="Add Subregion">
-                <IconButton
-                  disabled={!addButtonEnabled}
-                  size="large"
-                  edge="start"
-                  color="inherit"
-                  aria-label="menu"
-                  sx={{ mr: 2 }}
-                  onClick={handleStartPolygon}
-                >
-                  <AddIcon />
-                </IconButton>
+                <span>
+                  <IconButton
+                    disabled={!addButtonEnabled}
+                    size="large"
+                    edge="start"
+                    color="inherit"
+                    aria-label="menu"
+                    sx={{ mr: 2 }}
+                    onClick={handleStartPolygon}
+                  >
+                    <AddIcon />
+                  </IconButton>
+                </span>
               </Tooltip>
 
               <Tooltip title="Delete Subregion">
-                <IconButton
-                  disabled={!deleteButtonEnabled}
-                  size="large"
-                  edge="start"
-                  color="inherit"
-                  aria-label="menu"
-                  sx={{ mr: 2 }}
-                  onClick={handleFeatureDelete}
-                >
-                  <DeleteIcon />
-                </IconButton>
+                <span>
+                  <IconButton
+                    disabled={!deleteButtonEnabled}
+                    size="large"
+                    edge="start"
+                    color="inherit"
+                    aria-label="menu"
+                    sx={{ mr: 2 }}
+                    onClick={handleFeatureDelete}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </span>
               </Tooltip>
 
               <Tooltip title="Merge Subregions">
-                <IconButton
-                  disabled={!mergeButtonEnabled}
-                  size="large"
-                  edge="start"
-                  color="inherit"
-                  aria-label="menu"
-                  sx={{ mr: 2 }}
-                  onClick={handleEnableMerge}
-                >
-                  <MergeIcon />
-                </IconButton>
+                <span>
+                  <IconButton
+                    disabled={!mergeButtonEnabled}
+                    size="large"
+                    edge="start"
+                    color="inherit"
+                    aria-label="menu"
+                    sx={{ mr: 2 }}
+                    onClick={handleEnableMerge}
+                  >
+                    <MergeIcon />
+                  </IconButton>
+                </span>
               </Tooltip>
 
               <Tooltip title="Split Subregions">
-                <IconButton
-                  disabled={!splitButtonEnabled}
-                  size="large"
-                  edge="start"
-                  color="inherit"
-                  aria-label="menu"
-                  sx={{ mr: 2 }}
-                  onClick={handleEnableSplit}
-                >
-                  <CallSplitIcon />
-                </IconButton>
+                <span>
+                  <IconButton
+                    disabled={!splitButtonEnabled}
+                    size="large"
+                    edge="start"
+                    color="inherit"
+                    aria-label="menu"
+                    sx={{ mr: 2 }}
+                    onClick={handleEnableSplit}
+                  >
+                    <CallSplitIcon />
+                  </IconButton>
+                </span>
               </Tooltip>
 
               <Tooltip title="Compress Map">
-                <IconButton
-                  size="large"
-                  edge="start"
-                  color="inherit"
-                  aria-label="menu"
-                  sx={{ mr: 2 }}
-                  onClick={handleCompressMap}
-                >
-                  <CompressIcon />
-                </IconButton>
+                <span>
+                  <IconButton
+                    size="large"
+                    edge="start"
+                    color="inherit"
+                    aria-label="menu"
+                    sx={{ mr: 2 }}
+                    onClick={handleCompressMap}
+                  >
+                    <CompressIcon />
+                  </IconButton>
+                </span>
               </Tooltip>
 
               <Tooltip title="Info">
-                <IconButton
-                  size="large"
-                  edge="start"
-                  color="inherit"
-                  aria-label="menu"
-                  sx={{ mr: 2 }}
-                  onClick={handleInfo}
-                >
-                  <InfoIcon />
-                </IconButton>
+                <span>
+                  <IconButton
+                    size="large"
+                    edge="start"
+                    color="inherit"
+                    aria-label="menu"
+                    sx={{ mr: 2 }}
+                    onClick={handleInfo}
+                  >
+                    <InfoIcon />
+                  </IconButton>
+                </span>
               </Tooltip>
 
             </Toolbar>

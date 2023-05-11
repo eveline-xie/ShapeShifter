@@ -29,6 +29,7 @@ export default function HomeScreen() {
 
   const [dropdown, setDropdown] = React.useState(10);
   const [searchTerm, setSearchTerm] = useState("");
+  const [searchFilter, setSearchFilter] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [openExport, setOpenExport] = useState(false);
   const [openFork, setOpenFork] = useState(false);
@@ -51,15 +52,24 @@ export default function HomeScreen() {
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
+    // console.log(event.target.value);
+    if (event.target.value !== '') {
+      setSearchFilter(true);
+      // console.log("filter");
+    } else {
+      setSearchFilter(false);
+      // console.log("no filter");
+    }
   };
+
 
   const handleDropdown = (event) => {
     let n = event.target.value;
     setDropdown(n);
     console.log(n);
-    if(n === 20){
+    if (n === 20) {
       navigate("/shared");
-    }else{
+    } else {
       navigate("/home");
 
     }
@@ -140,26 +150,55 @@ export default function HomeScreen() {
   let mapcards = "";
   if (store.userMaps) {
 
-    mapcards = (
-      <List id="mapcards">
-        {store.userMaps.map((map) => (
-          <MapCard
-            id={map._id}
-            mapName={map.name}
-            ownerUsername={map.ownerUsername}
-            published={map.published.isPublished}
-            setOpenDelete={openDeleteModal}
-            setOpenExport={openExportModal}
-            setOpenFork={openForkModal}
-            setExportName={exportNameSet}
-            setForkName={forkNameSet}
-            dropdown={dropdown}
-            key={map._id}
-            thumbnail={map.thumbnail}
-          />
-        ))}
-      </List>
-    );
+    if (searchFilter === true) {
+      mapcards = (
+        <List id="mapcards">
+          {store.userMaps.filter((map) => !map.name.indexOf(searchTerm) || map.keywords.some(keyword => !keyword.indexOf(searchTerm))).map((map) => (
+            <MapCard
+              id={map._id}
+              mapName={map.name}
+              ownerUsername={map.ownerUsername}
+              published={map.published.isPublished}
+              setOpenDelete={openDeleteModal}
+              setOpenExport={openExportModal}
+              setOpenFork={openForkModal}
+              setExportName={exportNameSet}
+              setForkName={forkNameSet}
+              dropdown={dropdown}
+              key={map._id}
+              thumbnail={map.thumbnail}
+            />
+          ))}
+        </List>
+      );
+    } else {
+      mapcards = (
+        <List id="mapcards">
+          {store.userMaps.map((map) => (
+            <MapCard
+              id={map._id}
+              mapName={map.name}
+              ownerUsername={map.ownerUsername}
+              published={map.published.isPublished}
+              setOpenDelete={openDeleteModal}
+              setOpenExport={openExportModal}
+              setOpenFork={openForkModal}
+              setExportName={exportNameSet}
+              setForkName={forkNameSet}
+              dropdown={dropdown}
+              key={map._id}
+              thumbnail={map.thumbnail}
+            />
+          ))}
+        </List>
+      );
+    }
+
+  }
+
+  let searchResult = ""
+  if (searchTerm) {
+    searchResult = <p>Search results for " {searchTerm}"</p>;
   }
 
   return (
@@ -316,6 +355,7 @@ export default function HomeScreen() {
       </div>
 
       <br></br>
+      {searchResult}
       {/* mapcards */}
       <div>{mapcards}</div>
 
