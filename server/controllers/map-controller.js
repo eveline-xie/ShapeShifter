@@ -10,8 +10,6 @@ const fs = require('fs');
 
 async function createNewMap(req, res) {
     const body = req.body;
-    //console.log("createMap body: " + JSON.stringify(body));
-    console.log("in here");
     if (!body) {
         return res.status(400).json({
             success: false,
@@ -20,37 +18,7 @@ async function createNewMap(req, res) {
     }
     console.log("id:", req.userId);
     const loggedInUser = await User.findOne({ _id: req.userId });
-    //let thumbnailUrl;
-    /*
-    const canvas = createCanvas(1000, 1000);
-    const ctx = canvas.getContext('2d');
-    
-    // Render the GeoJSON layer onto the canvas using a library like d3.js or topojson.js
-    // For example, if using d3.js:
-     const path = d3.geoPath().projection(d3.geoMercator().fitSize([1000, 1000], body.map));
-     ctx.fillStyle = '#fff';
-     ctx.fillRect(0, 0, 1000, 1000);
-     ctx.strokeStyle = '#000';
-     ctx.lineWidth = 1;
-     ctx.beginPath();
-     path.context(ctx)(body.map);
-     ctx.stroke();
-    
-    // Convert the canvas to a PNG buffer using a library like canvas-to-buffer or node-canvas-to-buffer
-    const { createCanvas } = require('canvas');
-    const canvasToBuffer = require('canvas-to-buffer');
-    const buffer = canvasToBuffer(canvas, 'image/png');
-    
-    // Convert the PNG buffer to a data URL using the sharp library
-    const sharp = require('sharp');
-    const thumbnailUrl = await sharp(buffer).toFormat('png').toBuffer().then((data) => {
-      return `data:image/png;base64,${data.toString('base64')}`;
-    });
-    
-    console.log(thumbnailUrl);
-    */
 
-    console.log("hi", req.body.map, req.body.thumbnail);
     const map = new Map({
         name: "Untitled",
         ownerUsername: loggedInUser.username,
@@ -388,6 +356,62 @@ async function mergePolygonsOfMap(req, res) {
     })
 }
 
+async function undoMergePolygonsOfMap(req, res) {
+    const map = await Map.findOne({ _id: req.params.id });
+    let newgeojson = map.geoJsonMap;
+    var index;
+    console.log(req.body.mergedPolygon);
+    for (let i = 0; i < newgeojson.features.length; i++) {
+        if (newgeojson.features[i].geometry.type == "Polygon" &&
+            req.body.mergedPolygon.geometry.type == "Polygon") {
+            console.log(newgeojson.features[i].geometry.coordinates[0][0]);
+            console.log(req.body.mergedPolygon.geometry.coordinates[0][0]);
+            if (((Math.abs(newgeojson.features[i].geometry.coordinates[0][0][0] -
+                req.body.mergedPolygon.geometry.coordinates[0][0][0]) <= .00001) &&
+                (Math.abs(newgeojson.features[i].geometry.coordinates[0][0][1] -
+                    req.body.mergedPolygon.geometry.coordinates[0][0][1]) <= .00001)) &&
+                ((Math.abs(newgeojson.features[i].geometry.coordinates[0][1][0] -
+                    req.body.mergedPolygon.geometry.coordinates[0][1][0]) <= .00001) &&
+                    (Math.abs(newgeojson.features[i].geometry.coordinates[0][1][1] -
+                        req.body.mergedPolygon.geometry.coordinates[0][1][1]) <= .00001))) {
+                index = i;
+                break;
+            }
+        }
+        else if (newgeojson.features[i].geometry.type == "MultiPolygon" &&
+            req.body.mergedPolygon.geometry.type == "MultiPolygon") {
+            console.log(newgeojson.features[i].geometry.coordinates[1][0][0]);
+            console.log(req.body.mergedPolygon.geometry.coordinates[1][0][0]);
+            if ((Math.abs(newgeojson.features[i].geometry.coordinates[0][0][0][0] -
+                req.body.mergedPolygon.geometry.coordinates[0][0][0][0]) <= .00001 &&
+                (Math.abs(newgeojson.features[i].geometry.coordinates[0][0][0][1] -
+                    req.body.mergedPolygon.geometry.coordinates[0][0][0][1]) <= .00001)) &&
+                (Math.abs(newgeojson.features[i].geometry.coordinates[1][0][0][0] -
+                    req.body.mergedPolygon.geometry.coordinates[1][0][0][0]) <= .00001 &&
+                    (Math.abs(newgeojson.features[i].geometry.coordinates[1][0][0][1] -
+                        req.body.mergedPolygon.geometry.coordinates[1][0][0][1]) <= .00001))) {
+                index = i;
+                break;
+            }
+        }
+    }
+    console.log(index);
+    console.log("prev length", newgeojson.features.length);
+    newgeojson.features.splice(index, 1);
+    console.log("updated length", newgeojson.features.length);
+
+    newgeojson.features.push(req.body.polygonsToMerge[0]);
+    newgeojson.features.push(req.body.polygonsToMerge[1]);
+
+    map.geoJsonMap = "";
+    map.geoJsonMap = newgeojson;
+    map.save().then(() => {
+        return res.status(201).json({
+            map: map
+        });
+    })
+}
+
 async function updateThumbnailOfMap(req, res) {
     const map = await Map.findOne({ _id: req.params.id });
     map.thumbnail = req.body.thumbnail;
@@ -501,6 +525,22 @@ async function loadComments(req, res) {
   });
 }
 
+async function removeSharedMap(req, res){
+    const mapid = req.body.mapid;
+    const email = req.body.email;
+    const loggedInUser = await User.findOne({ email: email });
+    console.log("mapidL "+mapid)
+    console.log("before remove map user:"+loggedInUser);
+    loggedInUser.sharedWithMe.splice(
+      loggedInUser.sharedWithMe.indexOf(mapid),
+      1
+    );
+    console.log("after before remove map user:" + loggedInUser);
+    loggedInUser.save();
+    return res.status(201).json({});
+
+}
+
 module.exports = {
     createNewMap,
     updateMapCustomProperties,
@@ -508,6 +548,7 @@ module.exports = {
     loadUserMapsNoGeoJson,
     getMapById,
     getShpDbfFileById,
+    removeSharedMap,
 
     duplicateMapById,
     deleteMapById,
@@ -515,11 +556,13 @@ module.exports = {
     updatePolygonOfMap,
     deletePolygonOfMap,
     mergePolygonsOfMap,
+    undoMergePolygonsOfMap,
+
     updateThumbnailOfMap,
 
     publishMap,
     loadPublishedMaps,
     loadSharedMaps,
-  updateMapComments,
-  loadComments,
+    updateMapComments,
+    loadComments,
 };

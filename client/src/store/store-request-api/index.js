@@ -78,6 +78,13 @@ export const mergePolygonsOfMap = (id, polygonsToMerge, mergedPolygon) => {
   })
 }
 
+export const undoMergePolygonsOfMap = (id, polygonsToMerge, mergedPolygon) => {
+  return api.put(`/undo-merge-polygons-of-map/${id}`, {
+    polygonsToMerge: polygonsToMerge,
+    mergedPolygon: mergedPolygon
+  })
+}
+
 export const updateThumbnailOfMap = (id, thumbnail) => {
   return api.put(`/update-thumbnail-of-map/${id}`, {
     thumbnail: thumbnail
@@ -108,6 +115,12 @@ export const loadComments = (mapid) => {
   return api.get(`/load-comments?mapid=${mapid}`);
 };
 
+export const removeSharedMap = (mapid, email) => {
+  return api.put(`/remove-shared-map`, {
+    mapid: mapid,
+    email: email,
+  });
+};
 const apis = {
   createNewMap,
   updateMapCustomProperties,
@@ -115,13 +128,16 @@ const apis = {
   loadUserMapsNoGeoJson,
   getMapById,
   getShpDbfFileById,
-
+  removeSharedMap,
   duplicateMapById,
   deleteMapById,
   addPolygonToMap,
   updatePolygonOfMap,
   deletePolygonOfMap,
   mergePolygonsOfMap,
+  undoMergePolygonsOfMap,
+
+  
   updateThumbnailOfMap,
 
   publishMap,

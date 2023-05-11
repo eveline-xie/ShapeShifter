@@ -37,9 +37,10 @@ export default function CommunityScreen() {
       const [forkName, setForkName] = useState("");
       const [expandName, setExpandName] = useState("");
       const [expandOwnerName, setExpandOwnerName] = useState("");
+      const [expandThumbnail, setExpandThumbnail] = useState("");
       const [expandMapid, setExpandMapid] = useState("");
 
-       useEffect(() => {
+      useEffect(() => {
          store.loadPublishedMaps();
        }, []);
 
@@ -76,6 +77,9 @@ export default function CommunityScreen() {
       const expandOwnerNameSet = (show) => {
          setExpandOwnerName(show);
       };
+      const expandThumbnailSet = (show) => {
+        setExpandThumbnail(show);
+      }
        const expandMapidSet = (show) => {
          setExpandMapid(show);
        };
@@ -122,6 +126,7 @@ export default function CommunityScreen() {
               setExpandOwnerName={expandOwnerNameSet}
               setExpandMapid={expandMapidSet}
               thumbnail={map.thumbnail}
+              setExpandThumbnail={expandThumbnailSet}
               key={map._id}
             />
           ))}
@@ -229,6 +234,7 @@ export default function CommunityScreen() {
             setOpen={setOpenView}
             name={expandName}
             ownername={expandOwnerName}
+            thumbnail={expandThumbnail}
             mapid={expandMapid}
             key={expandMapid}
           />

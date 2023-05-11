@@ -1,11 +1,11 @@
 import { createContext, useContext, useState } from 'react'
 import api from './store-request-api'
-// import jsTPS from '../common/jsTPS'
-// import api from './store-request-api'
-// import CreateSong_Transaction from '../transactions/CreateSong_Transaction'
-// import MoveSong_Transaction from '../transactions/MoveSong_Transaction'
-// import RemoveSong_Transaction from '../transactions/RemoveSong_Transaction'
-// import UpdateSong_Transaction from '../transactions/UpdateSong_Transaction'
+
+import jsTPS from '../common/jsTPS'
+import AddPolygon_Transaction from '../transactions/AddPolygon_Transaction'
+import UpdatePolygon_Transaction from '../transactions/UpdatePolygon_Transaction'
+import DeletePolygon_Transaction from '../transactions/DeletePolygon_Transaction'
+import MergePolygons_Transaction from '../transactions/MergePolygons_Transaction'
 import AuthContext from '../auth'
 import { Global } from '@emotion/react'
 import shpjs from 'shpjs';
@@ -15,7 +15,6 @@ import * as topoServer from 'topojson-server';
 import * as topoClient from 'topojson-client';
 import * as topoSimplify from 'topojson-simplify';
 import L from 'leaflet';
-//import  useEffect from 'react';
 const shpwrite = require('shp-write');
 
 export const GlobalStoreContext = createContext({});
@@ -33,6 +32,8 @@ export const GlobalStoreActionType = {
   LOAD_COMMENTS: "LOAD_COMMENTS",
 };
 
+const tps = new jsTPS();
+
 function GlobalStoreContextProvider(props) {
   const [store, setStore] = useState({
     currentMap: null,
@@ -41,7 +42,7 @@ function GlobalStoreContextProvider(props) {
     mapIdMarkedForDeletion: null,
     mapIdMarkedForExport: null,
     sharedMaps: null,
-        mapComments: null,
+    mapComments: null,
   })
 
   const navigate = useNavigate();
@@ -221,50 +222,6 @@ function GlobalStoreContextProvider(props) {
         console.log("API FAILED TO CREATE A NEW LIST");
       }
     })
-
-    // async function waitForLeafletImage() {
-    //   return new Promise((resolve, reject) => {
-    //     leafletImage(map, (err, canvas) => {
-    //       if (err) {
-    //         reject(err);
-    //       } else {
-    //         const image = canvas.toDataURL();
-    //         console.log(image);
-    //         resolve(image);
-    //       }
-    //     });
-    //   });
-    // }
-
-    // waitForLeafletImage()
-    //   .then(async (image) => {
-    //     console.log('Leaflet image created:', image);
-    //     // Continue with the rest of your code here
-    //     const response = await api.createNewMap({ map: feature, thumbnail: image });
-    //     console.log("createNewMap response: " + response);
-    //     if (response.status === 201) {
-    //       //tps.clearAllTransactions();
-    //       let newMap = response.data.map;
-    //       console.log(newMap);
-    //       storeReducer({
-    //         type: GlobalStoreActionType.CREATE_NEW_MAP,
-    //         payload: newMap
-    //       }
-    //       );
-
-    //       // IF IT'S A VALID LIST THEN LET'S START EDITING IT
-    //       //history.push("/playlist/" + newList._id);
-    //       navigate("/createmap");
-    //     }
-    //     else {
-    //       console.log("API FAILED TO CREATE A NEW LIST");
-    //     }
-
-    //   })
-    //   .catch((err) => {
-    //     console.error('Error creating Leaflet image:', err);
-    //   });
-
   }
 
   store.updateMapCustomProperties = async function (name, keywords, collaborators) {
@@ -412,13 +369,44 @@ function GlobalStoreContextProvider(props) {
     }
   }
 
+  store.undo = function () {
+    tps.undoTransaction();
+  }
+  store.redo = function () {
+    tps.doTransaction();
+  }
+
+  store.canUndo = function () {
+    return ((store.currentMap !== null) && tps.hasTransactionToUndo());
+  }
+  store.canRedo = function () {
+    return ((store.currentMap !== null) && tps.hasTransactionToRedo());
+  }
+
+  store.clearAllTransactions = function () {
+    tps.clearAllTransactions();
+}
+
+  store.addAddPolygonToMapTransaction = function (feature) {
+    let transaction = new AddPolygon_Transaction(store, feature);
+    tps.addTransaction(transaction);
+  }
+
   store.addPolygonToMap = async function (feature) {
     const response = await api.addPolygonToMap(store.currentMap._id, feature);
     if (response.status === 201) {
       console.log("success");
       const map = response.data.map;
       console.log(map.geoJsonMap.features.length);
+      storeReducer({
+        type: GlobalStoreActionType.LOAD_CURRENT_MAP,
+        payload: map
+      })
     }
+  }
+  store.addUpdatePolygonToMapTransaction = function (prevPolygon, updatedPolygon) {
+    let transaction = new UpdatePolygon_Transaction(store, prevPolygon, updatedPolygon);
+    tps.addTransaction(transaction);
   }
   store.updatePolygonOfMap = async function (prevPolygon, updatedPolygon) {
     const response = await api.updatePolygonOfMap(store.currentMap._id, prevPolygon, updatedPolygon);
@@ -426,8 +414,18 @@ function GlobalStoreContextProvider(props) {
       console.log("success");
       const map = response.data.map;
       console.log(map.geoJsonMap.features.length);
+      storeReducer({
+        type: GlobalStoreActionType.LOAD_CURRENT_MAP,
+        payload: map
+      })
     }
   }
+
+  store.addDeletePolygonOfMapTransaction = function (feature) {
+    let transaction = new DeletePolygon_Transaction(store, feature);
+    tps.addTransaction(transaction);
+  }
+
 
   store.deletePolygonOfMap = async function (feature) {
     const response = await api.deletePolygonOfMap(store.currentMap._id, feature);
@@ -435,7 +433,16 @@ function GlobalStoreContextProvider(props) {
       console.log("ww");
       const map = response.data.map;
       console.log(map.geoJsonMap.features.length);
+      storeReducer({
+        type: GlobalStoreActionType.LOAD_CURRENT_MAP,
+        payload: map
+      })
     }
+  }
+
+  store.addmergePolygonsOfMapTransaction = function (polygonsToMerge, mergedPolygon) {
+    let transaction = new MergePolygons_Transaction(store, polygonsToMerge, mergedPolygon);
+    tps.addTransaction(transaction);
   }
 
   store.mergePolygonsOfMap = async function (polygonsToMerge, mergedPolygon) {
@@ -445,6 +452,24 @@ function GlobalStoreContextProvider(props) {
       console.log("success");
       const map = response.data.map;
       console.log(map.geoJsonMap.features.length);
+      storeReducer({
+        type: GlobalStoreActionType.LOAD_CURRENT_MAP,
+        payload: map
+      })
+    }
+  }
+
+  store.undoMergePolygonsOfMap = async function (polygonsToMerge, mergedPolygon) {
+
+    const response = await api.undoMergePolygonsOfMap(store.currentMap._id, polygonsToMerge, mergedPolygon);
+    if (response.status === 201) {
+      console.log("success");
+      const map = response.data.map;
+      console.log(map.geoJsonMap.features.length);
+      storeReducer({
+        type: GlobalStoreActionType.LOAD_CURRENT_MAP,
+        payload: map
+      })
     }
   }
 
@@ -572,6 +597,13 @@ function GlobalStoreContextProvider(props) {
         console.log("API FAILED TO CREATE A NEW LIST");
         }
       }
+    
+    store.removeSharedMap = async function(mapid, email){
+        const response = await api.removeSharedMap(mapid, email);
+        if (response.status === 201) {
+          console.log("map removed from shared with me");
+        }
+    }
 
   return (
     <GlobalStoreContext.Provider value={{

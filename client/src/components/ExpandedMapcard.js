@@ -90,6 +90,7 @@ export default function ExpandedMapcard(props) {
          evt.preventDefault();
          console.log("comment: "+comment+props.mapid)
         store.updateMapComments(comment, props.mapid);
+        setComment("");
        }
      };
 
@@ -396,139 +397,6 @@ export default function ExpandedMapcard(props) {
                     <Grid item>
                       <br></br>
                         {commentsMap}
-                      {/* <Box
-                        sx={{
-                          height: "250px",
-                          width: "500px",
-                          marginLeft: "20px",
-                          marginTop: "20px",
-                        }}
-                      >
-                        <Grid
-                          container
-                          direction="column"
-                          justifyContent="space-between"
-                          alignItems="stretch"
-                        >
-                          <Grid item>
-                            <Grid
-                              container
-                              direction="column"
-                              justifyContent="space-between"
-                              alignItems="stretch"
-                            >
-                              <Grid item>
-                                <Grid
-                                  container
-                                  direction="row"
-                                  alignItems="stretch"
-                                >
-                                  <Grid item xs={1}>
-                                    <Avatar>P</Avatar>
-                                  </Grid>
-
-                                  <Grid item xs={4}>
-                                    <Typography
-                                      component="div"
-                                      variant="h6"
-                                      style={{
-                                        color: "#ffffff",
-                                      }}
-                                    >
-                                      Peter Pan
-                                    </Typography>
-                                  </Grid>
-
-                                  <Grid item xs={6}>
-                                    {replyButton}
-                                  </Grid>
-                                </Grid>
-                              </Grid>
-                              <Grid item>{replyTextbox}</Grid>
-                              <Grid item>
-                                <Box
-                                  sx={{
-                                    height: "60px",
-                                    width: "300px",
-                                    marginLeft: "50px",
-                                  }}
-                                >
-                                  <Typography
-                                    // mt={2}
-                                    component="div"
-                                    variant="subtitle1"
-                                    style={{
-                                      color: "#ffffff",
-                                    }}
-                                  >
-                                    Really nice map! I love Geography!!! Can I
-                                    collaborate with you on this map?
-                                  </Typography>
-                                </Box>
-                                {replyText}
-                              </Grid>
-                            </Grid>
-                          </Grid>
-
-                          <Grid item>
-                            <Grid
-                              container
-                              direction="column"
-                              justifyContent="space-between"
-                              alignItems="stretch"
-                            >
-                              <Grid item>
-                                <Grid
-                                  container
-                                  direction="row"
-                                  alignItems="stretch"
-                                >
-                                  <Grid item xs={1}>
-                                    <Avatar>C</Avatar>
-                                  </Grid>
-
-                                  <Grid item xs={4}>
-                                    <Typography
-                                      component="div"
-                                      variant="h6"
-                                      style={{
-                                        color: "#ffffff",
-                                      }}
-                                    >
-                                      Chandler Bing
-                                    </Typography>
-                                  </Grid>
-
-                                  <Grid item xs={6}>
-                                    {replyButton}
-                                  </Grid>
-                                </Grid>
-                              </Grid>
-
-                              <Grid item>
-                                <Box
-                                  sx={{
-                                    height: "60px",
-                                    width: "300px",
-                                    marginLeft: "50px",
-                                  }}
-                                >
-                                  <Typography
-                                    // mt={2}
-                                    component="div"
-                                    variant="subtitle1"
-                                    style={{
-                                      color: "#ffffff",
-                                    }}
-                                  >
-                                    EWWWWWWWW
-                                  </Typography>
-                                </Box>
-                              </Grid>
-                            </Grid>
-                          </Grid>
-                        </Grid>
-                      </Box> */}
                     </Grid>
                   </Grid>
                 </Grid>
@@ -542,7 +410,7 @@ export default function ExpandedMapcard(props) {
                       component="img"
                       alt="green iguana"
                       height="470"
-                      image="cardBackground.png"
+                      image={props.thumbnail}
                       style={{ objectFit: "cover" }}
                     />
                   </Card>
