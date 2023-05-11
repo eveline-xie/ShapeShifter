@@ -37,6 +37,8 @@ export default function CommunityScreen() {
       const [forkName, setForkName] = useState("");
       const [expandName, setExpandName] = useState("");
       const [expandOwnerName, setExpandOwnerName] = useState("");
+      const [expandMapid, setExpandMapid] = useState("");
+
        useEffect(() => {
          store.loadPublishedMaps();
        }, []);
@@ -48,6 +50,7 @@ export default function CommunityScreen() {
     //   const handleDropdown = (event) => {
     //     setDropdown(event.target.value);
     //   };
+      let searchResult = "";
 
       const openDeleteModal = (show) => {
         setOpenDelete(show);
@@ -73,7 +76,19 @@ export default function CommunityScreen() {
       const expandOwnerNameSet = (show) => {
          setExpandOwnerName(show);
       };
+       const expandMapidSet = (show) => {
+         setExpandMapid(show);
+       };
+       
+      const handleSearchKeyDown = async (evt) => {
+        if (["Enter"].includes(evt.key)) {
+          evt.preventDefault();
+          console.log("search: "+searchTerm)        }
+      };
 
+ if (searchTerm) {
+   searchResult = <p>Search results for " {searchTerm}"</p>;
+ }
     let mapcards = "";
     // if(store)
     // mapcards = (
@@ -105,6 +120,7 @@ export default function CommunityScreen() {
               setForkName={forkNameSet}
               setExpandName={expandNameSet}
               setExpandOwnerName={expandOwnerNameSet}
+              setExpandMapid={expandMapidSet}
               thumbnail={map.thumbnail}
               key={map._id}
             />
@@ -113,14 +129,10 @@ export default function CommunityScreen() {
       );
     }
 
-    let searchResult = ""
-    if(searchTerm){
-        searchResult = <p>Search results for " {searchTerm}"</p>;
-    }
     return (
       <div id="community-screen">
         <Grid container spacing={1}>
-          <Grid item xs={2}>
+          {/* <Grid item xs={2}>
             <Button
               variant="contained"
               style={{
@@ -133,8 +145,8 @@ export default function CommunityScreen() {
               }}
             >
               View All
-            </Button>
-          </Grid>
+            </Button> */}
+          {/* </Grid>
 
           <Grid item xs={2}>
             <Button
@@ -150,9 +162,9 @@ export default function CommunityScreen() {
             >
               Key Word
             </Button>
-          </Grid>
+          </Grid> */}
 
-          <Grid item xs={2}>
+          {/* <Grid item xs={2}>
             <Button
               variant="contained"
               style={{
@@ -166,26 +178,27 @@ export default function CommunityScreen() {
             >
               Key Word
             </Button>
-          </Grid>
+          </Grid> */}
 
-          <Grid item xs={6}>
+          <Grid item xs={1}>
             <TextField
               id="search-bar"
               type="search"
               label="Search"
               value={searchTerm}
               onChange={handleSearch}
+              onKeyDown={handleSearchKeyDown}
               sx={{ width: 400 }}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <SearchIcon />
-                  </InputAdornment>
-                ),
-              }}
-              InputLabelProps={{
-                style: { color: "#ffffff" },
-              }}
+              // InputProps={{
+              //   endAdornment: (
+              //     <InputAdornment position="end">
+              //       <SearchIcon />
+              //     </InputAdornment>
+              //   ),
+              // }}
+              // InputLabelProps={{
+              //   style: { color: "#ffffff" },
+              // }}
             />
           </Grid>
         </Grid>
@@ -216,6 +229,8 @@ export default function CommunityScreen() {
             setOpen={setOpenView}
             name={expandName}
             ownername={expandOwnerName}
+            mapid={expandMapid}
+            key={expandMapid}
           />
         </div>
       </div>

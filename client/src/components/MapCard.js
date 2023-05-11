@@ -72,6 +72,8 @@ export default function MapCard(props) {
     props.setOpenView(true);
     props.setExpandName(props.mapName);
     props.setExpandOwnerName(props.ownerUsername);
+    props.setExpandMapid(props.id);
+
   }
 
   var editButton = <Button variant="contained" sx={{ maxWidth: 100 }} style={{

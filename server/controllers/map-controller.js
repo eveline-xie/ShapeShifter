@@ -454,6 +454,7 @@ async function loadSharedMaps(req, res) {
             collaborators: map.collaborators,
             keywords: map.keywords,
             published: map.published,
+            thumbnail: map.thumbnail
         });
     }
     // console.log(maps);
@@ -461,6 +462,43 @@ async function loadSharedMaps(req, res) {
         success: true,
         sharedMaps: maps,
     });
+}
+
+async function updateMapComments(req, res) {
+  const body = req.body;
+  console.log("updateMap: " + JSON.stringify(body));
+
+  if (!body) {
+    return res.status(400).json({
+      success: false,
+      error: "You must provide a body to update",
+    });
+  }
+  console.log("saved user id" + req.userId);
+    const map = await Map.findOne({ _id: body.payload.mapid });
+    const user = await User.findOne({ _id: req.userId });
+    map.comments.push([user.username, body.payload.comments]);
+  //   map.name = body.payload.name;
+  //   map.keywords = body.payload.keywords;
+  //   map.collaborators = body.payload.collaborators;
+    map.save();
+  return res.status(201).json({
+    success: true,
+    mapComments: map.comments,
+  });
+}
+
+async function loadComments(req, res) {
+  const mapid = req.query.mapid;
+  console.log("mapid: " + mapid);
+  const map = await Map.findOne({ _id: mapid });
+  //   map.name = body.payload.name;
+  //   map.keywords = body.payload.keywords;
+  //   map.collaborators = body.payload.collaborators;
+  return res.status(201).json({
+    success: true,
+    mapComments: map.comments,
+  });
 }
 
 module.exports = {
@@ -482,4 +520,6 @@ module.exports = {
     publishMap,
     loadPublishedMaps,
     loadSharedMaps,
+  updateMapComments,
+  loadComments,
 };

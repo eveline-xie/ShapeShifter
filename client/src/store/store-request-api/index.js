@@ -98,6 +98,16 @@ export const loadSharedMaps = () => {
   return api.get("/load-shared-maps");
 };
 
+export const updateMapComments = (payload) => {
+  return api.put("/update-map-comments", {
+    payload: payload,
+  });
+};
+
+export const loadComments = (mapid) => {
+  return api.get(`/load-comments?mapid=${mapid}`);
+};
+
 const apis = {
   createNewMap,
   updateMapCustomProperties,
@@ -117,6 +127,8 @@ const apis = {
   publishMap,
   loadPublishedMaps,
   loadSharedMaps,
+  updateMapComments,
+  loadComments,
 };
 
 export default apis;
