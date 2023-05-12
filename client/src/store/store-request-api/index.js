@@ -12,12 +12,11 @@
 import axios from "axios";
 axios.defaults.withCredentials = true;
 const api = axios.create({
-  baseURL: "https://shapeshifter-api.onrender.com"
-  //baseURL: "http://localhost:5000"
+  //baseURL: "https://shapeshifter-api.onrender.com"
+  baseURL: "http://localhost:5000"
 });
 
 export const createNewMap = (payload) => {
-    console.log("The payload",payload.map, payload.thumbnail);
     return api.post('/map', payload);
 }
 

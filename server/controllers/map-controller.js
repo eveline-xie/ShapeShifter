@@ -144,7 +144,8 @@ async function duplicateMapById(req, res) {
         geoJsonMap: mapToDupe.geoJsonMap,
         collaborators: [],
         keywords: [],
-        published: { isPublished: false, publishedDate: new Date() }
+        published: { isPublished: false, publishedDate: new Date() },
+        thumbnail: mapToDupe.thumbnail
     })
     if (!map) {
         return res.status(400).json({ success: false, error: err })
