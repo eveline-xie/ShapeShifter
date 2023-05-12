@@ -12,8 +12,8 @@
 import axios from "axios";
 axios.defaults.withCredentials = true;
 const api = axios.create({
-  // baseURL: "https://shapeshifter-api.onrender.com"
-  baseURL: "http://localhost:5001"
+  baseURL: "https://shapeshifter-api.onrender.com"
+  // baseURL: "http://localhost:5000"
 });
 
 export const createNewMap = (payload) => {
@@ -105,6 +105,22 @@ export const loadSharedMaps = () => {
   return api.get("/load-shared-maps");
 };
 
+export const updateMapComments = (payload) => {
+  return api.put("/update-map-comments", {
+    payload: payload,
+  });
+};
+
+export const loadComments = (mapid) => {
+  return api.get(`/load-comments?mapid=${mapid}`);
+};
+
+export const removeSharedMap = (mapid, email) => {
+  return api.put(`/remove-shared-map`, {
+    mapid: mapid,
+    email: email,
+  });
+};
 const apis = {
   createNewMap,
   updateMapCustomProperties,
@@ -112,7 +128,7 @@ const apis = {
   loadUserMapsNoGeoJson,
   getMapById,
   getShpDbfFileById,
-
+  removeSharedMap,
   duplicateMapById,
   deleteMapById,
   addPolygonToMap,
@@ -127,6 +143,8 @@ const apis = {
   publishMap,
   loadPublishedMaps,
   loadSharedMaps,
+  updateMapComments,
+  loadComments,
 };
 
 export default apis;
