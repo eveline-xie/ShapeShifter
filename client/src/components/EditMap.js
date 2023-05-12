@@ -483,6 +483,8 @@ export default function EditMap() {
       let halfScreenPolyline = turf.lineString(largerLineCoords);
       let halfScreenPolygon = turf.lineToPolygon(halfScreenPolyline);
 
+      let apolygon = L.geoJSON(halfScreenPolygon).addTo(map);
+
       let firstHalfCoords = [];
       let secondHalfCoords = [];
       console.log("halfscreen poly", halfScreenPolygon);
@@ -532,7 +534,7 @@ export default function EditMap() {
       setUndoButtonEnabled(true);
       setRedoButtonEnabled(true);
 
-      store.addSplitPolygonsOfMapTransaction(selectedPolygon, [firstHalfPolys, secondHalfPolys]);
+      //store.addSplitPolygonsOfMapTransaction(selectedPolygon, [firstHalfPolys, secondHalfPolys]);
     }
   }
 
