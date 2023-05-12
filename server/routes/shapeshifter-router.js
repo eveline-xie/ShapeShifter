@@ -21,6 +21,7 @@ router.get("/load-user-maps", auth.verify, MapController.loadUserMaps);
 router.get("/load-user-maps-no-geojson", auth.verify, MapController.loadUserMapsNoGeoJson);
 router.get("/map/:id", auth.verify, MapController.getMapById);
 router.get("/shpdbfmap/:id", auth.verify, MapController.getShpDbfFileById);
+router.put("/remove-shared-map", auth.verify, MapController.removeSharedMap);
 
 router.post("/duplicate-map", auth.verify, MapController.duplicateMapById);
 router.delete("/map/:id", auth.verify, MapController.deleteMapById);
@@ -34,5 +35,8 @@ router.put("/update-thumbnail-of-map/:id", auth.verify, MapController.updateThum
 router.put("/publish-map", auth.verify, MapController.publishMap);
 router.get("/load-published-maps", auth.verify, MapController.loadPublishedMaps);
 router.get("/load-shared-maps", auth.verify, MapController.loadSharedMaps);
+router.put("/update-map-comments", auth.verify, MapController.updateMapComments);
+router.get("/load-comments", auth.verify, MapController.loadComments);
+
 
 module.exports = router;

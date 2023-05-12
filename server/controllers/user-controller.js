@@ -276,9 +276,13 @@ async function getUserByEmail(req, res){
       return res.status(200).json({ success: false });
     }
     else{
-      sendCollaboratorEmail(email);
+      let i = savedUser.sharedWithMe.includes(mapid);
+      if (!i) {
         savedUser.sharedWithMe.push(mapid);
-        savedUser.save();
+        sendCollaboratorEmail(email);
+      }
+      console.log(">>CM: "+i)
+      savedUser.save();
       return res
         .status(200)
         .json({

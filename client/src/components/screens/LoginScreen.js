@@ -83,7 +83,7 @@ export default function LoginScreen() {
             component="form"
             noValidate
             onSubmit={handleSubmit}
-            sx={{ mt: 1 }}
+            sx={{ mt: 1, flex: "50%", pl: "5%" }}
           >
             <TextField
               margin="normal"
@@ -133,7 +133,7 @@ export default function LoginScreen() {
               }}
               onChange={(e) => setPassword(e.target.value)}
             />
-            <FormControlLabel
+            {/* <FormControlLabel
               control={
                 <Checkbox
                   value="remember"
@@ -148,7 +148,7 @@ export default function LoginScreen() {
               sx={{
                 color: "white",
               }}
-            />
+            /> */}
             <div style={{ color: "red" }}>{errorMessage}</div>
             <Button
               type="submit"

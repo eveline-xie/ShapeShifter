@@ -114,6 +114,7 @@ export default function CreateMap() {
   function handleDelete(item) {
     console.log("item: " + item);
     let temp_collab = collaborators.filter((i) => i !== item);
+    store.removeSharedMap(store.currentMap._id, item);
     console.log("after delete: " + temp_collab);
     setCollaborators(temp_collab);
   }

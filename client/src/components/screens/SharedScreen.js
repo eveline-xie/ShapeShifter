@@ -32,7 +32,8 @@ export default function SharedScreen() {
   const [openDelete, setOpenDelete] = useState(false);
   const [openExport, setOpenExport] = useState(false);
   const [openFork, setOpenFork] = useState(false);
-
+  const [exportName, setExportName] = useState("");
+  const [forkName, setForkName] = useState("");
   const [shpFile, setShpFile] = useState(null);
   const [dbfFile, setDbfFile] = useState(null);
   const [geoJsonFile, setGeoJsonFile] = useState(null);
@@ -71,6 +72,12 @@ export default function SharedScreen() {
   const openForkModal = (show) => {
     setOpenFork(show);
   };
+   const exportNameSet = (show) => {
+     setExportName(show);
+   };
+   const forkNameSet = (show) => {
+     setForkName(show);
+   };
 
   const handleUploadSHP = () => {
     shpInputRef.current.click();
@@ -140,7 +147,11 @@ export default function SharedScreen() {
             setOpenDelete={openDeleteModal}
             setOpenExport={openExportModal}
             setOpenFork={openForkModal}
+            setExportName={exportNameSet}
+            setForkName={forkNameSet}
             dropdown={dropdown}
+            key={map._id}
+            thumbnail={map.thumbnail}
           />
         ))}
       </List>
@@ -256,7 +267,6 @@ export default function SharedScreen() {
         </Card>
       </div>
       <br></br>
-
       <div
         id="home-dropdown"
         style={{
@@ -299,14 +309,16 @@ export default function SharedScreen() {
           }}
         />
       </div>
-
       <br></br>
       {/* mapcards */}
       <div>{mapcards}</div>
-
       <DeleteModal open={openDelete} setOpen={setOpenDelete} />
-      <ExportModal open={openExport} setOpen={setOpenExport} />
-      <ForkModal open={openFork} setOpen={setOpenFork} />
+      <ExportModal
+        open={openExport}
+        setOpen={setOpenExport}
+        name={exportName}
+      />
+      <ForkModal open={openFork} setOpen={setOpenFork} name={forkName} />
     </div>
   );
 }

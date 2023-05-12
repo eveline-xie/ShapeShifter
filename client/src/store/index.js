@@ -30,7 +30,8 @@ export const GlobalStoreActionType = {
   MARK_MAP_FOR_DELETION: "MARK_MAP_FOR_DELETION",
   MARK_MAP_FOR_EXPORT: "MARK_MAP_FOR_EXPORT",
   LOAD_PUBLISHED_MAPS: "LOAD_PUBLISHED_MAPS",
-  LOAD_SHARED_MAPS: "LOAD_SHARED_MAPS"
+  LOAD_SHARED_MAPS: "LOAD_SHARED_MAPS",
+  LOAD_COMMENTS: "LOAD_COMMENTS",
 };
 
 const tps = new jsTPS();
@@ -43,6 +44,7 @@ function GlobalStoreContextProvider(props) {
     mapIdMarkedForDeletion: null,
     mapIdMarkedForExport: null,
     sharedMaps: null,
+    mapComments: null,
   })
 
   const navigate = useNavigate();
@@ -93,6 +95,12 @@ function GlobalStoreContextProvider(props) {
           sharedMaps: payload,
         });
       }
+          case GlobalStoreActionType.LOAD_COMMENTS: {
+            return setStore({
+              mapComments: payload,
+              publishedMaps: store.publishedMaps,
+            });
+          }
     }
   }
 
@@ -585,6 +593,51 @@ function GlobalStoreContextProvider(props) {
       });
     }
   };
+
+      store.updateMapComments = async function (
+        comments,
+        mapid
+      ) {
+        let payload = {
+          comments: comments,
+          mapid: mapid,
+        };
+        console.log(payload);
+        const response = await api.updateMapComments(
+          payload
+        );
+        if (response.status === 201) {
+          console.log("comment success")
+          console.log(response.data.mapComments)
+           storeReducer({
+             type: GlobalStoreActionType.LOAD_COMMENTS,
+             payload: response.data.mapComments,
+           });
+        } else {
+          console.log("API FAILED TO CREATE A NEW LIST");
+        }
+      };
+
+      store.loadComments = async function (mapid){
+        const response = await api.loadComments(mapid);
+        if (response.status === 201) {
+        console.log("comment success");
+        console.log(response.data.mapComments);
+        storeReducer({
+            type: GlobalStoreActionType.LOAD_COMMENTS,
+            payload: response.data.mapComments,
+        });
+        } else {
+        console.log("API FAILED TO CREATE A NEW LIST");
+        }
+      }
+    
+    store.removeSharedMap = async function(mapid, email){
+        const response = await api.removeSharedMap(mapid, email);
+        if (response.status === 201) {
+          console.log("map removed from shared with me");
+        }
+    }
 
   return (
     <GlobalStoreContext.Provider value={{
