@@ -6,6 +6,8 @@ import AddPolygon_Transaction from '../transactions/AddPolygon_Transaction'
 import UpdatePolygon_Transaction from '../transactions/UpdatePolygon_Transaction'
 import DeletePolygon_Transaction from '../transactions/DeletePolygon_Transaction'
 import MergePolygons_Transaction from '../transactions/MergePolygons_Transaction'
+import SplitPolygon_Transaction from '../transactions/SplitPolygon_Transaction'
+
 import AuthContext from '../auth'
 import { Global } from '@emotion/react'
 import shpjs from 'shpjs';
@@ -112,6 +114,16 @@ function GlobalStoreContextProvider(props) {
     }
   }
 
+  store.onEachRegion = function (country, layer) {
+    if (country.properties !== undefined) {
+      if (country.properties.color) {
+        layer.setStyle({
+          color: country.properties.color
+        })
+      }
+    }
+  }
+
   store.createNewMapSHPDBF = async function (shpfile, dbffile) {
 
     let shpfileContents = shpjs.parseShp(shpfile);
@@ -121,27 +133,31 @@ function GlobalStoreContextProvider(props) {
 
     let top = topoServer.topology({ foo: shp2geoContents });
     let top2 = topoSimplify.presimplify(top);
-    let top3 = topoSimplify.simplify(top2, .005);
+    let top3 = topoSimplify.simplify(top2, .5);
     let feature = topoClient.feature(top3, "foo");
-    console.log("test2", feature);
-
-    console.log("feature", feature);
 
     var container = document.createElement('div');
     container.style.height = '500px';
     container.style.width = '500px';
     document.body.appendChild(container);
 
-    let map = L.map(container).setView([0, 0], 1);
+    var southWest = L.latLng(-500, -500);
+    var northEast = L.latLng(500, 500);
+    var bounds = L.latLngBounds(southWest, northEast);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution:
-        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
-
+    let map = L.map(container, { maxBounds: bounds });
     var geojsonMap =
       L.geoJson(feature, {
+        onEachFeature: store.onEachRegion
       });
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    }).addTo(map);
+
+    var bounds = geojsonMap.getBounds();
+    map.fitBounds(bounds);
+
     geojsonMap.eachLayer(function (layer) {
       //console.log(layer);
       layer.addTo(map);
@@ -154,7 +170,6 @@ function GlobalStoreContextProvider(props) {
       map.remove();
       container.parentNode.removeChild(container);
       const response = await api.createNewMap({ map: feature, thumbnail: image });
-      console.log("createNewMap response: " + response);
       if (response.status === 201) {
         //tps.clearAllTransactions();
         let newMap = response.data.map;
@@ -191,16 +206,23 @@ function GlobalStoreContextProvider(props) {
     container.style.width = '500px';
     document.body.appendChild(container);
 
-    let map = L.map(container).setView([0, 0], 1);
+    var southWest = L.latLng(-500, -500);
+    var northEast = L.latLng(500, 500);
+    var bounds = L.latLngBounds(southWest, northEast);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution:
-        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
-
+    let map = L.map(container, { maxBounds: bounds });
     var geojsonMap =
       L.geoJson(feature, {
+        onEachFeature: store.onEachRegion
       });
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    }).addTo(map);
+
+    var bounds = geojsonMap.getBounds();
+    map.fitBounds(bounds);
+
     geojsonMap.eachLayer(function (layer) {
       //console.log(layer);
       layer.addTo(map);
@@ -213,7 +235,6 @@ function GlobalStoreContextProvider(props) {
       map.remove();
       container.parentNode.removeChild(container);
       const response = await api.createNewMap({ map: feature, thumbnail: image });
-      console.log("createNewMap response: " + response);
       if (response.status === 201) {
         //tps.clearAllTransactions();
         let newMap = response.data.map;
@@ -398,7 +419,7 @@ function GlobalStoreContextProvider(props) {
 
   store.clearAllTransactions = function () {
     tps.clearAllTransactions();
-}
+  }
 
   store.addAddPolygonToMapTransaction = function (feature) {
     let transaction = new AddPolygon_Transaction(store, feature);
@@ -486,6 +507,11 @@ function GlobalStoreContextProvider(props) {
     }
   }
 
+  store.addSplitPolygonsOfMapTransaction = function (polygonToSplit, splitPolygons) {
+    let transaction = new SplitPolygon_Transaction(store, polygonToSplit, splitPolygons);
+    tps.addTransaction(transaction);
+  }
+
 
   store.updateThumbnailOfMap = async function (id) {
     const response = await api.getMapById(id);
@@ -495,16 +521,24 @@ function GlobalStoreContextProvider(props) {
       container.style.height = '500px';
       container.style.width = '500px';
       document.body.appendChild(container);
-      let map = L.map(container).setView([0, 0], 1);
 
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution:
-          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-      }).addTo(map);
+      var southWest = L.latLng(-500, -500);
+      var northEast = L.latLng(500, 500);
+      var bounds = L.latLngBounds(southWest, northEast);
 
+      let map = L.map(container, { maxBounds: bounds });
       var geojsonMap =
         L.geoJson(features, {
+          onEachFeature: store.onEachRegion
         });
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      }).addTo(map);
+
+      var bounds = geojsonMap.getBounds();
+      map.fitBounds(bounds);
+
       geojsonMap.eachLayer(function (layer) {
         //console.log(layer);
         layer.addTo(map);
