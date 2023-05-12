@@ -41,7 +41,8 @@ export const GlobalStoreActionType = {
 const tps = new jsTPS();
 
 const socket = new io(
-  "http://localhost:5000"
+  //"http://localhost:5000"
+  "https://shapeshifter-api.onrender.com"
   , {
     autoConnect: false,
   }
