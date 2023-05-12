@@ -89,7 +89,7 @@ export default function EditMap() {
       L.geoJson(store.currentMap.geoJsonMap, {
         onEachFeature: onEachRegion
       });
-      console.log("test2");
+    console.log("test2");
     if (currentView) {
       newmap.setView(currentView, currentZoom);
     }
@@ -116,7 +116,7 @@ export default function EditMap() {
     })
     map = newmap;
     setAMap(newmap);
-    
+
     return () => {
       // Remove the map
       newmap.remove();
@@ -168,7 +168,6 @@ export default function EditMap() {
   function onEachRegion(country, layer) {
     // layer.bindPopup(country.properties.admin,{ autoClose: false, closeOnClick: false });
     let regionName = "";
-    console.log("hi");
     if (country.properties !== undefined) {
       if (country.properties.NAME_5) {
         regionName = country.properties.NAME_5;
@@ -351,27 +350,27 @@ export default function EditMap() {
     if (feature.geometry.type !== 'LineString') {
       onEachRegion(feature, e.layer);
 
-    console.log("adding", feature);
-    feature.properties = {drawn: true};
-    setCurrentView(map.getCenter());
-    setCurrentZoom(map.getZoom());
-    store.addAddPolygonToMapTransaction(feature);
+      console.log("adding", feature);
+      feature.properties = { drawn: true };
+      setCurrentView(map.getCenter());
+      setCurrentZoom(map.getZoom());
+      store.addAddPolygonToMapTransaction(feature);
 
-    prevLayer = selectedLayer;
-    prevPolygon = selectedPolygon;
-    if (selectedLayer) {
-      selectedLayer.disableEdit();
-      deSelect(selectedLayer);
-    }
-    selectRegion(e.layer);
+      prevLayer = selectedLayer;
+      prevPolygon = selectedPolygon;
+      if (selectedLayer) {
+        selectedLayer.disableEdit();
+        deSelect(selectedLayer);
+      }
+      selectRegion(e.layer);
 
-    selectedLayer = e.layer;
-    selectedPolygon = feature;
+      selectedLayer = e.layer;
+      selectedPolygon = feature;
     }
     else {
       e.layer.disableEdit();
     }
-    
+
     //setTransaction([...transaction, { type: 'delete', feature }]);
   };
 
@@ -436,105 +435,196 @@ export default function EditMap() {
     let lineString = e.layer.toGeoJSON();
     if (lineString.geometry.coordinates.length == 2) {
       console.log("stopped drawing");
+      map.editTools.stopDrawing();
+      map.removeLayer(e.layer);
       console.log("e", selectedPolygon);
 
       let lineCoords = turf.getCoords(lineString);
-      console.log("linecoords", lineCoords);
-      var slope;
-      if (lineCoords[0][0] < lineCoords[1][0]) {
-        slope = (lineCoords[1][1] - lineCoords[0][1])/(lineCoords[1][0] - lineCoords[0][0]);
+      let pointOne = turf.point(lineCoords[0]);
+      let pointTwo = turf.point(lineCoords[1]);
+      if (turf.booleanPointInPolygon(pointOne, selectedPolygon) ||
+        turf.booleanPointInPolygon(pointTwo, selectedPolygon)) {
+        console.log("contains vertex");
+        //deSelect(currentLayer, null);
+
+        setRenameButtonEnabled(true);
+        setColorButtonEnabled(true);
+        setDeleteButtonEnabled(true);
+        setSplitButtonEnabled(true);
+
+        setAddButtonEnabled(false);
+        setMergeButtonEnabled(false);
+
+        setUndoButtonEnabled(true);
+        setRedoButtonEnabled(true);
+
+        setSplitEnabled(false);
       }
       else {
-        slope = (lineCoords[0][1] - lineCoords[1][1])/(lineCoords[0][0] - lineCoords[1][0]);
-      }
-      console.log("slope", slope);
+        console.log("linecoords", lineCoords);
 
-      lineCoords.push([lineCoords[0][0] - .001,lineCoords[0][1] - .001]);
-      console.log(lineCoords);
+        if (lineCoords[0][0] > lineCoords[1][0]) {
+          let temp = lineCoords[0];
+          lineCoords[0] = lineCoords[1];
+          lineCoords[1] = temp;
+        }
 
-      
-      let thickLineString = turf.lineString(lineCoords);
-      let thickLinePolygon = turf.lineToPolygon(thickLineString);
+        let slope = (lineCoords[1][1] - lineCoords[0][1]) / (lineCoords[1][0] - lineCoords[0][0]);
+        if (!isFinite(slope)) {
+          slope = 9999;
+        }
+        let intercept = lineCoords[0][1] - slope * lineCoords[0][0];
+        console.log("slope", slope);
+        console.log("intercept", intercept);
 
-      let polygonHalves = turf.difference(selectedPolygon, thickLinePolygon);
-      console.log("difference is", polygonHalves);
+        lineCoords.push([lineCoords[0][0] - .001, lineCoords[0][1] - .001]);
+        console.log("linecoords before", lineCoords);
 
-      // store.addUpdatePolygonToMapTransaction(selectedPolygon, polygonHalves);
+        let thickLineString = turf.lineString(lineCoords);
+        console.log("linecoords now", lineCoords);
+        L.geoJSON(thickLineString).addTo(map);
 
-      let largerLineCoords = [];
-      largerLineCoords.push([-500, slope*(-500 - lineCoords[0][0]) + lineCoords[0][1]]);
-      largerLineCoords.push([500, slope*(500 - lineCoords[1][0]) + lineCoords[1][1]]);
-      if (slope > .17) {
-        largerLineCoords.push([-500, 85]);
-        largerLineCoords.push([-500, -85]);
-      }
-      else if (slope > 0) {
-        largerLineCoords.push([500, 85]);
-        largerLineCoords.push([-500, 85]);
-      }
-      else if (slope > -.17) {
-        largerLineCoords.push([500, 85]);
-        largerLineCoords.push([-500, 85]);
-      }
-      else {
-        largerLineCoords.push([500, -85]);
-        largerLineCoords.push([500, 85]);
-      }
-      let halfScreenPolyline = turf.lineString(largerLineCoords);
-      let halfScreenPolygon = turf.lineToPolygon(halfScreenPolyline);
+        let thickLinePolygon = turf.lineToPolygon(thickLineString);
 
-      let apolygon = L.geoJSON(halfScreenPolygon).addTo(map);
+        let polygonHalves = turf.difference(selectedPolygon, thickLinePolygon);
+        console.log("difference is", polygonHalves);
 
-      let firstHalfCoords = [];
-      let secondHalfCoords = [];
-      console.log("halfscreen poly", halfScreenPolygon);
-      for (let i = 0; i < polygonHalves.geometry.coordinates.length; i++) {
-        let currPolyCoords = polygonHalves.geometry.coordinates[i];
-        let currPoly = turf.polygon(currPolyCoords);
-        if (turf.booleanOverlap(halfScreenPolygon, currPoly)) {
-          firstHalfCoords.push(currPolyCoords);
+
+        let largerLineCoords = [];
+        if (slope > .17) {
+          if ((-85 - intercept) / slope < -500) {
+            largerLineCoords.push([-500, slope * (-500) + intercept]);
+          }
+          else {
+            largerLineCoords.push([(-85 - intercept) / slope, -85]);
+          }
+          largerLineCoords.push(lineCoords[0]);
+          largerLineCoords.push(lineCoords[1]);
+          if ((85 - intercept) / slope > 500) {
+            largerLineCoords.push([500, slope * (500) + intercept]);
+          }
+          else {
+            largerLineCoords.push([(85 - intercept) / slope, 85]);
+          }
+          largerLineCoords.push([-500, 85]);
+          largerLineCoords.push([-500, -85]);
+        }
+        else if (slope > 0) {
+          if ((-85 - intercept) / slope < -500) {
+            largerLineCoords.push([-500, slope * (-500) + intercept]);
+          }
+          else {
+            largerLineCoords.push([(-85 - intercept) / slope, -85]);
+          }
+          largerLineCoords.push(lineCoords[0]);
+          largerLineCoords.push(lineCoords[1]);
+          if ((85 - intercept) / slope > 500) {
+            largerLineCoords.push([500, slope * (500) + intercept]);
+          }
+          else {
+            largerLineCoords.push([(85 - intercept) / slope, 85]);
+          }
+          largerLineCoords.push([500, 85]);
+          largerLineCoords.push([-500, 85]);
+        }
+        else if (slope > -.17) {
+          if ((85 - intercept) / slope < -500) {
+            largerLineCoords.push([-500, slope * (-500) + intercept]);
+          }
+          else {
+            largerLineCoords.push([(85 - intercept) / slope, 85]);
+          }
+          largerLineCoords.push(lineCoords[0]);
+          largerLineCoords.push(lineCoords[1]);
+          if ((-85 - intercept) / slope > 500) {
+            largerLineCoords.push([500, slope * (500) + intercept]);
+          }
+          else {
+            largerLineCoords.push([(-85 - intercept) / slope, -85]);
+          }
+          largerLineCoords.push([500, 85]);
+          largerLineCoords.push([-500, 85]);
         }
         else {
-          secondHalfCoords.push(currPolyCoords);
+          if ((85 - intercept) / slope < -500) {
+            largerLineCoords.push([-500, slope * (-500) + intercept]);
+          }
+          else {
+            largerLineCoords.push([(85 - intercept) / slope, 85]);
+          }
+          largerLineCoords.push(lineCoords[0]);
+          largerLineCoords.push(lineCoords[1]);
+          if ((-85 - intercept) / slope > 500) {
+            largerLineCoords.push([500, slope * (500) + intercept]);
+          }
+          else {
+            largerLineCoords.push([(-85 - intercept) / slope, -85]);
+          }
+          largerLineCoords.push([500, -85]);
+          largerLineCoords.push([500, 85]);
         }
+        console.log("coords", largerLineCoords);
+        let halfScreenPolyline = turf.lineString(largerLineCoords);
+        let halfScreenPolygon = turf.lineToPolygon(halfScreenPolyline);
+
+        //let apolygon = L.geoJSON(halfScreenPolygon).addTo(map);
+
+        let firstHalfCoords = [];
+        let secondHalfCoords = [];
+        console.log("halfscreen poly", halfScreenPolygon);
+        for (let i = 0; i < polygonHalves.geometry.coordinates.length; i++) {
+          let currPolyCoords = polygonHalves.geometry.coordinates[i];
+          let currPoly = turf.polygon(currPolyCoords);
+          if (
+            //turf.booleanOverlap(halfScreenPolygon, currPoly) || 
+            turf.booleanContains(halfScreenPolygon, currPoly)
+            || turf.booleanWithin(currPoly, halfScreenPolygon) 
+            //|| turf.booleanIntersects(currPoly, halfScreenPolygon)
+            ) {
+            firstHalfCoords.push(currPolyCoords);
+          }
+          else {
+            secondHalfCoords.push(currPolyCoords);
+          }
+        }
+        console.log("first half", firstHalfCoords);
+        console.log("secondhalf", secondHalfCoords);
+        var firstHalfPolys;
+        var secondHalfPolys;
+        if (firstHalfCoords.length == 1) {
+          firstHalfPolys = turf.polygon(firstHalfCoords[0]);
+        }
+        else {
+          firstHalfPolys = turf.multiPolygon(firstHalfCoords);
+        }
+        if (secondHalfCoords.length == 1) {
+          secondHalfPolys = turf.polygon(secondHalfCoords[0]);
+        }
+        else {
+          secondHalfPolys = turf.multiPolygon(secondHalfCoords);
+        }
+        console.log("first half polygon", firstHalfPolys);
+        console.log("second half polys", secondHalfPolys);
+        firstHalfPolys.properties = { split: true }
+        secondHalfPolys.properties = { split: true }
+
+
+        setSplitEnabled(false);
+
+        setRenameButtonEnabled(false);
+        setColorButtonEnabled(false);
+        setDeleteButtonEnabled(false);
+        setSplitButtonEnabled(false);
+
+        setAddButtonEnabled(true);
+        setMergeButtonEnabled(true);
+
+        setUndoButtonEnabled(true);
+        setRedoButtonEnabled(true);
+
+        store.addSplitPolygonsOfMapTransaction(selectedPolygon, [firstHalfPolys, secondHalfPolys]);
       }
-      console.log("first half", firstHalfCoords);
-      console.log("secondhalf", secondHalfCoords);
-      var firstHalfPolys;
-      var secondHalfPolys;
-      if (firstHalfCoords.length == 1) {
-        firstHalfPolys = turf.polygon(firstHalfCoords[0]);
-      }
-      else {
-        firstHalfPolys = turf.multiPolygon(firstHalfCoords);
-      }
-      if (secondHalfCoords.length == 1) {
-        secondHalfPolys = turf.polygon(secondHalfCoords[0]);
-      }
-      else {
-        secondHalfPolys = turf.multiPolygon(secondHalfCoords);
-      }
-      console.log("first half polygon", firstHalfPolys);
-      console.log("second half polys", secondHalfPolys);
-      firstHalfPolys.properties = {split: true}
-      secondHalfPolys.properties = {split: true}
-      map.editTools.stopDrawing();
 
-
-      setSplitEnabled(false);
-
-      setRenameButtonEnabled(false);
-      setColorButtonEnabled(false);
-      setDeleteButtonEnabled(false);
-      setSplitButtonEnabled(false);
-
-      setAddButtonEnabled(true);
-      setMergeButtonEnabled(true);
-
-      setUndoButtonEnabled(true);
-      setRedoButtonEnabled(true);
-
-      //store.addSplitPolygonsOfMapTransaction(selectedPolygon, [firstHalfPolys, secondHalfPolys]);
     }
   }
 
@@ -650,13 +740,13 @@ export default function EditMap() {
       map.editTools.stopDrawing();
       //deSelect(currentLayer, null);
 
-      setRenameButtonEnabled(false);
-      setColorButtonEnabled(false);
-      setDeleteButtonEnabled(false);
-      setSplitButtonEnabled(false);
+      setRenameButtonEnabled(true);
+      setColorButtonEnabled(true);
+      setDeleteButtonEnabled(true);
+      setSplitButtonEnabled(true);
 
-      setAddButtonEnabled(true);
-      setMergeButtonEnabled(true);
+      setAddButtonEnabled(false);
+      setMergeButtonEnabled(false);
 
       setUndoButtonEnabled(true);
       setRedoButtonEnabled(true);
