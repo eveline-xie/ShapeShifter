@@ -22,7 +22,7 @@ import L from 'leaflet';
 import 'leaflet-editable'
 import "leaflet/dist/leaflet.css";
 import { feature } from "topojson-client";
-import * as turf from '@turf/turf';
+import * as turf from 'turf';
 
 
 /*
