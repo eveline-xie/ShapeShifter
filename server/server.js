@@ -4,16 +4,19 @@ const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
 const bodyParser = require('body-parser');
 
-
 require("dotenv").config();
 const port = process.env.PORT || 5000;
 const app = express();
+
+const http = require('http');
+const server = http.createServer(app);
+const io = require('socket.io')(server);
 
 app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
     origin: "https://shapershifter.onrender.com",
-    // origin: "http://localhost:3000",
+    //origin: "http://localhost:3000",
     credentials: true,
   })
 );
@@ -64,7 +67,7 @@ app.use("", shapeshifterRouter);
 //     auth.changePassword(username, password, newPassword, req, res);
 // })
 
-let server = app.listen(port, () => {
+server.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
 });
 
