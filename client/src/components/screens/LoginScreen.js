@@ -73,12 +73,6 @@ export default function LoginScreen() {
         <div id="login-text">Log In</div>
 
         <Grid container component="main" sx={{ height: "100vh" }}>
-          {/* <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-                        <LockOutlinedIcon />
-                    </Avatar> */}
-          {/* <Typography align="center" display="flex">
-                        Log in
-                    </Typography> */}
           <Box
             component="form"
             noValidate
