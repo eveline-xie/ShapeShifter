@@ -136,16 +136,18 @@ async function duplicateMapById(req, res) {
     console.log("id:", req.userId);
     const loggedInUser = await User.findOne({ _id: req.userId });
     const mapToDupe = await Map.findById({ _id: body.id });
+    let newName = "Copy of " + mapToDupe.name;
     const map = new Map({
-        name: mapToDupe.name,
-        ownerUsername: loggedInUser.username,
-        ownerEmail: loggedInUser.email,
-        comments: [],
-        geoJsonMap: mapToDupe.geoJsonMap,
-        collaborators: [],
-        keywords: [],
-        published: { isPublished: false, publishedDate: new Date() }
-    })
+      name: newName,
+      ownerUsername: loggedInUser.username,
+      ownerEmail: loggedInUser.email,
+      comments: [],
+      geoJsonMap: mapToDupe.geoJsonMap,
+      collaborators: [],
+      keywords: [],
+      published: { isPublished: false, publishedDate: new Date() },
+      thumbnail: mapToDupe.thumbnail,
+    });
     if (!map) {
         return res.status(400).json({ success: false, error: err })
     }

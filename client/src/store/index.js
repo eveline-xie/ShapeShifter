@@ -30,6 +30,7 @@ export const GlobalStoreActionType = {
   LOAD_PUBLISHED_MAPS: "LOAD_PUBLISHED_MAPS",
   LOAD_SHARED_MAPS: "LOAD_SHARED_MAPS",
   LOAD_COMMENTS: "LOAD_COMMENTS",
+  FORK_MAP: "FORK_MAP",
 };
 
 const tps = new jsTPS();
@@ -62,6 +63,7 @@ function GlobalStoreContextProvider(props) {
         return setStore({
           currentMap: store.currentMap,
           userMaps: payload,
+          publishedMaps: store.publishedMaps,
         });
       }
       case GlobalStoreActionType.LOAD_CURRENT_MAP: {
@@ -80,7 +82,15 @@ function GlobalStoreContextProvider(props) {
         return setStore({
           currentMap: store.currentMap,
           userMaps: store.userMaps,
+          publishedMaps: store.publishedMaps,
           mapIdMarkedForExport: payload,
+        });
+      }
+      case GlobalStoreActionType.FORK_MAP: {
+        return setStore({
+          currentMap: store.currentMap,
+          userMaps: store.userMaps,
+          publishedMaps: store.publishedMaps,
         });
       }
       case GlobalStoreActionType.LOAD_PUBLISHED_MAPS: {
@@ -93,12 +103,12 @@ function GlobalStoreContextProvider(props) {
           sharedMaps: payload,
         });
       }
-          case GlobalStoreActionType.LOAD_COMMENTS: {
-            return setStore({
-              mapComments: payload,
-              publishedMaps: store.publishedMaps,
-            });
-          }
+      case GlobalStoreActionType.LOAD_COMMENTS: {
+        return setStore({
+          mapComments: payload,
+          publishedMaps: store.publishedMaps,
+        });
+      }
     }
   }
 
@@ -292,6 +302,9 @@ function GlobalStoreContextProvider(props) {
     const response = await api.duplicateMapById({ id: id });
     if (response.status === 201) {
       store.loadUserMapsNoGeoJson();
+      storeReducer({
+        type: GlobalStoreActionType.FORK_MAP,
+      });
     }
   }
 
