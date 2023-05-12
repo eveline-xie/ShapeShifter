@@ -6,14 +6,14 @@ const bodyParser = require('body-parser');
 
 
 require("dotenv").config();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 5004;
 const app = express();
 
 app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
     //origin: "https://shapershifter.onrender.com",
-    origin: "http://localhost:3000",
+    origin: "http://localhost:3001",
     credentials: true,
   })
 );
