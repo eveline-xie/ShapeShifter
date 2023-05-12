@@ -148,12 +148,13 @@ export default function HomeScreen() {
 
 
   let mapcards = "";
+
   if (store.userMaps) {
 
     if (searchFilter === true) {
       mapcards = (
         <List id="mapcards">
-          {store.userMaps.filter((map) => !map.name.indexOf(searchTerm) || map.keywords.some(keyword => !keyword.indexOf(searchTerm))).map((map) => (
+          {store.userMaps.filter((map) => map.name.split(" ").some(i=> !i.indexOf(searchTerm)) || map.keywords.some(keyword => !keyword.indexOf(searchTerm))).map((map) => (
             <MapCard
               id={map._id}
               mapName={map.name}
