@@ -84,12 +84,10 @@ export default function EditMap() {
 
     var newmap;
     newmap = L.map('my-map', { editable: true, maxBounds: bounds });
-    console.log("test");
     var geojsonMap =
       L.geoJson(store.currentMap.geoJsonMap, {
         onEachFeature: onEachRegion
       });
-    console.log("test2");
     if (currentView) {
       newmap.setView(currentView, currentZoom);
     }
@@ -110,7 +108,6 @@ export default function EditMap() {
       minZoom: 2
     }).addTo(newmap);
 
-    console.log("test");
     geojsonMap.eachLayer(function (layer) {
       layer.addTo(newmap);
     })
@@ -477,18 +474,16 @@ export default function EditMap() {
         console.log("slope", slope);
         console.log("intercept", intercept);
 
-        lineCoords.push([lineCoords[0][0] - .001, lineCoords[0][1] - .001]);
+        lineCoords.push([lineCoords[0][0] - .00001, lineCoords[0][1] - .00001]);
         console.log("linecoords before", lineCoords);
 
         let thickLineString = turf.lineString(lineCoords);
         console.log("linecoords now", lineCoords);
-        L.geoJSON(thickLineString).addTo(map);
 
         let thickLinePolygon = turf.lineToPolygon(thickLineString);
 
         let polygonHalves = turf.difference(selectedPolygon, thickLinePolygon);
         console.log("difference is", polygonHalves);
-
 
         let largerLineCoords = [];
         if (slope > .17) {
@@ -575,18 +570,48 @@ export default function EditMap() {
         for (let i = 0; i < polygonHalves.geometry.coordinates.length; i++) {
           let currPolyCoords = polygonHalves.geometry.coordinates[i];
           let currPoly = turf.polygon(currPolyCoords);
-          if (
-            //turf.booleanOverlap(halfScreenPolygon, currPoly) || 
-            turf.booleanContains(halfScreenPolygon, currPoly)
-            || turf.booleanWithin(currPoly, halfScreenPolygon) 
-            //|| turf.booleanIntersects(currPoly, halfScreenPolygon)
-            ) {
+          let point = turf.pointOnFeature(currPoly);
+          if (turf.booleanPointInPolygon(point, halfScreenPolygon)) {
             firstHalfCoords.push(currPolyCoords);
           }
           else {
             secondHalfCoords.push(currPolyCoords);
           }
         }
+        // for (let i = 0; i < polygonHalves.geometry.coordinates.length; i++) {
+        //   let currPolyCoords = polygonHalves.geometry.coordinates[i];
+        //   let currPoly = turf.polygon(currPolyCoords);
+        //   if (
+        //     //turf.booleanOverlap(halfScreenPolygon, currPoly) || 
+        //     turf.booleanContains(halfScreenPolygon, currPoly)
+        //     || turf.booleanWithin(currPoly, halfScreenPolygon) 
+        //     //|| turf.booleanIntersects(currPoly, halfScreenPolygon)
+        //     ) {
+        //     firstHalfCoords.push(currPolyCoords);
+        //   }
+        //   else {
+        //     secondHalfCoords.push(currPolyCoords);
+        //   }
+        // }
+        // if (firstHalfCoords.length == 0 || secondHalfCoords.length == 0) {
+        //   firstHalfCoords = [];
+        //   secondHalfCoords = [];
+        //   for (let i = 0; i < polygonHalves.geometry.coordinates.length; i++) {
+        //     let currPolyCoords = polygonHalves.geometry.coordinates[i];
+        //     let currPoly = turf.polygon(currPolyCoords);
+        //     if (
+        //       turf.booleanOverlap(halfScreenPolygon, currPoly) || 
+        //       turf.booleanContains(halfScreenPolygon, currPoly)
+        //       || turf.booleanWithin(currPoly, halfScreenPolygon) 
+        //       //|| turf.booleanIntersects(currPoly, halfScreenPolygon)
+        //       ) {
+        //       firstHalfCoords.push(currPolyCoords);
+        //     }
+        //     else {
+        //       secondHalfCoords.push(currPolyCoords);
+        //     }
+        //   }
+        //}
         console.log("first half", firstHalfCoords);
         console.log("secondhalf", secondHalfCoords);
         var firstHalfPolys;
