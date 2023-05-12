@@ -102,6 +102,7 @@ export default function EditMap() {
     newmap.on('editable:vertex:dragend', handleFeatureEndMoveVertex);
     newmap.on('editable:vertex:new', handleSplitFeature);
     newmap.on('editable:vertex:deleted', handleFeatureDeleteVertex);
+    newmap.on('moveend', handleSetView);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
@@ -208,8 +209,6 @@ export default function EditMap() {
           map.removeLayer(regionsToMerge[0]);
           map.removeLayer(regionsToMerge[1]);
           L.geoJSON(merged, { onEachFeature: onEachRegion }).addTo(map);
-          setCurrentView(map.getCenter());
-          setCurrentZoom(map.getZoom());
           store.addmergePolygonsOfMapTransaction([regionsToMerge[0].feature, regionsToMerge[1].feature], merged);
           handleEnableMerge();
         }
@@ -282,6 +281,11 @@ export default function EditMap() {
     })
   }
 
+  const handleSetView = (e) => {
+    setCurrentView(map.getCenter());
+    setCurrentZoom(map.getZoom());
+  }
+
   const handleEditSubregionName = (e) => {
     let regionName = "";
     if (currentLayer) {
@@ -322,8 +326,6 @@ export default function EditMap() {
         changedColorPolygon.properties.color = changedColor;
 
         store.addUpdatePolygonToMapTransaction(currentPolygon, changedColorPolygon);
-        setCurrentView(map.getCenter());
-        setCurrentZoom(map.getZoom());
       });
       document.body.appendChild(colorPicker);
       colorPicker.click();
@@ -349,8 +351,6 @@ export default function EditMap() {
 
       console.log("adding", feature);
       feature.properties = { drawn: true };
-      setCurrentView(map.getCenter());
-      setCurrentZoom(map.getZoom());
       store.addAddPolygonToMapTransaction(feature);
 
       prevLayer = selectedLayer;
@@ -375,8 +375,6 @@ export default function EditMap() {
     console.log(selectedLayer);
     console.log("curr poly", currentPolygon);
     if (currentPolygon !== null) {
-      setCurrentView(map.getCenter());
-      setCurrentZoom(map.getZoom());
       store.addDeletePolygonOfMapTransaction(currentPolygon);
 
       prevPolygon = null;
@@ -408,8 +406,6 @@ export default function EditMap() {
     const feature = e.layer.toGeoJSON();
     console.log("prev", selectedPolygon);
     console.log("updated", feature);
-    setCurrentView(map.getCenter());
-    setCurrentZoom(map.getZoom());
     store.addUpdatePolygonToMapTransaction(selectedPolygon, feature);
 
     prevPolygon = null;
@@ -658,8 +654,6 @@ export default function EditMap() {
     console.log("prev", selectedPolygon);
     console.log("updated", feature);
 
-    setCurrentView(map.getCenter());
-    setCurrentZoom(map.getZoom());
     store.addUpdatePolygonToMapTransaction(selectedPolygon, feature);
 
     setRenameButtonEnabled(false);
@@ -752,8 +746,6 @@ export default function EditMap() {
       setUndoButtonEnabled(false);
       setRedoButtonEnabled(false);
     }
-    setCurrentView(map.getCenter());
-    setCurrentZoom(map.getZoom());
     setMergeEnabled(!mergeEnabled);
 
 
@@ -793,14 +785,10 @@ export default function EditMap() {
       setUndoButtonEnabled(false);
       setRedoButtonEnabled(false);
     }
-    setCurrentView(map.getCenter());
-    setCurrentZoom(map.getZoom());
     setSplitEnabled(!splitEnabled);
   }
 
   function handleUndo() {
-    setCurrentView(map.getCenter());
-    setCurrentZoom(map.getZoom());
 
     store.undo();
 
@@ -813,8 +801,6 @@ export default function EditMap() {
     setMergeButtonEnabled(true);
   }
   function handleRedo() {
-    setCurrentView(map.getCenter());
-    setCurrentZoom(map.getZoom());
     store.redo();
 
     setRenameButtonEnabled(false);
