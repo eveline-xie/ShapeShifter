@@ -5,7 +5,6 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
-import { MapContainer, TileLayer, GeoJSON } from "react-leaflet";
 import {
   Grid,
   Card,
@@ -19,8 +18,8 @@ import ExportModal from "./modals/ExportModal";
 import { useState, useEffect } from "react";
 import GlobalStoreContext from "../store";
 import { useNavigate } from "react-router-dom";
-import L from 'leaflet';
-
+import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
+import geo_file from './custom.geo.json'
 /*
     This React component represents the expanded mapcard, after the user clicks on the "view" button of a map card,
     where the user can comment on the map depending on if they are logged in or are a guest.
@@ -52,7 +51,6 @@ export default function ExpandedMapcard(props) {
 
   useEffect(() => {
     if (props.mapid) {
-      store.loadMapById(props.mapid);
       store.loadComments(props.mapid);
       console.log("load comments~~~")
     }
@@ -99,23 +97,6 @@ export default function ExpandedMapcard(props) {
       setComment("");
     }
   };
-
-  // if (props.open) {
-  //   var container = document.createElement('div');
-  //   container.style.height = '500px';
-  //   container.style.width = '500px';
-  //   document.body.appendChild(container);
-
-  //   var southWest = L.latLng(-500, -500);
-  //   var northEast = L.latLng(500, 500);
-  //   var bounds = L.latLngBounds(southWest, northEast);
-
-  //   let map = L.map("test", { maxBounds: bounds });
-  //   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  //     attribution:
-  //       '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-  //   }).addTo(map);
-  // }
 
   let replyTextbox = ""
   if (reply) {
@@ -226,12 +207,6 @@ export default function ExpandedMapcard(props) {
     Reply
   </Button>
 
-  let geojsonStuff = ""
-  if (store.currentMap) {
-    console.log("ss", store.currentMap.geoJsonMap);
-    geojsonStuff = <GeoJSON data={store.currentMap.geoJsonMap} />
-  }
-
   if (window.location.pathname == '/communityguest') {
     forkButton = '';
     commentBox = '';
@@ -306,8 +281,43 @@ export default function ExpandedMapcard(props) {
     );
   }
 
+  let geojsonData = {
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [-122.408986, 37.78356]
+        },
+        "properties": {
+          "name": "San Francisco"
+        }
+      },
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [-73.985664, 40.748817]
+        },
+        "properties": {
+          "name": "New York"
+        }
+      },
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [139.691706, 35.689487]
+        },
+        "properties": {
+          "name": "Tokyo"
+        }
+      }
+    ]
+  }
+
   return (
-    
     <div>
       <Modal
         id="view-modal"
@@ -436,17 +446,6 @@ export default function ExpandedMapcard(props) {
             <Grid item xs={6}>
               <Box sx={{ marginLeft: "30px", marginTop: "10px" }}>
                 <Card sx={{ borderRadius: "30px" }}>
-                  <div id="map-container" style={{ width: "500px", height: "500px" }}>
-                  <MapContainer center={[0, 0]} zoom={0} container="map-container">
-                    <TileLayer 
-                    url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' />
-                    {geojsonStuff}
-                    <pre/><pre/><pre/><pre/><pre/><pre/><pre/><pre/><pre/><pre/><pre/>
-                    <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
-                    <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
-                  </MapContainer>
-                  </div>
-                
                   {/* <CardMedia
                     component="img"
                     alt="green iguana"
@@ -454,6 +453,16 @@ export default function ExpandedMapcard(props) {
                     image={props.thumbnail}
                     style={{ objectFit: "cover" }}
                   /> */}
+                  <div id="map-container" style={{ width: "1000px", height: "500px" }}>
+                  <MapContainer center={[0, 500]} zoom={0} container="map-container">
+                    <TileLayer 
+                    url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' />
+                     <GeoJSON data={geo_file} />
+                    <pre/><pre/><pre/><pre/><pre/><pre/><pre/><pre/><pre/><pre/><pre/>
+                    <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+                    <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+                  </MapContainer>
+                  </div>
                 </Card>
               </Box>
 
