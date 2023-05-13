@@ -21,6 +21,7 @@ import { useNavigate } from "react-router-dom";
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
 import geo_file from './custom.geo.json'
 import { useRef } from "react";
+import L from 'leaflet';
 /*
     This React component represents the expanded mapcard, after the user clicks on the "view" button of a map card,
     where the user can comment on the map depending on if they are logged in or are a guest.
@@ -50,7 +51,6 @@ export default function ExpandedMapcard(props) {
   const [comment, setComment] = useState("");
   let navigate = useNavigate();
 
-  const prevMapRef = useRef();
 
   useEffect(() => {
     if (props.mapid) {
@@ -321,8 +321,8 @@ export default function ExpandedMapcard(props) {
   }
 
   var geoData = "";
+  var bounds;
   if (store.currentMap) {
-    console.log("hi")
     geoData = <GeoJSON data={store.currentMap.geoJsonMap} onEachFeature={onEachRegion}/>
   }
 
@@ -467,6 +467,7 @@ export default function ExpandedMapcard(props) {
                       center={[0, 150]}
                       zoom={1}
                       minZoom={1}
+                      maxBounds={[[-500, -500],[500, 500]]}
                       container="map-container"
                       style={{ width: "1000px", height: "500px" }}>
                       <TileLayer
