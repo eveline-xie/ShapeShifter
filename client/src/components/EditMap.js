@@ -304,9 +304,11 @@ export default function EditMap() {
           currentLayer.setTooltipContent(content.value);
         }
         console.log('got here')
+        //check to see the highest level name property
       if (currentLayer.feature.properties.hasOwnProperty('NAME_5')) {
         console.log("5")
         currentLayer.feature.properties['NAME_5'] = regionName.trim();
+        //trim gets rid of the '/n' which apparently is there even though console logging regionName does not have '/n'
       }
       else if (currentLayer.feature.properties.hasOwnProperty('NAME_4')) {
         console.log("4")
