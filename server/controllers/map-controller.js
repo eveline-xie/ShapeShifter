@@ -119,30 +119,6 @@ async function getShpDbfFileById(req, res) {
             errorMessage: "Failed to find map"
         })
     }
-//     const geojsonMap = map.geoJsonMap;
-//     var options = {
-//         folder: 'myshapes',
-//         types: {
-//             point: 'mypoints',
-//             polygon: 'mypolygons',
-//             line: 'mylines'
-//         }
-//     }
-//     // a GeoJSON bridge for features
-//     const myFile = shpwrite.zip(map.geoJsonMap, options);
-//     console.log(myFile);
-//     res.setHeader('Content-Type', 'application/zip');
-//   // Set the content disposition to attachment, which prompts the browser to download the file
-//     res.setHeader('Content-Disposition', `attachment; filename=shapefile.zip`);
-//     return res.status(201).send(myFile);
-//     // const options = { encoding: 'utf-8' };
-//     // const shp = shpwrite.zip(features, options);
-//     // fs.writeFileSync('output.zip', shp);
-//     // const zip = new require('node-zip')();
-//     // zip.load(fs.readFileSync('output.zip'));
-//     // const dbf = zip.files['output.dbf'].asNodeBuffer();
-//     // fs.writeFileSync('output.dbf', dbf);
-//     // return res.status(201).send(zip);
     const options = {
         layer: "test"
     }
