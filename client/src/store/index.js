@@ -87,7 +87,7 @@ function GlobalStoreContextProvider(props) {
       case GlobalStoreActionType.LOAD_USER_MAPS: {
         return setStore({
           currentMap: store.currentMap,
-          userMaps: payload,
+          userMaps: payload.reverse(),
           publishedMaps: store.publishedMaps,
         });
       }
@@ -120,12 +120,12 @@ function GlobalStoreContextProvider(props) {
       }
       case GlobalStoreActionType.LOAD_PUBLISHED_MAPS: {
         return setStore({
-          publishedMaps: payload,
+          publishedMaps: payload.reverse(),
         });
       }
       case GlobalStoreActionType.LOAD_SHARED_MAPS: {
         return setStore({
-          sharedMaps: payload,
+          sharedMaps: payload.reverse(),
         });
       }
       case GlobalStoreActionType.LOAD_COMMENTS: {
@@ -156,8 +156,25 @@ function GlobalStoreContextProvider(props) {
 
     let top = topoServer.topology({ foo: shp2geoContents });
     let top2 = topoSimplify.presimplify(top);
-    let top3 = topoSimplify.simplify(top2, .5);
+    let top3 = topoSimplify.simplify(top2, .005);
     let feature = topoClient.feature(top3, "foo");
+    console.log("feature", feature);
+
+    feature.features.forEach(function (feature) {
+      if (feature.geometry.type === 'MultiPolygon') {
+        for (var i = feature.geometry.coordinates.length - 1; i >= 0; i--) {
+          var polygon = feature.geometry.coordinates[i];
+          var filteredPolygon = polygon.filter(function (ring) {
+            return !(ring.length === 4 && ring[0][0] === ring[1][0] && ring[0][1] === ring[1][1] && ring[1][0] === ring[2][0] && ring[1][1] === ring[2][1] && ring[2][0] === ring[0][0] && ring[2][1] === ring[0][1]);
+          });
+          if (filteredPolygon.length === 0) {
+            feature.geometry.coordinates.splice(i, 1);
+          } else {
+            feature.geometry.coordinates[i] = filteredPolygon;
+          }
+        }
+      }
+    });
 
     var container = document.createElement('div');
     container.style.height = '500px';
@@ -223,6 +240,22 @@ function GlobalStoreContextProvider(props) {
     let top2 = topoSimplify.presimplify(top);
     let top3 = topoSimplify.simplify(top2, .005);
     let feature = topoClient.feature(top3, "foo");
+
+    feature.features.forEach(function (feature) {
+      if (feature.geometry.type === 'MultiPolygon') {
+        for (var i = feature.geometry.coordinates.length - 1; i >= 0; i--) {
+          var polygon = feature.geometry.coordinates[i];
+          var filteredPolygon = polygon.filter(function (ring) {
+            return !(ring.length === 4 && ring[0][0] === ring[1][0] && ring[0][1] === ring[1][1] && ring[1][0] === ring[2][0] && ring[1][1] === ring[2][1] && ring[2][0] === ring[0][0] && ring[2][1] === ring[0][1]);
+          });
+          if (filteredPolygon.length === 0) {
+            feature.geometry.coordinates.splice(i, 1);
+          } else {
+            feature.geometry.coordinates[i] = filteredPolygon;
+          }
+        }
+      }
+    });
 
     var container = document.createElement('div');
     container.style.height = '500px';
@@ -338,7 +371,10 @@ function GlobalStoreContextProvider(props) {
         type: GlobalStoreActionType.LOAD_CURRENT_MAP,
         payload: response.data.currentMap
       })
-      if (window.location.pathname == '/home') {
+      if (
+        window.location.pathname == "/home" ||
+        window.location.pathname == "/shared"
+      ) {
         navigate("/createmap");
       }
     }
@@ -381,7 +417,7 @@ function GlobalStoreContextProvider(props) {
   store.exportToGeoJSON = async function () {
     const response = await api.getMapById(store.mapIdMarkedForExport);
     if (response.status === 201) {
-      console.log(response.data.currentMap);
+      console.log("downloading geojson ", response.data.currentMap);
       const map = response.data.currentMap;
       const json = JSON.stringify(map.geoJsonMap);
       console.log("download geojson", json)
@@ -403,21 +439,19 @@ function GlobalStoreContextProvider(props) {
     const response = await api.getShpDbfFileById(store.mapIdMarkedForExport);
     //const response = await api.getMapById(store.mapIdMarkedForExport);
     if (response.status === 201) {
-      const map = response.data.currentMap;
-      console.log("before");
-      const shp = shpwrite.zip(map.geoJsonMap);
+      const map = response.data;
+      console.log(map);
       console.log("after");
-      console.log("downloading shpdbf", shp);
-      const blob = new Blob([shp], { type: 'application/zip' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = map.name + '.zip';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      // const blob = new Blob([shp], { type: 'application/zip' });
+      // const url = URL.createObjectURL(blob);
+      // const link = document.createElement('a');
+      // link.href = url;
+      // link.download = map.name + '.zip';
+      // document.body.appendChild(link);
+      // link.click();
+      // document.body.removeChild(link);
 
-      URL.revokeObjectURL(url);
+      // URL.revokeObjectURL(url);
 
       // shpjs.zip(map.geoJsonMap).then(function(content) {
       //     // content is a Blob containing the zipped shapefile
@@ -464,7 +498,7 @@ function GlobalStoreContextProvider(props) {
   //   }
   // }
 
-  
+
   socket.on("connection", (data) => {
     console.log(data);
   });

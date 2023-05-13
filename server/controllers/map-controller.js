@@ -7,6 +7,8 @@ const User = require('../models/user-model');
 const shpwrite = require('shp-write');
 const toGeoJSON = require('togeojson');
 const fs = require('fs');
+const {convert} = require('geojson2shp');
+const os = require('os');
 
 async function createNewMap(req, res) {
     const body = req.body;
@@ -112,15 +114,26 @@ async function getMapById(req, res) {
 
 async function getShpDbfFileById(req, res) {
     const map = await Map.findById({ _id: req.params.id });
-    const shp = shpwrite.zip(map.geoJsonMap);
-    fs.writeFileSync('data.shp', shp.shp);
-    //fs.writeFileSync('data.shx', shp.shx);
-    fs.writeFileSync('data.dbf', shp.dbf);
-    //fs.writeFileSync('data.prj', shp.prj);
-    return res.status(201).json({
-        success: true,
-        currentMap: shp
-    })
+    const options = {
+        layer: "Test"
+    }
+    // let path = `${os.tmpdir()}/${map.name}_shp.zip`;
+    // let stream = fs.createWriteStream(path);
+    // console.log("themap", map.geoJsonMap);
+    // await convert(map.geoJsonMap.features, stream, options);
+    // fs.readFile(path, (err, data) => {
+    //     if (err) {
+    //         console.error(err);
+    //     }
+    //     fs.unlink(path, (err) => {
+    //         if (err) {
+    //             console.error(err);
+    //         }
+    //     });
+    //     return res.status(201).send(data);
+    // })
+    const shapefileBuffer = shpWrite.zip(map.geoJsonMap);
+    fs.writeFileSync('example.zip', shapefileBuffer);
 }
 
 async function duplicateMapById(req, res) {
