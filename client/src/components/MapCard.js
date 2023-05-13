@@ -74,6 +74,7 @@ export default function MapCard(props) {
     props.setExpandOwnerName(props.ownerUsername);
     props.setExpandThumbnail(props.thumbnail);
     props.setExpandMapid(props.id);
+    props.setExpandKeywords(props.keywords);
 
   }
 

@@ -36,13 +36,14 @@ export const GlobalStoreActionType = {
   LOAD_SHARED_MAPS: "LOAD_SHARED_MAPS",
   LOAD_COMMENTS: "LOAD_COMMENTS",
   FORK_MAP: "FORK_MAP",
+  RESET_EXPANDED_MODAL: "RESET_EXPANDED_MODAL",
 };
 
 const tps = new jsTPS();
 
 const socket = new io(
-  "http://localhost:5000"
-  //"https://shapeshifter-api.onrender.com"
+  // "http://localhost:5000"
+  "https://shapeshifter-api.onrender.com"
   , {
     autoConnect: false,
   }
@@ -130,8 +131,13 @@ function GlobalStoreContextProvider(props) {
       }
       case GlobalStoreActionType.LOAD_COMMENTS: {
         return setStore({
-          currentMap: store.currentMap,
-          mapComments: payload,
+          currentMap: payload,
+          mapComments: payload.comments,
+          publishedMaps: store.publishedMaps,
+        });
+      }
+      case GlobalStoreActionType.RESET_EXPANDED_MODAL: {
+        return setStore({
           publishedMaps: store.publishedMaps,
         });
       }
@@ -739,6 +745,17 @@ store.loadPublishedMaps = async function (id) {
   }
 };
 
+store.loadGuestPublishedMaps = async function (id) {
+  const response = await api.loadGuestPublishedMaps();
+  if (response.status === 201) {
+    console.log(response.data.publishedMaps);
+    storeReducer({
+      type: GlobalStoreActionType.LOAD_PUBLISHED_MAPS,
+      payload: response.data.publishedMaps,
+    });
+  }
+};
+
 store.loadSharedMaps = async function () {
   const response = await api.loadSharedMaps();
   if (response.status === 201) {
@@ -764,10 +781,10 @@ store.updateMapComments = async function (
   );
   if (response.status === 201) {
     console.log("comment success")
-    console.log(response.data.mapComments)
+    console.log(response.data.map.comments)
     storeReducer({
       type: GlobalStoreActionType.LOAD_COMMENTS,
-      payload: response.data.mapComments,
+      payload: response.data.map,
     });
   } else {
     console.log("API FAILED TO CREATE A NEW LIST");
@@ -778,14 +795,21 @@ store.loadComments = async function (mapid) {
   const response = await api.loadComments(mapid);
   if (response.status === 201) {
     console.log("comment success");
-    console.log(response.data.mapComments);
+    console.log(response.data.map.comments);
     storeReducer({
       type: GlobalStoreActionType.LOAD_COMMENTS,
-      payload: response.data.mapComments,
+      payload: response.data.map,
     });
   } else {
     console.log("API FAILED TO CREATE A NEW LIST");
   }
+}
+
+store.resetExpandedModal = function () {
+  storeReducer({
+    type: GlobalStoreActionType.RESET_EXPANDED_MODAL,
+  });
+  //navigate("/community");
 }
 
 store.removeSharedMap = async function (mapid, email) {
