@@ -27,8 +27,9 @@ This screen lists all the maps that are published and actions allowed by a guest
 export default function CommunityGuestScreen() {
   //   const theme = useTheme();
   //   const [dropdown, setDropdown] = React.useState("");
-   const { store } = useContext(GlobalStoreContext);
+  const { store } = useContext(GlobalStoreContext);
   const [searchTerm, setSearchTerm] = useState("");
+  const [searchFilter, setSearchFilter] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [openExport, setOpenExport] = useState(false);
   const [openFork, setOpenFork] = useState(false);
@@ -42,12 +43,20 @@ export default function CommunityGuestScreen() {
   const [expandKeywords, setExpandKeywords] = useState([]);
 
 
-   useEffect(() => {
+  useEffect(() => {
     console.log("GUEST")
-     store.loadGuestPublishedMaps();
-   }, []);
+    store.loadGuestPublishedMaps();
+  }, []);
+
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
+    if (event.target.value !== '') {
+      setSearchFilter(true);
+      console.log("filter");
+    } else {
+      setSearchFilter(false);
+      console.log("no filter");
+    }
   };
 
   //   const handleDropdown = (event) => {
@@ -89,35 +98,80 @@ export default function CommunityGuestScreen() {
   };
 
   let mapcards = "";
- if (store.publishedMaps) {
-   console.log("JIIIII" + store.publishedMaps.length);
-   mapcards = (
-     <List id="mapcards">
-       {store.publishedMaps.map((map) => (
-         <MapCard
-           id={map._id}
-           mapName={map.name}
-           ownerUsername={map.ownerUsername}
-           published={map.published.isPublished}
-           setOpenDelete={openDeleteModal}
-           setOpenExport={openExportModal}
-           setOpenFork={openForkModal}
-           setOpenView={openViewModal}
-           setExportName={exportNameSet}
-           setForkName={forkNameSet}
-           setExpandName={expandNameSet}
-           setExpandOwnerName={expandOwnerNameSet}
-           thumbnail={map.thumbnail}
-           keywords = {map.keywords}
-           setExpandMapid={expandMapidSet}
-           setExpandThumbnail={expandThumbnailSet}
-           setExpandKeywords={expandKeywordsSet}
-           key={map._id}
-         />
-       ))}
-     </List>
-   );
- }
+  if (store.publishedMaps) {
+    console.log("JIIIII" + store.publishedMaps.length);
+    if (searchFilter === true) {
+      mapcards = (
+        <List id="mapcards">
+          {store.publishedMaps
+            .filter(
+              (map) =>
+                map.name
+                  .split(" ")
+                  .some(
+                    (i) => !i.toLowerCase().indexOf(searchTerm.toLowerCase())
+                  ) ||
+                !map.ownerUsername
+                  .toLowerCase()
+                  .indexOf(searchTerm.toLowerCase()) ||
+                map.keywords.some(
+                  (keyword) =>
+                    !keyword.toLowerCase().indexOf(searchTerm.toLowerCase())
+                )
+            )
+            .map((map) => (
+              <MapCard
+                id={map._id}
+                mapName={map.name}
+                ownerUsername={map.ownerUsername}
+                published={map.published.isPublished}
+                setOpenDelete={openDeleteModal}
+                setOpenExport={openExportModal}
+                setOpenFork={openForkModal}
+                setOpenView={openViewModal}
+                setExportName={exportNameSet}
+                setForkName={forkNameSet}
+                setExpandName={expandNameSet}
+                setExpandOwnerName={expandOwnerNameSet}
+                thumbnail={map.thumbnail}
+                keywords={map.keywords}
+                setExpandMapid={expandMapidSet}
+                setExpandThumbnail={expandThumbnailSet}
+                setExpandKeywords={expandKeywordsSet}
+                key={map._id}
+              />
+            ))}
+        </List>
+      );
+    } else {
+      mapcards = (
+        <List id="mapcards">
+          {store.publishedMaps.map((map) => (
+            <MapCard
+              id={map._id}
+              mapName={map.name}
+              ownerUsername={map.ownerUsername}
+              published={map.published.isPublished}
+              setOpenDelete={openDeleteModal}
+              setOpenExport={openExportModal}
+              setOpenFork={openForkModal}
+              setOpenView={openViewModal}
+              setExportName={exportNameSet}
+              setForkName={forkNameSet}
+              setExpandName={expandNameSet}
+              setExpandOwnerName={expandOwnerNameSet}
+              thumbnail={map.thumbnail}
+              keywords={map.keywords}
+              setExpandMapid={expandMapidSet}
+              setExpandThumbnail={expandThumbnailSet}
+              setExpandKeywords={expandKeywordsSet}
+              key={map._id}
+            />
+          ))}
+        </List>
+      );
+    }
+  }
 
 
   let searchResult = ""

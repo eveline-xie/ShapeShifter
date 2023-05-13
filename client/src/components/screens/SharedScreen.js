@@ -29,6 +29,7 @@ export default function SharedScreen() {
 
   const [dropdown, setDropdown] = React.useState(20);
   const [searchTerm, setSearchTerm] = useState("");
+  const [searchFilter, setSearchFilter] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [openExport, setOpenExport] = useState(false);
   const [openFork, setOpenFork] = useState(false);
@@ -50,6 +51,13 @@ export default function SharedScreen() {
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
+    if (event.target.value !== '') {
+      setSearchFilter(true);
+      // console.log("filter");
+    } else {
+      setSearchFilter(false);
+      // console.log("no filter");
+    }
   };
 
   const handleDropdown = (event) => {
@@ -57,9 +65,9 @@ export default function SharedScreen() {
     setDropdown(n);
     console.log(n);
     if (n === 20) {
-        navigate("/shared");
+      navigate("/shared");
     } else {
-        navigate("/home");
+      navigate("/home");
     }
   };
   const openDeleteModal = (show) => {
@@ -72,12 +80,12 @@ export default function SharedScreen() {
   const openForkModal = (show) => {
     setOpenFork(show);
   };
-   const exportNameSet = (show) => {
-     setExportName(show);
-   };
-   const forkNameSet = (show) => {
-     setForkName(show);
-   };
+  const exportNameSet = (show) => {
+    setExportName(show);
+  };
+  const forkNameSet = (show) => {
+    setForkName(show);
+  };
 
   const handleUploadSHP = () => {
     shpInputRef.current.click();
@@ -135,27 +143,76 @@ export default function SharedScreen() {
 
   let mapcards = "";
   if (store.sharedMaps) {
-    console.log("sharedmaps loading")
-    mapcards = (
-      <List id="mapcards">
-        {store.sharedMaps.map((map) => (
-          <MapCard
-            id={map._id}
-            mapName={map.name}
-            ownerUsername={map.ownerUsername}
-            published={map.published.isPublished}
-            setOpenDelete={openDeleteModal}
-            setOpenExport={openExportModal}
-            setOpenFork={openForkModal}
-            setExportName={exportNameSet}
-            setForkName={forkNameSet}
-            dropdown={dropdown}
-            key={map._id}
-            thumbnail={map.thumbnail}
-          />
-        ))}
-      </List>
-    );
+
+    if (searchFilter === true) {
+      mapcards = (
+        <List id="mapcards">
+          {store.sharedMaps.filter((map) => map.name.split(" ").some(i => !i.indexOf(searchTerm)) || map.keywords.some(keyword => !keyword.indexOf(searchTerm))).map((map) => (
+            <MapCard
+              id={map._id}
+              mapName={map.name}
+              ownerUsername={map.ownerUsername}
+              published={map.published.isPublished}
+              setOpenDelete={openDeleteModal}
+              setOpenExport={openExportModal}
+              setOpenFork={openForkModal}
+              setExportName={exportNameSet}
+              setForkName={forkNameSet}
+              dropdown={dropdown}
+              key={map._id}
+              thumbnail={map.thumbnail}
+            />
+          ))}
+        </List>
+      );
+    } else {
+      mapcards = (
+        <List id="mapcards">
+          {store.sharedMaps.map((map) => (
+            <MapCard
+              id={map._id}
+              mapName={map.name}
+              ownerUsername={map.ownerUsername}
+              published={map.published.isPublished}
+              setOpenDelete={openDeleteModal}
+              setOpenExport={openExportModal}
+              setOpenFork={openForkModal}
+              setExportName={exportNameSet}
+              setForkName={forkNameSet}
+              dropdown={dropdown}
+              key={map._id}
+              thumbnail={map.thumbnail}
+            />
+          ))}
+        </List>
+      );
+    }
+    // console.log("sharedmaps loading")
+    // mapcards = (
+    //   <List id="mapcards">
+    //     {store.sharedMaps.map((map) => (
+    //       <MapCard
+    //         id={map._id}
+    //         mapName={map.name}
+    //         ownerUsername={map.ownerUsername}
+    //         published={map.published.isPublished}
+    //         setOpenDelete={openDeleteModal}
+    //         setOpenExport={openExportModal}
+    //         setOpenFork={openForkModal}
+    //         setExportName={exportNameSet}
+    //         setForkName={forkNameSet}
+    //         dropdown={dropdown}
+    //         key={map._id}
+    //         thumbnail={map.thumbnail}
+    //       />
+    //     ))}
+    //   </List>
+    // );
+  }
+
+  let searchResult = ""
+  if (searchTerm) {
+    searchResult = <p>Search results for " {searchTerm}"</p>;
   }
 
   return (
@@ -310,6 +367,7 @@ export default function SharedScreen() {
         />
       </div>
       <br></br>
+      {searchResult}
       {/* mapcards */}
       <div>{mapcards}</div>
       <DeleteModal open={openDelete} setOpen={setOpenDelete} />

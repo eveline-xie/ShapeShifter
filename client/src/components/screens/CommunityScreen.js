@@ -103,22 +103,8 @@ export default function CommunityScreen() {
     }
   };
 
-  //  if (searchTerm) {
-  //    searchResult = <p>Search results for " {searchTerm}"</p>;
-  //  }
   let mapcards = "";
-  // if(store)
-  // mapcards = (
-  //     <List id="mapcards">
-  //         <MapCard
-  //             setOpenDelete={openDeleteModal}
-  //             setOpenExport={openExportModal}
-  //             setOpenFork={openForkModal}
-  //             setOpenView={openViewModal}
-  //         ></MapCard>
-  //     </List>
-  // );
-
+  
   if (store.publishedMaps) {
 
     if (searchFilter === true) {
@@ -127,9 +113,18 @@ export default function CommunityScreen() {
           {store.publishedMaps
             .filter(
               (map) =>
-                !map.name.indexOf(searchTerm) ||
-                !map.ownerUsername.indexOf(searchTerm) ||
-                map.keywords.some((keyword) => !keyword.indexOf(searchTerm))
+                map.name
+                  .split(" ")
+                  .some(
+                    (i) => !i.toLowerCase().indexOf(searchTerm.toLowerCase())
+                  ) ||
+                !map.ownerUsername
+                  .toLowerCase()
+                  .indexOf(searchTerm.toLowerCase()) ||
+                map.keywords.some(
+                  (keyword) =>
+                    !keyword.toLowerCase().indexOf(searchTerm.toLowerCase())
+                )
             )
             .map((map) => (
               <MapCard

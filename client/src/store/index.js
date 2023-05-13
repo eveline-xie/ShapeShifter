@@ -183,6 +183,22 @@ function GlobalStoreContextProvider(props) {
       }
     });
 
+    feature.features = feature.features.map(feature => {
+      if (feature.geometry.type === 'MultiPolygon' && feature.geometry.coordinates.length === 1) {
+        // If the feature is a MultiPolygon with only 1 Polygon, convert it to a Polygon
+        return {
+          ...feature,
+          geometry: {
+            type: 'Polygon',
+            coordinates: feature.geometry.coordinates[0]
+          }
+        };
+      } else {
+        // Otherwise, keep the original feature
+        return feature;
+      }
+    });
+
     var container = document.createElement('div');
     container.style.height = '500px';
     container.style.width = '500px';
@@ -261,6 +277,22 @@ function GlobalStoreContextProvider(props) {
             feature.geometry.coordinates[i] = filteredPolygon;
           }
         }
+      }
+    });
+
+    feature.features = feature.features.map(feature => {
+      if (feature.geometry.type === 'MultiPolygon' && feature.geometry.coordinates.length === 1) {
+        // If the feature is a MultiPolygon with only 1 Polygon, convert it to a Polygon
+        return {
+          ...feature,
+          geometry: {
+            type: 'Polygon',
+            coordinates: feature.geometry.coordinates[0]
+          }
+        };
+      } else {
+        // Otherwise, keep the original feature
+        return feature;
       }
     });
 
