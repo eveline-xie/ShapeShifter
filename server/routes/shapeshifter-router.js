@@ -38,7 +38,7 @@ router.get("/load-guest-published-maps",  MapController.loadGuestPublishedMaps);
 
 router.get("/load-shared-maps", auth.verify, MapController.loadSharedMaps);
 router.put("/update-map-comments", auth.verify, MapController.updateMapComments);
-router.get("/load-comments", auth.verify, MapController.loadComments);
+router.get("/load-comments", MapController.loadComments);
 
 
 module.exports = router;

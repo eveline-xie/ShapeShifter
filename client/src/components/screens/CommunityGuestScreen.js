@@ -37,6 +37,10 @@ export default function CommunityGuestScreen() {
   const [forkName, setForkName] = useState("");
   const [expandName, setExpandName] = useState("");
   const [expandOwnerName, setExpandOwnerName] = useState("");
+  const [expandThumbnail, setExpandThumbnail] = useState("");
+  const [expandMapid, setExpandMapid] = useState("");
+
+
    useEffect(() => {
     console.log("GUEST")
      store.loadGuestPublishedMaps();
@@ -73,6 +77,13 @@ export default function CommunityGuestScreen() {
   const expandOwnerNameSet = (show) => {
     setExpandOwnerName(show);
   };
+  const expandThumbnailSet = (show) => {
+    setExpandThumbnail(show);
+  };
+  const expandMapidSet = (show) => {
+    setExpandMapid(show);
+  };
+
   let mapcards = "";
  if (store.publishedMaps) {
    console.log("JIIIII" + store.publishedMaps.length);
@@ -92,6 +103,9 @@ export default function CommunityGuestScreen() {
            setForkName={forkNameSet}
            setExpandName={expandNameSet}
            setExpandOwnerName={expandOwnerNameSet}
+           thumbnail={map.thumbnail}
+           setExpandMapid={expandMapidSet}
+           setExpandThumbnail={expandThumbnailSet}
            key={map._id}
          />
        ))}
@@ -213,6 +227,9 @@ export default function CommunityGuestScreen() {
           setOpen={setOpenView}
           name={expandName}
           ownername={expandOwnerName}
+          thumbnail={expandThumbnail}
+          mapid={expandMapid}
+          key={expandMapid}
         />
       </div>
     </div>
