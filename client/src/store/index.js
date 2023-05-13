@@ -41,8 +41,8 @@ export const GlobalStoreActionType = {
 const tps = new jsTPS();
 
 const socket = new io(
-  //"http://localhost:5000"
-  "https://shapeshifter-api.onrender.com"
+  "http://localhost:5000"
+  //"https://shapeshifter-api.onrender.com"
   , {
     autoConnect: false,
   }
@@ -156,7 +156,7 @@ function GlobalStoreContextProvider(props) {
 
     let top = topoServer.topology({ foo: shp2geoContents });
     let top2 = topoSimplify.presimplify(top);
-    let top3 = topoSimplify.simplify(top2, .5);
+    let top3 = topoSimplify.simplify(top2, .05);
     let feature = topoClient.feature(top3, "foo");
 
     var container = document.createElement('div');
@@ -384,8 +384,8 @@ function GlobalStoreContextProvider(props) {
   store.exportToGeoJSON = async function () {
     const response = await api.getMapById(store.mapIdMarkedForExport);
     if (response.status === 201) {
-      console.log(response.data.currentMap);
-      const map = response.data;
+      console.log("downloading geojson ", response.data.currentMap);
+      const map = response.data.currentMap;
       const json = JSON.stringify(map.geoJsonMap);
       console.log("download geojson", json)
       const blob = new Blob([json], { type: 'application/json' });
