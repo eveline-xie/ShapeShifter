@@ -13,7 +13,7 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { useNavigate } from 'react-router-dom'
-import { useContext, useState } from "react";
+import { useState, useContext, useEffect } from "react";
 import AuthContext from "../auth";
 
 /*
@@ -27,9 +27,18 @@ function NavBar() {
   const { auth } = useContext(AuthContext);
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const navigate = useNavigate();
-
+  useEffect(() => {
+    if (auth.user) {setFirstName(auth.user.firstName);
+      setLastName(auth.user.lastName);}
+    if (auth.error) {
+      setErrorMessage(auth.errMessage);
+    }
+  });
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -105,7 +114,7 @@ function NavBar() {
     <Box sx={{ flexGrow: 0 }} >
       <Tooltip title="Open settings">
         <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-          <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+          <Avatar sx={{ bgcolor: "#9660BF" }}>{firstName[0]}{lastName[0]}</Avatar>
         </IconButton>
       </Tooltip>
       <Menu
