@@ -657,40 +657,6 @@ export default function EditMap() {
             secondHalfCoords.push(currPolyCoords);
           }
         }
-        // for (let i = 0; i < polygonHalves.geometry.coordinates.length; i++) {
-        //   let currPolyCoords = polygonHalves.geometry.coordinates[i];
-        //   let currPoly = turf.polygon(currPolyCoords);
-        //   if (
-        //     //turf.booleanOverlap(halfScreenPolygon, currPoly) || 
-        //     turf.booleanContains(halfScreenPolygon, currPoly)
-        //     || turf.booleanWithin(currPoly, halfScreenPolygon) 
-        //     //|| turf.booleanIntersects(currPoly, halfScreenPolygon)
-        //     ) {
-        //     firstHalfCoords.push(currPolyCoords);
-        //   }
-        //   else {
-        //     secondHalfCoords.push(currPolyCoords);
-        //   }
-        // }
-        // if (firstHalfCoords.length == 0 || secondHalfCoords.length == 0) {
-        //   firstHalfCoords = [];
-        //   secondHalfCoords = [];
-        //   for (let i = 0; i < polygonHalves.geometry.coordinates.length; i++) {
-        //     let currPolyCoords = polygonHalves.geometry.coordinates[i];
-        //     let currPoly = turf.polygon(currPolyCoords);
-        //     if (
-        //       turf.booleanOverlap(halfScreenPolygon, currPoly) || 
-        //       turf.booleanContains(halfScreenPolygon, currPoly)
-        //       || turf.booleanWithin(currPoly, halfScreenPolygon) 
-        //       //|| turf.booleanIntersects(currPoly, halfScreenPolygon)
-        //       ) {
-        //       firstHalfCoords.push(currPolyCoords);
-        //     }
-        //     else {
-        //       secondHalfCoords.push(currPolyCoords);
-        //     }
-        //   }
-        //}
         console.log("first half", firstHalfCoords);
         console.log("secondhalf", secondHalfCoords);
         var firstHalfPolys;
@@ -707,8 +673,6 @@ export default function EditMap() {
         else {
           secondHalfPolys = turf.multiPolygon(secondHalfCoords);
         }
-        console.log("first half polygon", firstHalfPolys);
-        console.log("second half polys", secondHalfPolys);
 
         if (selectedPolygon.properties.hasOwnProperty('NAME_5')) {
           //currentLayer.feature.properties.NAME_5 = regionName.trim();
@@ -730,19 +694,20 @@ export default function EditMap() {
         }
         else if (selectedPolygon.properties.hasOwnProperty('NAME_1')) {
           console.log("wa");
-          firstHalfPolys.properties = { NAME_1: selectedPolygon.properties.NAME_2 }
-          secondHalfPolys.properties = { NAME_1: selectedPolygon.properties.NAME_2 + "2" }
+          firstHalfPolys.properties = { NAME_1: selectedPolygon.properties.NAME_1 }
+          secondHalfPolys.properties = { NAME_1: selectedPolygon.properties.NAME_1 + "2" }
         }
         else if (selectedPolygon.properties.hasOwnProperty('NAME_0')) {
-          firstHalfPolys.properties = { NAME_0: selectedPolygon.properties.NAME_1 }
-          secondHalfPolys.properties = { NAME_0: selectedPolygon.properties.NAME_1 + "2" }
+          firstHalfPolys.properties = { NAME_0: selectedPolygon.properties.NAME_0 }
+          secondHalfPolys.properties = { NAME_0: selectedPolygon.properties.NAME_0 + "2" }
         }
         else if (selectedPolygon.properties.hasOwnProperty('admin')) {
           firstHalfPolys.properties = { admin: selectedPolygon.properties.admin }
           secondHalfPolys.properties = { admin: selectedPolygon.properties.admin + "2" }
         }
 
-
+        console.log("first half polygon", firstHalfPolys);
+        console.log("second half polys", secondHalfPolys);
 
         setSplitEnabled(false);
 

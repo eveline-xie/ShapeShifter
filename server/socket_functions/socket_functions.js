@@ -22,8 +22,6 @@ async function updatePolygonOfMap(id, prevPolygon, updatedPolygon) {
     for (let i = 0; i < newgeojson.features.length; i++) {
         if (newgeojson.features[i].geometry.type == "Polygon" &&
             prevPolygon.geometry.type == "Polygon") {
-            console.log(newgeojson.features[i].geometry.coordinates[0][0]);
-            console.log(prevPolygon.geometry.coordinates[0][0]);
             if (((Math.abs(newgeojson.features[i].geometry.coordinates[0][0][0] -
                 prevPolygon.geometry.coordinates[0][0][0]) <= .00001) &&
                 (Math.abs(newgeojson.features[i].geometry.coordinates[0][0][1] -
@@ -38,8 +36,6 @@ async function updatePolygonOfMap(id, prevPolygon, updatedPolygon) {
         }
         else if (newgeojson.features[i].geometry.type == "MultiPolygon" &&
             prevPolygon.geometry.type == "MultiPolygon") {
-            console.log(newgeojson.features[i].geometry.coordinates[1][0][0]);
-            console.log(prevPolygon.geometry.coordinates[1][0][0]);
             if ((Math.abs(newgeojson.features[i].geometry.coordinates[0][0][0][0] -
                 prevPolygon.geometry.coordinates[0][0][0][0]) <= .00001 &&
                 (Math.abs(newgeojson.features[i].geometry.coordinates[0][0][0][1] -
@@ -77,8 +73,6 @@ async function deletePolygonOfMap(id, feature) {
     for (let i = 0; i < newgeojson.features.length; i++) {
         if (newgeojson.features[i].geometry.type == "Polygon" &&
             feature.geometry.type == "Polygon") {
-            console.log(newgeojson.features[i].geometry.coordinates[0][0]);
-            console.log(feature.geometry.coordinates[0][0]);
             if (((Math.abs(newgeojson.features[i].geometry.coordinates[0][0][0] -
                 feature.geometry.coordinates[0][0][0]) <= .00001) &&
                 (Math.abs(newgeojson.features[i].geometry.coordinates[0][0][1] -
@@ -93,8 +87,6 @@ async function deletePolygonOfMap(id, feature) {
         }
         else if (newgeojson.features[i].geometry.type == "MultiPolygon" &&
             feature.geometry.type == "MultiPolygon") {
-            console.log(newgeojson.features[i].geometry.coordinates[1][0][0]);
-            console.log(feature.geometry.coordinates[1][0][0]);
             if ((Math.abs(newgeojson.features[i].geometry.coordinates[0][0][0][0] -
                 feature.geometry.coordinates[0][0][0][0]) <= .00001 &&
                 (Math.abs(newgeojson.features[i].geometry.coordinates[0][0][0][1] -
@@ -128,8 +120,6 @@ async function mergePolygonsOfMap(id, polygonsToMerge, mergedPolygon) {
         for (let i = 0; i < newgeojson.features.length; i++) {
             if (newgeojson.features[i].geometry.type == "Polygon" &&
                 polygonsToMerge[j].geometry.type == "Polygon") {
-                console.log(newgeojson.features[i].geometry.coordinates[0][0]);
-                console.log(polygonsToMerge[j].geometry.coordinates[0][0]);
                 if (((Math.abs(newgeojson.features[i].geometry.coordinates[0][0][0] -
                     polygonsToMerge[j].geometry.coordinates[0][0][0]) <= .00001) &&
                     (Math.abs(newgeojson.features[i].geometry.coordinates[0][0][1] -
@@ -144,8 +134,6 @@ async function mergePolygonsOfMap(id, polygonsToMerge, mergedPolygon) {
             }
             else if (newgeojson.features[i].geometry.type == "MultiPolygon" &&
                 polygonsToMerge[j].geometry.type == "MultiPolygon") {
-                console.log(newgeojson.features[i].geometry.coordinates[1][0][0]);
-                console.log(polygonsToMerge[j].geometry.coordinates[1][0][0]);
                 if ((Math.abs(newgeojson.features[i].geometry.coordinates[0][0][0][0] -
                     polygonsToMerge[j].geometry.coordinates[0][0][0][0]) <= .00001 &&
                     (Math.abs(newgeojson.features[i].geometry.coordinates[0][0][0][1] -
@@ -173,12 +161,12 @@ async function undoMergePolygonsOfMap(id, polygonsToMerge, mergedPolygon) {
     const map = await Map.findOne({ _id: id });
     let newgeojson = map.geoJsonMap;
     var index;
-    console.log(mergedPolygon);
+    console.log("test", map);
+    console.log("mergedpolygon", mergedPolygon);
+    console.log("polygons to merge", polygonsToMerge)
     for (let i = 0; i < newgeojson.features.length; i++) {
         if (newgeojson.features[i].geometry.type == "Polygon" &&
             mergedPolygon.geometry.type == "Polygon") {
-            console.log(newgeojson.features[i].geometry.coordinates[0][0]);
-            console.log(mergedPolygon.geometry.coordinates[0][0]);
             if (((Math.abs(newgeojson.features[i].geometry.coordinates[0][0][0] -
                 mergedPolygon.geometry.coordinates[0][0][0]) <= .00001) &&
                 (Math.abs(newgeojson.features[i].geometry.coordinates[0][0][1] -
@@ -193,8 +181,6 @@ async function undoMergePolygonsOfMap(id, polygonsToMerge, mergedPolygon) {
         }
         else if (newgeojson.features[i].geometry.type == "MultiPolygon" &&
             mergedPolygon.geometry.type == "MultiPolygon") {
-            console.log(newgeojson.features[i].geometry.coordinates[1][0][0]);
-            console.log(mergedPolygon.geometry.coordinates[1][0][0]);
             if ((Math.abs(newgeojson.features[i].geometry.coordinates[0][0][0][0] -
                 mergedPolygon.geometry.coordinates[0][0][0][0]) <= .00001 &&
                 (Math.abs(newgeojson.features[i].geometry.coordinates[0][0][0][1] -
