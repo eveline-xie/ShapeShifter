@@ -15,7 +15,10 @@ import CallSplitIcon from "@mui/icons-material/CallSplit";
 import CircleIcon from "@mui/icons-material/Circle";
 import SouthAmericaIcon from "@mui/icons-material/SouthAmerica";
 import DeleteIcon from "@mui/icons-material/Delete";
+
 import InfoIcon from "@mui/icons-material/Info";
+//import InfoModal from "../modals/InfoModal";
+import Modal from "@mui/material/Modal";
 import GlobalStoreContext from "../store";
 import { useContext, useEffect, useState } from 'react'
 import L from 'leaflet';
@@ -74,6 +77,7 @@ export default function EditMap() {
 
   const [mergeEnabled, setMergeEnabled] = useState(false);
   const [splitEnabled, setSplitEnabled] = useState(false);
+  const [isInfoOpen, setIsInfoOpen] = useState(false);
 
   useEffect(() => {
     console.log("reloading map");
@@ -124,6 +128,18 @@ export default function EditMap() {
     };
   }, [store.currentMap.geoJsonMap, mergeEnabled]);
 
+  const handleHelpIconClick = () => {
+    setIsInfoOpen(true);
+  }
+
+  const handleCloseInfo = () => {
+    setIsInfoOpen(false);
+  }
+  /*
+  const infoNameSet = (show) => {
+    setInfoName(show);
+  };
+  */
   function selectRegion(layer) {
     if (layer.color == undefined) {
       layer.setStyle({
@@ -1017,14 +1033,107 @@ export default function EditMap() {
                     color="inherit"
                     aria-label="menu"
                     sx={{ mr: 2 }}
-                    onClick={handleInfo}
+                    onClick = {handleHelpIconClick}
                   >
+                    
+
                     <InfoIcon />
                   </IconButton>
                 </span>
               </Tooltip>
 
             </Toolbar>
+            <Modal open={isInfoOpen} onClose={handleCloseInfo} 
+              style = {{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: 500,
+                backgroundColor: "#145374",
+                color:"#FFE484",
+                border: "2px solid #000",
+                boxShadow: 24,
+                borderRadius: 10,
+                p: 4,
+                overflowY: "scroll",
+              }} >
+            <div>
+            <Button
+            variant="contained"
+            sx={{ maxWidth: 100 }}
+            style={{
+              borderRadius: 50,
+              backgroundColor: "#FFE484",
+              padding: "7px 34px",
+              margin: "10px 10px",
+              fontSize: "13px",
+              color: "#000000",
+
+            }}
+            onClick={handleCloseInfo}
+          >
+            X
+          </Button>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Hover over an icon to see its purpose.
+            <br></br>
+            <IconButton
+            color="inherit">
+                    <UndoIcon />
+            </IconButton>
+            Undo a change.
+            <br></br>
+            <IconButton
+            color="inherit">
+                    <RedoIcon />
+            </IconButton>
+            Redo a change.
+            <br></br>
+              Click on a subregion to select it. It will be highlighted.
+              The white squares are its corresponding vertices.
+              <br></br>
+              To unselect a subregion, click it again.
+              <br></br>
+            <IconButton color="inherit">
+                    <BorderColorIcon />
+            </IconButton>
+            Rename a selected subregion.
+            <br></br>
+            <IconButton color="inherit">
+                    <FormatColorFillIcon />
+            </IconButton>
+            Change the color for a selected subregion. Click on the map to confirm.
+            <br></br>
+            <IconButton color="inherit">
+                    <AddIcon />
+            </IconButton>
+            With no subregion selected, begin clicking to add vertices.
+            Once there you are done outlining the subregion, click on the last vertex you added.
+            <br></br>
+            <IconButton color="inherit">
+                    <DeleteIcon />
+            </IconButton>
+            Delete the selected subregion.
+            <br></br>
+            <IconButton color="inherit">
+                    <MergeIcon />
+            </IconButton>
+            Click on the Merge button and then select two subregions. They will be merged after you have selected the second subregion.
+            Keep in mind that colors from selected subregions will not be inherited.
+            <br></br>
+            <IconButton color="inherit">
+                    <CallSplitIcon />
+            </IconButton>
+            The text for Split has not been added.
+            <br></br>
+            <IconButton color="inherit">
+                    <CompressIcon />
+            </IconButton>
+            Click on this icon to compress the map. This will make the map less detailed as it will have less data. This action is irreversible.
+          </Typography>
+            </div>
+            </Modal>
           </AppBar>
         </Box>
       </div>
