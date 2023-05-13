@@ -188,7 +188,7 @@ export default function EditMap() {
       else if (country.properties.admin) {
         regionName = country.properties.admin;
       }
-
+      layer.bindTooltip(regionName, { permanent: true, direction: "center", fillColor: "blue" });
       if (country.properties.color) {
         layer.setStyle({
           color: country.properties.color
