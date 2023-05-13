@@ -100,6 +100,10 @@ export const loadPublishedMaps = () => {
   return api.get("/load-published-maps");
 };
 
+export const loadGuestPublishedMaps = () => {
+  return api.get("/load-guest-published-maps");
+};
+
 export const loadSharedMaps = () => {
   return api.get("/load-shared-maps");
 };
@@ -141,6 +145,7 @@ const apis = {
 
   publishMap,
   loadPublishedMaps,
+  loadGuestPublishedMaps,
   loadSharedMaps,
   updateMapComments,
   loadComments,

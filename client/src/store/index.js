@@ -739,6 +739,17 @@ store.loadPublishedMaps = async function (id) {
   }
 };
 
+store.loadGuestPublishedMaps = async function (id) {
+  const response = await api.loadGuestPublishedMaps();
+  if (response.status === 201) {
+    console.log(response.data.publishedMaps);
+    storeReducer({
+      type: GlobalStoreActionType.LOAD_PUBLISHED_MAPS,
+      payload: response.data.publishedMaps,
+    });
+  }
+};
+
 store.loadSharedMaps = async function () {
   const response = await api.loadSharedMaps();
   if (response.status === 201) {

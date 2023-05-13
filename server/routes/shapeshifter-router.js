@@ -34,6 +34,8 @@ router.put("/update-thumbnail-of-map/:id", auth.verify, MapController.updateThum
 
 router.put("/publish-map", auth.verify, MapController.publishMap);
 router.get("/load-published-maps", auth.verify, MapController.loadPublishedMaps);
+router.get("/load-guest-published-maps",  MapController.loadGuestPublishedMaps);
+
 router.get("/load-shared-maps", auth.verify, MapController.loadSharedMaps);
 router.put("/update-map-comments", auth.verify, MapController.updateMapComments);
 router.get("/load-comments", auth.verify, MapController.loadComments);

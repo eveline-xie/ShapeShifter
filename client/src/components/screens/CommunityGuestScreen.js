@@ -38,7 +38,8 @@ export default function CommunityGuestScreen() {
   const [expandName, setExpandName] = useState("");
   const [expandOwnerName, setExpandOwnerName] = useState("");
    useEffect(() => {
-     store.loadPublishedMaps();
+    console.log("GUEST")
+     store.loadGuestPublishedMaps();
    }, []);
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
@@ -106,7 +107,7 @@ export default function CommunityGuestScreen() {
   return (
     <div id="community-screen">
       <Grid container spacing={1}>
-        <Grid item xs={2}>
+        {/* <Grid item xs={2}>
           <Button
             variant="contained"
             style={{
@@ -152,7 +153,7 @@ export default function CommunityGuestScreen() {
           >
             Key Word
           </Button>
-        </Grid>
+        </Grid> */}
 
         <Grid item xs={6}>
           <TextField
