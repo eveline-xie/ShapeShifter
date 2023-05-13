@@ -39,6 +39,7 @@ export default function CommunityGuestScreen() {
   const [expandOwnerName, setExpandOwnerName] = useState("");
   const [expandThumbnail, setExpandThumbnail] = useState("");
   const [expandMapid, setExpandMapid] = useState("");
+  const [expandKeywords, setExpandKeywords] = useState([]);
 
 
    useEffect(() => {
@@ -83,6 +84,9 @@ export default function CommunityGuestScreen() {
   const expandMapidSet = (show) => {
     setExpandMapid(show);
   };
+  const expandKeywordsSet = (show) => {
+    setExpandKeywords(show);
+  };
 
   let mapcards = "";
  if (store.publishedMaps) {
@@ -104,8 +108,10 @@ export default function CommunityGuestScreen() {
            setExpandName={expandNameSet}
            setExpandOwnerName={expandOwnerNameSet}
            thumbnail={map.thumbnail}
+           keywords = {map.keywords}
            setExpandMapid={expandMapidSet}
            setExpandThumbnail={expandThumbnailSet}
+           setExpandKeywords={expandKeywordsSet}
            key={map._id}
          />
        ))}
@@ -229,6 +235,7 @@ export default function CommunityGuestScreen() {
           ownername={expandOwnerName}
           thumbnail={expandThumbnail}
           mapid={expandMapid}
+          keywords={expandKeywords}
           key={expandMapid}
         />
       </div>

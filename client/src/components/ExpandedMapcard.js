@@ -48,7 +48,6 @@ export default function ExpandedMapcard(props) {
   const [replytext, setReplytext] = useState(false);
   const [comment, setComment] = useState("");
   let navigate = useNavigate();
-
   useEffect(() => {
     if (props.mapid) {
       store.loadComments(props.mapid);
@@ -284,6 +283,30 @@ export default function ExpandedMapcard(props) {
       </Box>
     );
   }
+  let keywords = props.keywords;
+  let keywordButtons = ""
+  if(keywords){
+    console.log("KEYWORDS HERE: "+keywords)
+    keywordButtons = (
+      <Grid>
+        {keywords.map((k) => (
+          <Button
+            variant="contained"
+            style={{
+              borderRadius: 50,
+              backgroundColor: "rgba(255, 255, 255, .2)",
+              padding: "7px 14px",
+              margin: "20px 30px",
+              fontSize: "10px",
+              color: "#ffffff",
+            }}
+          >
+            {k}
+          </Button>
+        ))}
+      </Grid>
+    );
+  }
 
   let geojsonData = {
     "type": "FeatureCollection",
@@ -457,7 +480,7 @@ export default function ExpandedMapcard(props) {
                     image={props.thumbnail}
                     style={{ objectFit: "cover" }}
                   /> */}
-                  <div id="map-container" style={{ width: "1000px", height: "500px" }}>
+                  <div id="map-container" style={{ width: "1000px", height: "480px" }}>
                   <MapContainer center={[0, 500]} zoom={0} container="map-container">
                     <TileLayer 
                     url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' />
@@ -469,48 +492,7 @@ export default function ExpandedMapcard(props) {
                   </div>
                 </Card>
               </Box>
-
-              {/* <Button
-                  variant="contained"
-                  style={{
-                    borderRadius: 50,
-                    backgroundColor: "rgba(255, 255, 255, .2)",
-                    padding: "7px 14px",
-                    margin: "20px 30px",
-                    fontSize: "10px",
-                    color: "#ffffff",
-                  }}
-                >
-                  Keyword
-                </Button>
-
-                <Button
-                  variant="contained"
-                  style={{
-                    borderRadius: 50,
-                    backgroundColor: "rgba(255, 255, 255, .2)",
-                    padding: "7px 14px",
-                    margin: "20px 30px",
-                    fontSize: "10px",
-                    color: "#ffffff",
-                  }}
-                >
-                  Keyword
-                </Button>
-
-                <Button
-                  variant="contained"
-                  style={{
-                    borderRadius: 50,
-                    backgroundColor: "rgba(255, 255, 255, .2)",
-                    padding: "7px 14px",
-                    margin: "20px 30px",
-                    fontSize: "10px",
-                    color: "#ffffff",
-                  }}
-                >
-                  Keyword
-                </Button> */}
+                  {keywordButtons}
             </Grid>
           </Grid>
         </Box>
