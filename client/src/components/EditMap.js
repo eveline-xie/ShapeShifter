@@ -304,10 +304,11 @@ export default function EditMap() {
   }
 
   const handleEditSubregionName = (e) => {
+
     let regionName = "";
-    
+
     if (currentLayer) {
-      console.log(currentLayer.feature.properties)
+      console.log("1:" + JSON.stringify(currentPolygon));
       // Bind the tooltip to the layer and set its content
       currentLayer.bindTooltip(regionName, { permanent: true, direction: "center", fillColor: "blue" });
       // Set up the click event listener on the layer
@@ -316,45 +317,74 @@ export default function EditMap() {
         if (e.key === "Enter") {
           currentLayer.bindPopup(content.value);
           regionName = content.value;
-          console.log(regionName)
           currentLayer.setTooltipContent(content.value);
+
+          let renamedPolygon = JSON.parse(JSON.stringify(currentPolygon));
+          console.log("2:" + JSON.stringify(renamedPolygon));
+
+          if (currentLayer.feature.properties.hasOwnProperty('NAME_5')) {
+            console.log("5")
+            //currentLayer.feature.properties.NAME_5 = regionName.trim();
+            //trim gets rid of the '/n' which apparently is there even though console logging regionName does not have '/n'
+            renamedPolygon.properties.NAME_5 = regionName.trim();
+            console.log("3:" + JSON.stringify(renamedPolygon));
+          }
+          else if (currentLayer.feature.properties.hasOwnProperty('NAME_4')) {
+            console.log("4")
+            //currentLayer.feature.properties.NAME_4 = regionName.trim();
+            renamedPolygon.properties.NAME_4 = regionName.trim();
+            console.log("3:" + JSON.stringify(renamedPolygon));
+          }
+          else if (currentLayer.feature.properties.hasOwnProperty('NAME_3')) {
+            console.log("3")
+            //currentLayer.feature.properties.NAME_3 = regionName.trim();
+            renamedPolygon.properties.NAME_3 = regionName.trim();
+            console.log("3:" + JSON.stringify(renamedPolygon));
+          }
+          else if (currentLayer.feature.properties.hasOwnProperty('NAME_2')) {
+            console.log("2")
+            //currentLayer.feature.properties.NAME_2 = regionName.trim();
+            renamedPolygon.properties.NAME_2 = regionName.trim();
+            console.log("3:" + JSON.stringify(renamedPolygon));
+          }
+          else if (currentLayer.feature.properties.hasOwnProperty('NAME_1')) {
+            console.log('Name_1')
+            //currentLayer.feature.properties.NAME_1 = regionName.trim();
+            renamedPolygon.properties.NAME_1 = regionName.trim();
+            console.log("3:" + JSON.stringify(renamedPolygon));
+            console.log(renamedPolygon.properties.NAME_1);
+            console.log(currentPolygon.properties.NAME_1);
+          }
+          else if (currentLayer.feature.properties.hasOwnProperty('NAME_0')) {
+            console.log("0")
+            //currentLayer.feature.properties.NAME_0 = regionName.trim();
+            renamedPolygon.properties.NAME_0 = regionName.trim();
+            console.log("3:" + JSON.stringify(renamedPolygon));
+          }
+          else if (currentLayer.feature.properties.hasOwnProperty('admin')) {
+            console.log("admin")
+            //currentLayer.feature.properties.admin = regionName.trim();
+            renamedPolygon.properties.admin = regionName.trim();
+            console.log("3:" + JSON.stringify(renamedPolygon));
+            console.log(renamedPolygon.properties.admin);
+            console.log(currentPolygon.properties.admin);
+          }
+
+          store.addUpdatePolygonToMapTransaction(currentPolygon, renamedPolygon);
         }
-        console.log('got here')
-        //check to see the highest level name property
-      if (currentLayer.feature.properties.hasOwnProperty('NAME_5')) {
-        console.log("5")
-        currentLayer.feature.properties.NAME_5 = regionName.trim();
-        //trim gets rid of the '/n' which apparently is there even though console logging regionName does not have '/n'
-      }
-      else if (currentLayer.feature.properties.hasOwnProperty('NAME_4')) {
-        console.log("4")
-        currentLayer.feature.properties.NAME_4 = regionName.trim();
-      }
-      else if (currentLayer.feature.properties.hasOwnProperty('NAME_3')) {
-        console.log("3")
-        currentLayer.feature.properties.NAME_3 = regionName.trim();
-      }
-      else if (currentLayer.feature.properties.hasOwnProperty('NAME_2')) {
-        console.log("2")
-        currentLayer.feature.properties.NAME_2= regionName.trim();
-      }
-      else if (currentLayer.feature.properties.hasOwnProperty('NAME_1')) {
-        console.log('Name_1')
-        currentLayer.feature.properties.NAME_1= regionName.trim();
-      }
-      else if (currentLayer.feature.properties.hasOwnProperty('NAME_0')) {
-        console.log("0")
-        currentLayer.feature.properties.NAME_0= regionName.trim();
-      }
-      else if (currentLayer.feature.properties.hasOwnProperty('admin')) {
-        console.log("admin")
-        currentLayer.feature.properties.admin= regionName.trim();
-      }
-      console.log(currentLayer.feature.properties)
+
+
+        // renamedPolygon.properties.name = regionName.trim();
+        // console.log("3:" +JSON.stringify(renamedPolygon));
+        // // currentPolygon.properties.name = regionName.trim();
+
+        // store.addUpdatePolygonToMapTransaction(currentPolygon, renamedPolygon);
+
+
+        // check to see the highest level name property
       });
-      
       currentLayer.bindPopup(content).openPopup();
-     
+
     }
   }
 
@@ -679,8 +709,39 @@ export default function EditMap() {
         }
         console.log("first half polygon", firstHalfPolys);
         console.log("second half polys", secondHalfPolys);
-        firstHalfPolys.properties = { split: true }
-        secondHalfPolys.properties = { split: true }
+
+        if (selectedPolygon.properties.hasOwnProperty('NAME_5')) {
+          //currentLayer.feature.properties.NAME_5 = regionName.trim();
+          //trim gets rid of the '/n' which apparently is there even though console logging regionName does not have '/n'
+          firstHalfPolys.properties = { NAME_5: selectedPolygon.properties.NAME_5 }
+          secondHalfPolys.properties = { NAME_5: selectedPolygon.properties.NAME_5 + "2" }
+        }
+        else if (selectedPolygon.properties.hasOwnProperty('NAME_4')) {
+          firstHalfPolys.properties = { NAME_4: selectedPolygon.properties.NAME_5 }
+          secondHalfPolys.properties = { NAME_4: selectedPolygon.properties.NAME_5 + "2" }
+        }
+        else if (selectedPolygon.properties.hasOwnProperty('NAME_3')) {
+          firstHalfPolys.properties = { NAME_3: selectedPolygon.properties.NAME_4 }
+          secondHalfPolys.properties = { NAME_3: selectedPolygon.properties.NAME_4 + "2" }
+        }
+        else if (selectedPolygon.properties.hasOwnProperty('NAME_2')) {
+          firstHalfPolys.properties = { NAME_2: selectedPolygon.properties.NAME_3 }
+          secondHalfPolys.properties = { NAME_2: selectedPolygon.properties.NAME_3 + "2" }
+        }
+        else if (selectedPolygon.properties.hasOwnProperty('NAME_1')) {
+          console.log("wa");
+          firstHalfPolys.properties = { NAME_1: selectedPolygon.properties.NAME_2 }
+          secondHalfPolys.properties = { NAME_1: selectedPolygon.properties.NAME_2 + "2" }
+        }
+        else if (selectedPolygon.properties.hasOwnProperty('NAME_0')) {
+          firstHalfPolys.properties = { NAME_0: selectedPolygon.properties.NAME_1 }
+          secondHalfPolys.properties = { NAME_0: selectedPolygon.properties.NAME_1 + "2" }
+        }
+        else if (selectedPolygon.properties.hasOwnProperty('admin')) {
+          firstHalfPolys.properties = { admin: selectedPolygon.properties.admin }
+          secondHalfPolys.properties = { admin: selectedPolygon.properties.admin + "2" }
+        }
+
 
 
         setSplitEnabled(false);
@@ -1033,9 +1094,9 @@ export default function EditMap() {
                     color="inherit"
                     aria-label="menu"
                     sx={{ mr: 2 }}
-                    onClick = {handleHelpIconClick}
+                    onClick={handleHelpIconClick}
                   >
-                    
+
 
                     <InfoIcon />
                   </IconButton>
@@ -1043,96 +1104,96 @@ export default function EditMap() {
               </Tooltip>
 
             </Toolbar>
-            <Modal open={isInfoOpen} onClose={handleCloseInfo} 
-              style = {{
+            <Modal open={isInfoOpen} onClose={handleCloseInfo}
+              style={{
                 position: "absolute",
                 top: "50%",
                 left: "50%",
                 transform: "translate(-50%, -50%)",
                 width: 500,
                 backgroundColor: "#145374",
-                color:"#FFE484",
+                color: "#FFE484",
                 border: "2px solid #000",
                 boxShadow: 24,
                 borderRadius: 10,
                 p: 4,
                 overflowY: "scroll",
               }} >
-            <div>
-            <Button
-            variant="contained"
-            sx={{ maxWidth: 100 }}
-            style={{
-              borderRadius: 50,
-              backgroundColor: "#FFE484",
-              padding: "7px 34px",
-              margin: "10px 10px",
-              fontSize: "13px",
-              color: "#000000",
+              <div>
+                <Button
+                  variant="contained"
+                  sx={{ maxWidth: 100 }}
+                  style={{
+                    borderRadius: 50,
+                    backgroundColor: "#FFE484",
+                    padding: "7px 34px",
+                    margin: "10px 10px",
+                    fontSize: "13px",
+                    color: "#000000",
 
-            }}
-            onClick={handleCloseInfo}
-          >
-            X
-          </Button>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Hover over an icon to see its purpose.
-            <br></br>
-            <IconButton
-            color="inherit">
+                  }}
+                  onClick={handleCloseInfo}
+                >
+                  X
+                </Button>
+                <Typography id="modal-modal-title" variant="h6" component="h2">
+                  Hover over an icon to see its purpose.
+                  <br></br>
+                  <IconButton
+                    color="inherit">
                     <UndoIcon />
-            </IconButton>
-            Undo a change.
-            <br></br>
-            <IconButton
-            color="inherit">
+                  </IconButton>
+                  Undo a change.
+                  <br></br>
+                  <IconButton
+                    color="inherit">
                     <RedoIcon />
-            </IconButton>
-            Redo a change.
-            <br></br>
-              Click on a subregion to select it. It will be highlighted.
-              The white squares are its corresponding vertices.
-              <br></br>
-              To unselect a subregion, click it again.
-              <br></br>
-            <IconButton color="inherit">
+                  </IconButton>
+                  Redo a change.
+                  <br></br>
+                  Click on a subregion to select it. It will be highlighted.
+                  The white squares are its corresponding vertices.
+                  <br></br>
+                  To unselect a subregion, click it again.
+                  <br></br>
+                  <IconButton color="inherit">
                     <BorderColorIcon />
-            </IconButton>
-            Rename a selected subregion.
-            <br></br>
-            <IconButton color="inherit">
+                  </IconButton>
+                  Rename a selected subregion.
+                  <br></br>
+                  <IconButton color="inherit">
                     <FormatColorFillIcon />
-            </IconButton>
-            Change the color for a selected subregion. Click on the map to confirm.
-            <br></br>
-            <IconButton color="inherit">
+                  </IconButton>
+                  Change the color for a selected subregion. Click on the map to confirm.
+                  <br></br>
+                  <IconButton color="inherit">
                     <AddIcon />
-            </IconButton>
-            With no subregion selected, begin clicking to add vertices.
-            Once there you are done outlining the subregion, click on the last vertex you added.
-            <br></br>
-            <IconButton color="inherit">
+                  </IconButton>
+                  With no subregion selected, begin clicking to add vertices.
+                  Once there you are done outlining the subregion, click on the last vertex you added.
+                  <br></br>
+                  <IconButton color="inherit">
                     <DeleteIcon />
-            </IconButton>
-            Delete the selected subregion.
-            <br></br>
-            <IconButton color="inherit">
+                  </IconButton>
+                  Delete the selected subregion.
+                  <br></br>
+                  <IconButton color="inherit">
                     <MergeIcon />
-            </IconButton>
-            Click on the Merge button and then select two subregions. They will be merged after you have selected the second subregion.
-            Keep in mind that colors from selected subregions will not be inherited.
-            <br></br>
-            <IconButton color="inherit">
+                  </IconButton>
+                  Click on the Merge button and then select two subregions. They will be merged after you have selected the second subregion.
+                  Keep in mind that colors from selected subregions will not be inherited.
+                  <br></br>
+                  <IconButton color="inherit">
                     <CallSplitIcon />
-            </IconButton>
-            The text for Split has not been added.
-            <br></br>
-            <IconButton color="inherit">
+                  </IconButton>
+                  The text for Split has not been added.
+                  <br></br>
+                  <IconButton color="inherit">
                     <CompressIcon />
-            </IconButton>
-            Click on this icon to compress the map. This will make the map less detailed as it will have less data. This action is irreversible.
-          </Typography>
-            </div>
+                  </IconButton>
+                  Click on this icon to compress the map. This will make the map less detailed as it will have less data. This action is irreversible.
+                </Typography>
+              </div>
             </Modal>
           </AppBar>
         </Box>

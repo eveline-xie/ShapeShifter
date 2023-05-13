@@ -7,7 +7,7 @@ const User = require('../models/user-model');
 const shpwrite = require('shp-write');
 const toGeoJSON = require('togeojson');
 const fs = require('fs');
-const {convert} = require('geojson2shp');
+const { convert } = require('geojson2shp');
 const os = require('os');
 
 async function createNewMap(req, res) {
@@ -114,26 +114,57 @@ async function getMapById(req, res) {
 
 async function getShpDbfFileById(req, res) {
     const map = await Map.findById({ _id: req.params.id });
-    const options = {
-        layer: "Test"
+    if (!map) {
+        return res.status(500).json({
+            errorMessage: "Failed to find map"
+        })
     }
-    // let path = `${os.tmpdir()}/${map.name}_shp.zip`;
-    // let stream = fs.createWriteStream(path);
-    // console.log("themap", map.geoJsonMap);
-    // await convert(map.geoJsonMap.features, stream, options);
-    // fs.readFile(path, (err, data) => {
-    //     if (err) {
-    //         console.error(err);
-    //     }
-    //     fs.unlink(path, (err) => {
-    //         if (err) {
-    //             console.error(err);
-    //         }
-    //     });
-    //     return res.status(201).send(data);
-    // })
-    const shapefileBuffer = shpWrite.zip(map.geoJsonMap);
-    fs.writeFileSync('example.zip', shapefileBuffer);
+//     const geojsonMap = map.geoJsonMap;
+//     var options = {
+//         folder: 'myshapes',
+//         types: {
+//             point: 'mypoints',
+//             polygon: 'mypolygons',
+//             line: 'mylines'
+//         }
+//     }
+//     // a GeoJSON bridge for features
+//     const myFile = shpwrite.zip(map.geoJsonMap, options);
+//     console.log(myFile);
+//     res.setHeader('Content-Type', 'application/zip');
+//   // Set the content disposition to attachment, which prompts the browser to download the file
+//     res.setHeader('Content-Disposition', `attachment; filename=shapefile.zip`);
+//     return res.status(201).send(myFile);
+//     // const options = { encoding: 'utf-8' };
+//     // const shp = shpwrite.zip(features, options);
+//     // fs.writeFileSync('output.zip', shp);
+//     // const zip = new require('node-zip')();
+//     // zip.load(fs.readFileSync('output.zip'));
+//     // const dbf = zip.files['output.dbf'].asNodeBuffer();
+//     // fs.writeFileSync('output.dbf', dbf);
+//     // return res.status(201).send(zip);
+    const options = {
+        layer: "test"
+    }
+    let path = `${os.tmpdir()}/${map.name
+        .replace(" ", "_")
+        .replace("/", "_")
+    .replace("\\", "_")}_shp.zip`;
+    let stream = fs.createWriteStream(path);
+    console.log("themap", map.geoJsonMap);
+    await convert(map.geoJsonMap, stream, options);
+    fs.readFile(path, (err, data) => {
+        if (err) {
+            console.error(err);
+        }
+        fs.unlink(path, (err) => {
+            if (err) {
+                console.error(err);
+            }
+        });
+        console.log(data);
+        return res.status(201).send(data);
+    })
 }
 
 async function duplicateMapById(req, res) {
@@ -151,15 +182,15 @@ async function duplicateMapById(req, res) {
     const mapToDupe = await Map.findById({ _id: body.id });
     let newName = "Copy of " + mapToDupe.name;
     const map = new Map({
-      name: newName,
-      ownerUsername: loggedInUser.username,
-      ownerEmail: loggedInUser.email,
-      comments: [],
-      geoJsonMap: mapToDupe.geoJsonMap,
-      collaborators: [],
-      keywords: [],
-      published: { isPublished: false, publishedDate: new Date() },
-      thumbnail: mapToDupe.thumbnail,
+        name: newName,
+        ownerUsername: loggedInUser.username,
+        ownerEmail: loggedInUser.email,
+        comments: [],
+        geoJsonMap: mapToDupe.geoJsonMap,
+        collaborators: [],
+        keywords: [],
+        published: { isPublished: false, publishedDate: new Date() },
+        thumbnail: mapToDupe.thumbnail,
     });
     if (!map) {
         return res.status(400).json({ success: false, error: err })
@@ -456,15 +487,15 @@ async function loadPublishedMaps(req, res) {
     let mapsNoGeoJson = [];
     for (let i = 0; i < maps.length; i++) {
         mapsNoGeoJson.push({
-          _id: maps[i]._id,
-          name: maps[i].name,
-          ownerUsername: maps[i].ownerUsername,
-          ownerEmail: maps[i].ownerEmail,
-          comments: maps[i].comments,
-          collaborators: maps[i].collaborators,
-          keywords: maps[i].keywords,
-          published: maps[i].published,
-          thumbnail: maps[i].thumbnail,
+            _id: maps[i]._id,
+            name: maps[i].name,
+            ownerUsername: maps[i].ownerUsername,
+            ownerEmail: maps[i].ownerEmail,
+            comments: maps[i].comments,
+            collaborators: maps[i].collaborators,
+            keywords: maps[i].keywords,
+            published: maps[i].published,
+            thumbnail: maps[i].thumbnail,
         });
     }
     return res.status(201).json({
@@ -504,51 +535,51 @@ async function loadSharedMaps(req, res) {
 }
 
 async function updateMapComments(req, res) {
-  const body = req.body;
-  console.log("updateMap: " + JSON.stringify(body));
+    const body = req.body;
+    console.log("updateMap: " + JSON.stringify(body));
 
-  if (!body) {
-    return res.status(400).json({
-      success: false,
-      error: "You must provide a body to update",
-    });
-  }
-  console.log("saved user id" + req.userId);
+    if (!body) {
+        return res.status(400).json({
+            success: false,
+            error: "You must provide a body to update",
+        });
+    }
+    console.log("saved user id" + req.userId);
     const map = await Map.findOne({ _id: body.payload.mapid });
     const user = await User.findOne({ _id: req.userId });
     map.comments.push([user.username, body.payload.comments]);
-  //   map.name = body.payload.name;
-  //   map.keywords = body.payload.keywords;
-  //   map.collaborators = body.payload.collaborators;
+    //   map.name = body.payload.name;
+    //   map.keywords = body.payload.keywords;
+    //   map.collaborators = body.payload.collaborators;
     map.save();
-  return res.status(201).json({
-    success: true,
-    mapComments: map.comments,
-  });
+    return res.status(201).json({
+        success: true,
+        mapComments: map.comments,
+    });
 }
 
 async function loadComments(req, res) {
-  const mapid = req.query.mapid;
-  console.log("mapid: " + mapid);
-  const map = await Map.findOne({ _id: mapid });
-  //   map.name = body.payload.name;
-  //   map.keywords = body.payload.keywords;
-  //   map.collaborators = body.payload.collaborators;
-  return res.status(201).json({
-    success: true,
-    mapComments: map.comments,
-  });
+    const mapid = req.query.mapid;
+    console.log("mapid: " + mapid);
+    const map = await Map.findOne({ _id: mapid });
+    //   map.name = body.payload.name;
+    //   map.keywords = body.payload.keywords;
+    //   map.collaborators = body.payload.collaborators;
+    return res.status(201).json({
+        success: true,
+        mapComments: map.comments,
+    });
 }
 
-async function removeSharedMap(req, res){
+async function removeSharedMap(req, res) {
     const mapid = req.body.mapid;
     const email = req.body.email;
     const loggedInUser = await User.findOne({ email: email });
-    console.log("mapidL "+mapid)
-    console.log("before remove map user:"+loggedInUser);
+    console.log("mapidL " + mapid)
+    console.log("before remove map user:" + loggedInUser);
     loggedInUser.sharedWithMe.splice(
-      loggedInUser.sharedWithMe.indexOf(mapid),
-      1
+        loggedInUser.sharedWithMe.indexOf(mapid),
+        1
     );
     console.log("after before remove map user:" + loggedInUser);
     loggedInUser.save();
