@@ -39,6 +39,9 @@ export default function HomeScreen() {
   const [shpFile, setShpFile] = useState(null);
   const [dbfFile, setDbfFile] = useState(null);
   const [geoJsonFile, setGeoJsonFile] = useState(null);
+  const [shpFileName, setShpFileName] = useState("");
+  const [dbfFileName, setDbfFileName] = useState("");
+  const [geoJsonFileName, setGeoJsonFileName] = useState("");
 
   const shpInputRef = React.useRef();
   const dbfInputRef = React.useRef();
@@ -110,6 +113,7 @@ export default function HomeScreen() {
     reader.onload = function (buffer) {
       console.log("shp", buffer.target.result);
       setShpFile(buffer.target.result);
+      setShpFileName(event.target.files[0].name);
 
       if (event.target.files[0] && dbfFile !== null) {
         store.createNewMapSHPDBF(buffer.target.result, dbfFile);
@@ -125,6 +129,7 @@ export default function HomeScreen() {
     reader.onload = function (buffer) {
       console.log("dbf", buffer.target.result);
       setDbfFile(buffer.target.result);
+      setDbfFileName(event.target.files[0].name);
 
       if (event.target.files[0] && shpFile !== null) {
         store.createNewMapSHPDBF(shpFile, buffer.target.result);
@@ -140,6 +145,7 @@ export default function HomeScreen() {
       console.log("geojson", buffer.target.result);
       console.log("type", typeof buffer.target.result);
       setGeoJsonFile(buffer.target.result);
+      setGeoJsonFileName(event.target.files[0].name);
       store.createNewMapGeoJson(buffer.target.result);
     };
 
@@ -243,7 +249,8 @@ export default function HomeScreen() {
                     }}
                     onClick={handleUploadSHP}
                   >
-                    SHP
+                    SHP<br />
+                    {shpFileName}
                   </Button>
                   <input
                     type="file"
@@ -266,7 +273,8 @@ export default function HomeScreen() {
                     }}
                     onClick={handleUploadDBF}
                   >
-                    DBF
+                    DBF<br />
+                    {dbfFileName}
                   </Button>
                   <input
                     type="file"
@@ -289,7 +297,8 @@ export default function HomeScreen() {
                     }}
                     onClick={handleUploadGeoJson}
                   >
-                    GeoJson
+                    GeoJson<br />
+                    {geoJsonFileName}
                   </Button>
                   <input
                     type="file"
