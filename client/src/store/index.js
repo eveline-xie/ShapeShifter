@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
 import api from './store-request-api'
 
 import jsTPS from '../common/jsTPS'
@@ -17,7 +17,10 @@ import * as topoServer from 'topojson-server';
 import * as topoClient from 'topojson-client';
 import * as topoSimplify from 'topojson-simplify';
 import L from 'leaflet';
+
+import { io } from "socket.io-client"
 const shpwrite = require('shp-write');
+
 
 export const GlobalStoreContext = createContext({});
 console.log("create GlobalStoreContext");
@@ -32,11 +35,33 @@ export const GlobalStoreActionType = {
   LOAD_PUBLISHED_MAPS: "LOAD_PUBLISHED_MAPS",
   LOAD_SHARED_MAPS: "LOAD_SHARED_MAPS",
   LOAD_COMMENTS: "LOAD_COMMENTS",
+  FORK_MAP: "FORK_MAP",
 };
 
 const tps = new jsTPS();
 
+const socket = new io(
+  "http://localhost:5000"
+  //"https://shapeshifter-api.onrender.com"
+  , {
+    autoConnect: false,
+  }
+)
+
+console.log("setup global store");
+
 function GlobalStoreContextProvider(props) {
+  const { auth } = useContext(AuthContext);
+  useEffect(() => {
+    if (auth.loggedIn) {
+      console.log("connecting socket");
+      socket.connect();
+    }
+    return () => {
+      console.log("disconnecting socket");
+      socket.disconnect();
+    };
+  }, [auth.loggedIn]);
   const [store, setStore] = useState({
     currentMap: null,
     userMaps: null,
@@ -49,7 +74,6 @@ function GlobalStoreContextProvider(props) {
 
   const navigate = useNavigate();
 
-  const { auth } = useContext(AuthContext);
 
   const storeReducer = (action) => {
     const { type, payload } = action;
@@ -64,6 +88,7 @@ function GlobalStoreContextProvider(props) {
         return setStore({
           currentMap: store.currentMap,
           userMaps: payload,
+          publishedMaps: store.publishedMaps,
         });
       }
       case GlobalStoreActionType.LOAD_CURRENT_MAP: {
@@ -82,7 +107,15 @@ function GlobalStoreContextProvider(props) {
         return setStore({
           currentMap: store.currentMap,
           userMaps: store.userMaps,
+          publishedMaps: store.publishedMaps,
           mapIdMarkedForExport: payload,
+        });
+      }
+      case GlobalStoreActionType.FORK_MAP: {
+        return setStore({
+          currentMap: store.currentMap,
+          userMaps: store.userMaps,
+          publishedMaps: store.publishedMaps,
         });
       }
       case GlobalStoreActionType.LOAD_PUBLISHED_MAPS: {
@@ -95,12 +128,12 @@ function GlobalStoreContextProvider(props) {
           sharedMaps: payload,
         });
       }
-          case GlobalStoreActionType.LOAD_COMMENTS: {
-            return setStore({
-              mapComments: payload,
-              publishedMaps: store.publishedMaps,
-            });
-          }
+      case GlobalStoreActionType.LOAD_COMMENTS: {
+        return setStore({
+          mapComments: payload,
+          publishedMaps: store.publishedMaps,
+        });
+      }
     }
   }
 
@@ -305,7 +338,9 @@ function GlobalStoreContextProvider(props) {
         type: GlobalStoreActionType.LOAD_CURRENT_MAP,
         payload: response.data.currentMap
       })
-      navigate("/createmap");
+      if (window.location.pathname == '/home') {
+        navigate("/createmap");
+      }
     }
   }
 
@@ -313,6 +348,9 @@ function GlobalStoreContextProvider(props) {
     const response = await api.duplicateMapById({ id: id });
     if (response.status === 201) {
       store.loadUserMapsNoGeoJson();
+      storeReducer({
+        type: GlobalStoreActionType.FORK_MAP,
+      });
     }
   }
 
@@ -413,91 +451,158 @@ function GlobalStoreContextProvider(props) {
     tps.addTransaction(transaction);
   }
 
-  store.addPolygonToMap = async function (feature) {
-    const response = await api.addPolygonToMap(store.currentMap._id, feature);
-    if (response.status === 201) {
-      console.log("success");
-      const map = response.data.map;
-      console.log(map.geoJsonMap.features.length);
-      storeReducer({
-        type: GlobalStoreActionType.LOAD_CURRENT_MAP,
-        payload: map
-      })
-    }
+  // store.addPolygonToMap = async function (feature) {
+  //   const response = await api.addPolygonToMap(store.currentMap._id, feature);
+  //   if (response.status === 201) {
+  //     console.log("success");
+  //     const map = response.data.map;
+  //     console.log(map.geoJsonMap.features.length);
+  //     storeReducer({
+  //       type: GlobalStoreActionType.LOAD_CURRENT_MAP,
+  //       payload: map
+  //     })
+  //   }
+  // }
+
+  
+  socket.on("connection", (data) => {
+    console.log(data);
+  });
+
+  store.addPolygonToMap = function (feature) {
+    console.log("emitting add");
+    socket.emit("add-polygon", store.currentMap._id, feature);
   }
+
+  socket.on("add-polygon-response", (data) => {
+    const map = data;
+    storeReducer({
+      type: GlobalStoreActionType.LOAD_CURRENT_MAP,
+      payload: map
+    })
+  });
+
   store.addUpdatePolygonToMapTransaction = function (prevPolygon, updatedPolygon) {
     let transaction = new UpdatePolygon_Transaction(store, prevPolygon, updatedPolygon);
     tps.addTransaction(transaction);
   }
-  store.updatePolygonOfMap = async function (prevPolygon, updatedPolygon) {
-    const response = await api.updatePolygonOfMap(store.currentMap._id, prevPolygon, updatedPolygon);
-    if (response.status === 201) {
-      console.log("success");
-      const map = response.data.map;
-      console.log(map.geoJsonMap.features.length);
-      storeReducer({
-        type: GlobalStoreActionType.LOAD_CURRENT_MAP,
-        payload: map
-      })
-    }
+  // store.updatePolygonOfMap = async function (prevPolygon, updatedPolygon) {
+  //   const response = await api.updatePolygonOfMap(store.currentMap._id, prevPolygon, updatedPolygon);
+  //   if (response.status === 201) {
+  //     console.log("success");
+  //     const map = response.data.map;
+  //     console.log(map.geoJsonMap.features.length);
+  //     storeReducer({
+  //       type: GlobalStoreActionType.LOAD_CURRENT_MAP,
+  //       payload: map
+  //     })
+  //   }
+  // }
+  store.updatePolygonOfMap = function (prevPolygon, updatedPolygon) {
+    console.log("emitting update");
+    socket.emit("update-polygon", store.currentMap._id, prevPolygon, updatedPolygon);
   }
+
+  socket.on("update-polygon-response", (data) => {
+    const map = data;
+    storeReducer({
+      type: GlobalStoreActionType.LOAD_CURRENT_MAP,
+      payload: map
+    })
+  });
 
   store.addDeletePolygonOfMapTransaction = function (feature) {
     let transaction = new DeletePolygon_Transaction(store, feature);
     tps.addTransaction(transaction);
   }
 
+  // store.deletePolygonOfMap = async function (feature) {
+  //   const response = await api.deletePolygonOfMap(store.currentMap._id, feature);
+  //   if (response.status === 201) {
+  //     console.log("ww");
+  //     const map = response.data.map;
+  //     console.log(map.geoJsonMap.features.length);
+  //     storeReducer({
+  //       type: GlobalStoreActionType.LOAD_CURRENT_MAP,
+  //       payload: map
+  //     })
+  //   }
+  // }
 
-  store.deletePolygonOfMap = async function (feature) {
-    const response = await api.deletePolygonOfMap(store.currentMap._id, feature);
-    if (response.status === 201) {
-      console.log("ww");
-      const map = response.data.map;
-      console.log(map.geoJsonMap.features.length);
-      storeReducer({
-        type: GlobalStoreActionType.LOAD_CURRENT_MAP,
-        payload: map
-      })
-    }
+  store.deletePolygonOfMap = function (feature) {
+    console.log("emitting delete");
+    socket.emit("delete-polygon", store.currentMap._id, feature);
   }
+
+  socket.on("delete-polygon-response", (data) => {
+    const map = data;
+    storeReducer({
+      type: GlobalStoreActionType.LOAD_CURRENT_MAP,
+      payload: map
+    })
+  });
 
   store.addmergePolygonsOfMapTransaction = function (polygonsToMerge, mergedPolygon) {
     let transaction = new MergePolygons_Transaction(store, polygonsToMerge, mergedPolygon);
     tps.addTransaction(transaction);
   }
 
+  // store.mergePolygonsOfMap = async function (polygonsToMerge, mergedPolygon) {
+  //   const response = await api.mergePolygonsOfMap(store.currentMap._id, polygonsToMerge, mergedPolygon);
+  //   if (response.status === 201) {
+  //     console.log("success");
+  //     const map = response.data.map;
+  //     console.log(map.geoJsonMap.features.length);
+  //     storeReducer({
+  //       type: GlobalStoreActionType.LOAD_CURRENT_MAP,
+  //       payload: map
+  //     })
+  //   }
+  // }
   store.mergePolygonsOfMap = async function (polygonsToMerge, mergedPolygon) {
-
-    const response = await api.mergePolygonsOfMap(store.currentMap._id, polygonsToMerge, mergedPolygon);
-    if (response.status === 201) {
-      console.log("success");
-      const map = response.data.map;
-      console.log(map.geoJsonMap.features.length);
-      storeReducer({
-        type: GlobalStoreActionType.LOAD_CURRENT_MAP,
-        payload: map
-      })
-    }
+    console.log("emitting merge");
+    socket.emit("merge-polygons", store.currentMap._id, polygonsToMerge, mergedPolygon);
   }
+
+  socket.on("merge-polygons-response", (data) => {
+    const map = data;
+    storeReducer({
+      type: GlobalStoreActionType.LOAD_CURRENT_MAP,
+      payload: map
+    })
+  });
+
+  // store.undoMergePolygonsOfMap = async function (polygonsToMerge, mergedPolygon) {
+  //   const response = await api.undoMergePolygonsOfMap(store.currentMap._id, polygonsToMerge, mergedPolygon);
+  //   if (response.status === 201) {
+  //     console.log("success");
+  //     const map = response.data.map;
+  //     console.log(map.geoJsonMap.features.length);
+  //     storeReducer({
+  //       type: GlobalStoreActionType.LOAD_CURRENT_MAP,
+  //       payload: map
+  //     })
+  //   }
+  // }
 
   store.undoMergePolygonsOfMap = async function (polygonsToMerge, mergedPolygon) {
-
-    const response = await api.undoMergePolygonsOfMap(store.currentMap._id, polygonsToMerge, mergedPolygon);
-    if (response.status === 201) {
-      console.log("success");
-      const map = response.data.map;
-      console.log(map.geoJsonMap.features.length);
-      storeReducer({
-        type: GlobalStoreActionType.LOAD_CURRENT_MAP,
-        payload: map
-      })
-    }
+    console.log("emitting undo merge");
+    socket.emit("undo-merge-polygons", store.currentMap._id, polygonsToMerge, mergedPolygon);
   }
+
+  socket.on("undo-merge-polygons-response", (data) => {
+    const map = data;
+    storeReducer({
+      type: GlobalStoreActionType.LOAD_CURRENT_MAP,
+      payload: map
+    })
+  });
 
   store.addSplitPolygonsOfMapTransaction = function (polygonToSplit, splitPolygons) {
     let transaction = new SplitPolygon_Transaction(store, polygonToSplit, splitPolygons);
     tps.addTransaction(transaction);
   }
+
 
 
   store.updateThumbnailOfMap = async function (id) {
@@ -594,50 +699,50 @@ function GlobalStoreContextProvider(props) {
     }
   };
 
-      store.updateMapComments = async function (
-        comments,
-        mapid
-      ) {
-        let payload = {
-          comments: comments,
-          mapid: mapid,
-        };
-        console.log(payload);
-        const response = await api.updateMapComments(
-          payload
-        );
-        if (response.status === 201) {
-          console.log("comment success")
-          console.log(response.data.mapComments)
-           storeReducer({
-             type: GlobalStoreActionType.LOAD_COMMENTS,
-             payload: response.data.mapComments,
-           });
-        } else {
-          console.log("API FAILED TO CREATE A NEW LIST");
-        }
-      };
-
-      store.loadComments = async function (mapid){
-        const response = await api.loadComments(mapid);
-        if (response.status === 201) {
-        console.log("comment success");
-        console.log(response.data.mapComments);
-        storeReducer({
-            type: GlobalStoreActionType.LOAD_COMMENTS,
-            payload: response.data.mapComments,
-        });
-        } else {
-        console.log("API FAILED TO CREATE A NEW LIST");
-        }
-      }
-    
-    store.removeSharedMap = async function(mapid, email){
-        const response = await api.removeSharedMap(mapid, email);
-        if (response.status === 201) {
-          console.log("map removed from shared with me");
-        }
+  store.updateMapComments = async function (
+    comments,
+    mapid
+  ) {
+    let payload = {
+      comments: comments,
+      mapid: mapid,
+    };
+    console.log(payload);
+    const response = await api.updateMapComments(
+      payload
+    );
+    if (response.status === 201) {
+      console.log("comment success")
+      console.log(response.data.mapComments)
+      storeReducer({
+        type: GlobalStoreActionType.LOAD_COMMENTS,
+        payload: response.data.mapComments,
+      });
+    } else {
+      console.log("API FAILED TO CREATE A NEW LIST");
     }
+  };
+
+  store.loadComments = async function (mapid) {
+    const response = await api.loadComments(mapid);
+    if (response.status === 201) {
+      console.log("comment success");
+      console.log(response.data.mapComments);
+      storeReducer({
+        type: GlobalStoreActionType.LOAD_COMMENTS,
+        payload: response.data.mapComments,
+      });
+    } else {
+      console.log("API FAILED TO CREATE A NEW LIST");
+    }
+  }
+
+  store.removeSharedMap = async function (mapid, email) {
+    const response = await api.removeSharedMap(mapid, email);
+    if (response.status === 201) {
+      console.log("map removed from shared with me");
+    }
+  }
 
   return (
     <GlobalStoreContext.Provider value={{

@@ -64,10 +64,13 @@ export default function ExpandedMapcard(props) {
     async function handleExport(event, id) {
         event.stopPropagation();
         setOpenExport(true);
+        store.markMapForExport(props.id);
+
     }
     async function handleFork(event, id) {
         event.stopPropagation();
         setOpenFork(true);
+        store.duplicateMapById(props.mapid);
     }
 
     function handleReply() {
@@ -357,7 +360,7 @@ export default function ExpandedMapcard(props) {
                           </Grid>
 
                           <Grid item xs={3}>
-                            {forkButton}
+                            {/* {forkButton}
 
                             <Button
                               variant="contained"
@@ -375,8 +378,8 @@ export default function ExpandedMapcard(props) {
                               }}
                             >
                               Export
-                            </Button>
-                            <ExportModal
+                            </Button> */}
+                            {/* <ExportModal
                               open={openExport}
                               setOpen={setOpenExport}
                               name={props.name}
@@ -385,10 +388,10 @@ export default function ExpandedMapcard(props) {
                               open={openFork}
                               setOpen={setOpenFork}
                               name={props.name}
-                            />
+                            /> */}
                           </Grid>
                         </Grid>
-
+                            <br></br>
                         {commentBox}
                       </Grid>
                     </Grid>

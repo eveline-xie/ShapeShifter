@@ -4,14 +4,19 @@ const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
 const bodyParser = require('body-parser');
 
-
 require("dotenv").config();
 const port = process.env.PORT || 5004;
 const app = express();
 
+const http = require('http');
+const server = http.createServer(app);
+
+const socketFunctions = require('./socket_functions/socket_functions');
+
 app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
+    origin: "http://localhost:3000",
     //origin: "https://shapershifter.onrender.com",
     origin: "http://localhost:3001",
     credentials: true,
@@ -32,10 +37,44 @@ connection.once("open", () => {
 
 // SETUP OUR OWN ROUTERS AS MIDDLEWARE
 const shapeshifterRouter = require("./routes/shapeshifter-router");
-console.log(shapeshifterRouter)
+console.log(shapeshifterRouter);
 app.use("", shapeshifterRouter);
 
+const io = require('socket.io')(server, {
+  cors: {
+    origin: "*"
+  }
+});
 
+io.on('connection', (socket) => {
+  console.log('A user connected');
+
+  socket.emit('connection', 'Connection Established');
+
+  socket.on('disconnect', () => {
+    console.log('User disconnected');
+  });
+  socket.on("add-polygon", async (id, feature) => {
+    let map = await socketFunctions.addPolygonToMap(id, feature);
+    io.emit("add-polygon-response", map);
+  });
+  socket.on("update-polygon", async (id, prevPolygon, updatedPolygon) => {
+    let map = await socketFunctions.updatePolygonOfMap(id, prevPolygon, updatedPolygon);
+    io.emit("update-polygon-response", map);
+  });
+  socket.on("delete-polygon", async (id, feature) => {
+    let map = await socketFunctions.deletePolygonOfMap(id, feature);
+    io.emit("delete-polygon-response", map);
+  });
+  socket.on("merge-polygons", async (id, polygonsToMerge, mergedPolygon) => {
+    let map = await socketFunctions.mergePolygonsOfMap(id, polygonsToMerge, mergedPolygon);
+    io.emit("merge-polygons-response", map);
+  });
+  socket.on("undo-merge-polygons", async (id, polygonsToMerge, mergedPolygon) => {
+    let map = await socketFunctions.undoMergePolygonsOfMap(id, polygonsToMerge, mergedPolygon);
+    io.emit("undo-merge-polygons-response", map);
+  });
+});
 // app.post('/auth/signup', (req, res) =>  {
 //     console.log("signup!!!");
 //     console.log(req.body)
@@ -64,7 +103,7 @@ app.use("", shapeshifterRouter);
 //     auth.changePassword(username, password, newPassword, req, res);
 // })
 
-let server = app.listen(port, () => {
+server.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
 });
 
