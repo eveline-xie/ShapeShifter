@@ -45,6 +45,8 @@ export default function CreateMap() {
   const [value, setValue] = useState("");
   const [keyword, setKeyword] = useState("");
   const [error, setError] = useState(null);
+  const [keywordError, setKeywordError] = useState(null);
+
   // useEffect(() => {
   //   if (auth.error) {
   //     console.log(auth.errMessage);
@@ -79,6 +81,12 @@ export default function CreateMap() {
 
   async function isValid(email) {
     let error = null;
+    email = email.trim();
+    if (email === store.currentMap.ownerEmail) {
+      error = `You can not share the map to yourself`;
+      setError(error);
+      return false;
+    }
     if (email === "") {
       error = `Please enter an email`;
       setError(error);
@@ -126,6 +134,8 @@ export default function CreateMap() {
 
   function handleKeywords(evt) {
     setKeyword(evt.target.value);
+    setKeywordError(null);
+
   }
 
   const handleKeyDown = async (evt) => {
@@ -148,7 +158,11 @@ export default function CreateMap() {
   const handleKeywordKeyDown = async (evt) => {
     if (["Enter", "Tab", ","].includes(evt.key)) {
       evt.preventDefault();
-      if(keyword){
+      if(keyword.trim()){
+        if(keywords.includes(keyword)){
+          setKeywordError(`${keyword} has already been added.`);
+          return;
+        }
         keywords.push(keyword);
         setKeywords(keywords);
         setKeyword("")
@@ -210,7 +224,7 @@ export default function CreateMap() {
               Export
             </Button>
           </div>
-          
+
           <Box
             id="img"
             component="img"
@@ -225,7 +239,7 @@ export default function CreateMap() {
             alt="Map Preview"
             src={store.currentMap.thumbnail}
           />
-          
+
           <div>
             <Button
               variant="contained"
@@ -279,6 +293,7 @@ export default function CreateMap() {
               onChange={handleKeywords}
               onKeyDown={handleKeywordKeyDown}
             />
+            {keywordError && <p className="collaborator-error">{keywordError}</p>}
             {keywords.map((item) => (
               <div className="tag-item" key={item}>
                 {item}
