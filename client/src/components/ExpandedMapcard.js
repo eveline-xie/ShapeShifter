@@ -58,7 +58,11 @@ export default function ExpandedMapcard(props) {
 
   function handleClose() {
     props.setOpen(false);
-    navigate("/community");
+     if (window.location.pathname == "/community") {
+       navigate("/community");
+     } else if (window.location.pathname == "/communityguest") {
+       navigate("/communityguest");
+     }
 
   }
 
