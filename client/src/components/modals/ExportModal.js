@@ -70,7 +70,7 @@ export default function ExportModal(props) {
           <Typography id="modal-modal-title" variant="h6" component="h2">
             Which format do you want to export the “{props.name}” Map?
           </Typography>
-          {/* <Button
+          <Button
             variant="contained"
             sx={{ maxWidth: 100 }}
             style={{
@@ -84,7 +84,7 @@ export default function ExportModal(props) {
             onClick={handleExportSHPDBF}
           >
             DBF/SHP
-          </Button> */}
+          </Button>
           <Button
             variant="contained"
             sx={{ maxWidth: 100 }}

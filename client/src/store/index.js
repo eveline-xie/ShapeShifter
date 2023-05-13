@@ -41,8 +41,8 @@ export const GlobalStoreActionType = {
 const tps = new jsTPS();
 
 const socket = new io(
-  //"http://localhost:5000"
-  "https://shapeshifter-api.onrender.com"
+  "http://localhost:5000"
+  //"https://shapeshifter-api.onrender.com"
   , {
     autoConnect: false,
   }
@@ -338,7 +338,9 @@ function GlobalStoreContextProvider(props) {
         type: GlobalStoreActionType.LOAD_CURRENT_MAP,
         payload: response.data.currentMap
       })
-      navigate("/createmap");
+      if (window.location.pathname == '/home') {
+        navigate("/createmap");
+      }
     }
   }
 
