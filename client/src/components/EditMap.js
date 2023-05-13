@@ -307,32 +307,32 @@ export default function EditMap() {
         //check to see the highest level name property
       if (currentLayer.feature.properties.hasOwnProperty('NAME_5')) {
         console.log("5")
-        currentLayer.feature.properties['NAME_5'] = regionName.trim();
+        currentLayer.feature.properties.NAME_5 = regionName.trim();
         //trim gets rid of the '/n' which apparently is there even though console logging regionName does not have '/n'
       }
       else if (currentLayer.feature.properties.hasOwnProperty('NAME_4')) {
         console.log("4")
-        currentLayer.feature.properties['NAME_4'] = regionName.trim();
+        currentLayer.feature.properties.NAME_4 = regionName.trim();
       }
       else if (currentLayer.feature.properties.hasOwnProperty('NAME_3')) {
         console.log("3")
-        currentLayer.feature.properties['NAME_3'] = regionName.trim();
+        currentLayer.feature.properties.NAME_3 = regionName.trim();
       }
       else if (currentLayer.feature.properties.hasOwnProperty('NAME_2')) {
         console.log("2")
-        currentLayer.feature.properties['NAME_2']= regionName.trim();
+        currentLayer.feature.properties.NAME_2= regionName.trim();
       }
       else if (currentLayer.feature.properties.hasOwnProperty('NAME_1')) {
         console.log('Name_1')
-        currentLayer.feature.properties['NAME_1']= regionName.trim();
+        currentLayer.feature.properties.NAME_1= regionName.trim();
       }
       else if (currentLayer.feature.properties.hasOwnProperty('NAME_0')) {
         console.log("0")
-        currentLayer.feature.properties['NAME_0']= regionName.trim();
+        currentLayer.feature.properties.NAME_0= regionName.trim();
       }
       else if (currentLayer.feature.properties.hasOwnProperty('admin')) {
         console.log("admin")
-        currentLayer.feature.properties['admin']= regionName.trim();
+        currentLayer.feature.properties.admin= regionName.trim();
       }
       console.log(currentLayer.feature.properties)
       });
