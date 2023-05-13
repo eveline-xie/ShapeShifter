@@ -554,7 +554,7 @@ async function updateMapComments(req, res) {
     map.save();
     return res.status(201).json({
         success: true,
-        mapComments: map.comments,
+        map: map,
     });
 }
 
@@ -567,7 +567,7 @@ async function loadComments(req, res) {
     //   map.collaborators = body.payload.collaborators;
     return res.status(201).json({
         success: true,
-        mapComments: map.comments,
+        map: map
     });
 }
 

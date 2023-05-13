@@ -20,6 +20,7 @@ import GlobalStoreContext from "../store";
 import { useNavigate } from "react-router-dom";
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
 import geo_file from './custom.geo.json'
+import { useRef } from "react";
 /*
     This React component represents the expanded mapcard, after the user clicks on the "view" button of a map card,
     where the user can comment on the map depending on if they are logged in or are a guest.
@@ -49,17 +50,22 @@ export default function ExpandedMapcard(props) {
   const [comment, setComment] = useState("");
   let navigate = useNavigate();
 
+  const prevMapRef = useRef();
+
   useEffect(() => {
     if (props.mapid) {
       store.loadComments(props.mapid);
       console.log("load comments~~~")
     }
+    return () => {
+      store.resetExpandedModal();
+    }
   }, []);
 
   function handleClose() {
     props.setOpen(false);
-    navigate("/community");
-
+    //store.resetExpandedModal();
+    //navigate("/community");
   }
 
   async function handleExport(event, id) {
@@ -97,6 +103,39 @@ export default function ExpandedMapcard(props) {
       setComment("");
     }
   };
+
+  function onEachRegion(country, layer) {
+    let regionName = "";
+    if (country.properties !== undefined) {
+      if (country.properties.NAME_5) {
+        regionName = country.properties.NAME_5;
+      }
+      else if (country.properties.NAME_4) {
+        regionName = country.properties.NAME_4;
+      }
+      else if (country.properties.NAME_3) {
+        regionName = country.properties.NAME_3;
+      }
+      else if (country.properties.NAME_2) {
+        regionName = country.properties.NAME_2;
+      }
+      else if (country.properties.NAME_1) {
+        regionName = country.properties.NAME_1;
+      }
+      else if (country.properties.NAME_0) {
+        regionName = country.properties.NAME_0;
+      }
+      else if (country.properties.admin) {
+        regionName = country.properties.admin;
+      }
+      layer.bindTooltip(regionName, { permanent: true, direction: "center", fillColor: "blue" });
+      if (country.properties.color) {
+        layer.setStyle({
+          color: country.properties.color
+        })
+      }
+    }
+  }
 
   let replyTextbox = ""
   if (reply) {
@@ -281,40 +320,10 @@ export default function ExpandedMapcard(props) {
     );
   }
 
-  let geojsonData = {
-    "type": "FeatureCollection",
-    "features": [
-      {
-        "type": "Feature",
-        "geometry": {
-          "type": "Point",
-          "coordinates": [-122.408986, 37.78356]
-        },
-        "properties": {
-          "name": "San Francisco"
-        }
-      },
-      {
-        "type": "Feature",
-        "geometry": {
-          "type": "Point",
-          "coordinates": [-73.985664, 40.748817]
-        },
-        "properties": {
-          "name": "New York"
-        }
-      },
-      {
-        "type": "Feature",
-        "geometry": {
-          "type": "Point",
-          "coordinates": [139.691706, 35.689487]
-        },
-        "properties": {
-          "name": "Tokyo"
-        }
-      }
-    ]
+  var geoData = "";
+  if (store.currentMap) {
+    console.log("hi")
+    geoData = <GeoJSON data={store.currentMap.geoJsonMap} onEachFeature={onEachRegion}/>
   }
 
   return (
@@ -454,14 +463,16 @@ export default function ExpandedMapcard(props) {
                     style={{ objectFit: "cover" }}
                   /> */}
                   <div id="map-container" style={{ width: "1000px", height: "500px" }}>
-                  <MapContainer center={[0, 500]} zoom={0} container="map-container">
-                    <TileLayer 
-                    url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' />
-                     <GeoJSON data={geo_file} />
-                    <pre/><pre/><pre/><pre/><pre/><pre/><pre/><pre/><pre/><pre/><pre/>
-                    <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
-                    <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
-                  </MapContainer>
+                    <MapContainer
+                      center={[0, 150]}
+                      zoom={1}
+                      minZoom={1}
+                      container="map-container"
+                      style={{ width: "1000px", height: "500px" }}>
+                      <TileLayer
+                        url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' />
+                      {geoData}
+                    </MapContainer>
                   </div>
                 </Card>
               </Box>
