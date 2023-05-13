@@ -438,6 +438,8 @@ export default function ExpandedMapcard(props) {
                 <Card sx={{ borderRadius: "30px" }}>
                   <div id="map-container" style={{ width: "500px", height: "500px" }}>
                   <MapContainer center={[0, 0]} zoom={0} container="map-container">
+                    <TileLayer 
+                    url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' />
                     {geojsonStuff}
                     <pre/><pre/><pre/><pre/><pre/><pre/><pre/><pre/><pre/><pre/><pre/>
                     <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
