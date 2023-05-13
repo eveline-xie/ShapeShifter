@@ -709,8 +709,39 @@ export default function EditMap() {
         }
         console.log("first half polygon", firstHalfPolys);
         console.log("second half polys", secondHalfPolys);
-        firstHalfPolys.properties = { split: true }
-        secondHalfPolys.properties = { split: true }
+
+        if (selectedPolygon.properties.hasOwnProperty('NAME_5')) {
+          //currentLayer.feature.properties.NAME_5 = regionName.trim();
+          //trim gets rid of the '/n' which apparently is there even though console logging regionName does not have '/n'
+          firstHalfPolys.properties = { NAME_5: selectedPolygon.properties.NAME_5 }
+          secondHalfPolys.properties = { NAME_5: selectedPolygon.properties.NAME_5 + "2" }
+        }
+        else if (selectedPolygon.properties.hasOwnProperty('NAME_4')) {
+          firstHalfPolys.properties = { NAME_4: selectedPolygon.properties.NAME_5 }
+          secondHalfPolys.properties = { NAME_4: selectedPolygon.properties.NAME_5 + "2" }
+        }
+        else if (selectedPolygon.properties.hasOwnProperty('NAME_3')) {
+          firstHalfPolys.properties = { NAME_3: selectedPolygon.properties.NAME_4 }
+          secondHalfPolys.properties = { NAME_3: selectedPolygon.properties.NAME_4 + "2" }
+        }
+        else if (selectedPolygon.properties.hasOwnProperty('NAME_2')) {
+          firstHalfPolys.properties = { NAME_2: selectedPolygon.properties.NAME_3 }
+          secondHalfPolys.properties = { NAME_2: selectedPolygon.properties.NAME_3 + "2" }
+        }
+        else if (selectedPolygon.properties.hasOwnProperty('NAME_1')) {
+          console.log("wa");
+          firstHalfPolys.properties = { NAME_1: selectedPolygon.properties.NAME_2 }
+          secondHalfPolys.properties = { NAME_1: selectedPolygon.properties.NAME_2 + "2" }
+        }
+        else if (selectedPolygon.properties.hasOwnProperty('NAME_0')) {
+          firstHalfPolys.properties = { NAME_0: selectedPolygon.properties.NAME_1 }
+          secondHalfPolys.properties = { NAME_0: selectedPolygon.properties.NAME_1 + "2" }
+        }
+        else if (selectedPolygon.properties.hasOwnProperty('admin')) {
+          firstHalfPolys.properties = { admin: selectedPolygon.properties.admin }
+          secondHalfPolys.properties = { admin: selectedPolygon.properties.admin + "2" }
+        }
+
 
 
         setSplitEnabled(false);
