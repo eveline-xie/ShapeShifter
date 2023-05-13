@@ -156,8 +156,25 @@ function GlobalStoreContextProvider(props) {
 
     let top = topoServer.topology({ foo: shp2geoContents });
     let top2 = topoSimplify.presimplify(top);
-    let top3 = topoSimplify.simplify(top2, .05);
+    let top3 = topoSimplify.simplify(top2, .005);
     let feature = topoClient.feature(top3, "foo");
+    console.log("feature", feature);
+
+    feature.features.forEach(function (feature) {
+      if (feature.geometry.type === 'MultiPolygon') {
+        for (var i = feature.geometry.coordinates.length - 1; i >= 0; i--) {
+          var polygon = feature.geometry.coordinates[i];
+          var filteredPolygon = polygon.filter(function (ring) {
+            return !(ring.length === 4 && ring[0][0] === ring[1][0] && ring[0][1] === ring[1][1] && ring[1][0] === ring[2][0] && ring[1][1] === ring[2][1] && ring[2][0] === ring[0][0] && ring[2][1] === ring[0][1]);
+          });
+          if (filteredPolygon.length === 0) {
+            feature.geometry.coordinates.splice(i, 1);
+          } else {
+            feature.geometry.coordinates[i] = filteredPolygon;
+          }
+        }
+      }
+    });
 
     var container = document.createElement('div');
     container.style.height = '500px';
@@ -223,6 +240,22 @@ function GlobalStoreContextProvider(props) {
     let top2 = topoSimplify.presimplify(top);
     let top3 = topoSimplify.simplify(top2, .005);
     let feature = topoClient.feature(top3, "foo");
+
+    feature.features.forEach(function (feature) {
+      if (feature.geometry.type === 'MultiPolygon') {
+        for (var i = feature.geometry.coordinates.length - 1; i >= 0; i--) {
+          var polygon = feature.geometry.coordinates[i];
+          var filteredPolygon = polygon.filter(function (ring) {
+            return !(ring.length === 4 && ring[0][0] === ring[1][0] && ring[0][1] === ring[1][1] && ring[1][0] === ring[2][0] && ring[1][1] === ring[2][1] && ring[2][0] === ring[0][0] && ring[2][1] === ring[0][1]);
+          });
+          if (filteredPolygon.length === 0) {
+            feature.geometry.coordinates.splice(i, 1);
+          } else {
+            feature.geometry.coordinates[i] = filteredPolygon;
+          }
+        }
+      }
+    });
 
     var container = document.createElement('div');
     container.style.height = '500px';
@@ -465,7 +498,7 @@ function GlobalStoreContextProvider(props) {
   //   }
   // }
 
-  
+
   socket.on("connection", (data) => {
     console.log(data);
   });
