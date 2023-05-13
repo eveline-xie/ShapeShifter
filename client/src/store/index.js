@@ -486,7 +486,7 @@ function GlobalStoreContextProvider(props) {
       const map = response.data.currentMap;
 
       const params = new URLSearchParams([['json', JSON.stringify(map.geoJsonMap)], ['outputName', map.name]]);
-      const shp = await axios.post('http://ogre.adc4gis.com/convertJson', params, {responseType: 'blob'});
+      const shp = await axios.post('https://ogre.adc4gis.com/convertJson', params, {responseType: 'blob'});
       //const blob = new Blob([shp.data], { type: 'application/zip' });
       const url = URL.createObjectURL(shp.data);
 
