@@ -27,8 +27,9 @@ This screen lists all the maps that are published and actions allowed by a guest
 export default function CommunityGuestScreen() {
   //   const theme = useTheme();
   //   const [dropdown, setDropdown] = React.useState("");
-   const { store } = useContext(GlobalStoreContext);
+  const { store } = useContext(GlobalStoreContext);
   const [searchTerm, setSearchTerm] = useState("");
+  const [searchFilter, setSearchFilter] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [openExport, setOpenExport] = useState(false);
   const [openFork, setOpenFork] = useState(false);
@@ -37,11 +38,25 @@ export default function CommunityGuestScreen() {
   const [forkName, setForkName] = useState("");
   const [expandName, setExpandName] = useState("");
   const [expandOwnerName, setExpandOwnerName] = useState("");
-   useEffect(() => {
-     store.loadPublishedMaps();
-   }, []);
+  const [expandThumbnail, setExpandThumbnail] = useState("");
+  const [expandMapid, setExpandMapid] = useState("");
+  const [expandKeywords, setExpandKeywords] = useState([]);
+
+
+  useEffect(() => {
+    console.log("GUEST")
+    store.loadGuestPublishedMaps();
+  }, []);
+
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
+    if (event.target.value !== '') {
+      setSearchFilter(true);
+      console.log("filter");
+    } else {
+      setSearchFilter(false);
+      console.log("no filter");
+    }
   };
 
   //   const handleDropdown = (event) => {
@@ -72,31 +87,80 @@ export default function CommunityGuestScreen() {
   const expandOwnerNameSet = (show) => {
     setExpandOwnerName(show);
   };
+  const expandThumbnailSet = (show) => {
+    setExpandThumbnail(show);
+  };
+  const expandMapidSet = (show) => {
+    setExpandMapid(show);
+  };
+  const expandKeywordsSet = (show) => {
+    setExpandKeywords(show);
+  };
+
   let mapcards = "";
- if (store.publishedMaps) {
-   console.log("JIIIII" + store.publishedMaps.length);
-   mapcards = (
-     <List id="mapcards">
-       {store.publishedMaps.map((map) => (
-         <MapCard
-           id={map._id}
-           mapName={map.name}
-           ownerUsername={map.ownerUsername}
-           published={map.published.isPublished}
-           setOpenDelete={openDeleteModal}
-           setOpenExport={openExportModal}
-           setOpenFork={openForkModal}
-           setOpenView={openViewModal}
-           setExportName={exportNameSet}
-           setForkName={forkNameSet}
-           setExpandName={expandNameSet}
-           setExpandOwnerName={expandOwnerNameSet}
-           key={map._id}
-         />
-       ))}
-     </List>
-   );
- }
+  if (store.publishedMaps) {
+    console.log("JIIIII" + store.publishedMaps.length);
+    if (searchFilter === true) {
+      mapcards = (
+        <List id="mapcards">
+          {store.publishedMaps
+            .filter((map) =>
+              map.name.split(" ").some(i => !i.indexOf(searchTerm)) ||
+              !map.ownerUsername.indexOf(searchTerm) ||
+              map.keywords.some((keyword) => !keyword.indexOf(searchTerm)))
+            .map((map) => (
+              <MapCard
+                id={map._id}
+                mapName={map.name}
+                ownerUsername={map.ownerUsername}
+                published={map.published.isPublished}
+                setOpenDelete={openDeleteModal}
+                setOpenExport={openExportModal}
+                setOpenFork={openForkModal}
+                setOpenView={openViewModal}
+                setExportName={exportNameSet}
+                setForkName={forkNameSet}
+                setExpandName={expandNameSet}
+                setExpandOwnerName={expandOwnerNameSet}
+                thumbnail={map.thumbnail}
+                keywords={map.keywords}
+                setExpandMapid={expandMapidSet}
+                setExpandThumbnail={expandThumbnailSet}
+                setExpandKeywords={expandKeywordsSet}
+                key={map._id}
+              />
+            ))}
+        </List>
+      );
+    } else {
+      mapcards = (
+        <List id="mapcards">
+          {store.publishedMaps.map((map) => (
+            <MapCard
+              id={map._id}
+              mapName={map.name}
+              ownerUsername={map.ownerUsername}
+              published={map.published.isPublished}
+              setOpenDelete={openDeleteModal}
+              setOpenExport={openExportModal}
+              setOpenFork={openForkModal}
+              setOpenView={openViewModal}
+              setExportName={exportNameSet}
+              setForkName={forkNameSet}
+              setExpandName={expandNameSet}
+              setExpandOwnerName={expandOwnerNameSet}
+              thumbnail={map.thumbnail}
+              keywords={map.keywords}
+              setExpandMapid={expandMapidSet}
+              setExpandThumbnail={expandThumbnailSet}
+              setExpandKeywords={expandKeywordsSet}
+              key={map._id}
+            />
+          ))}
+        </List>
+      );
+    }
+  }
 
 
   let searchResult = ""
@@ -106,7 +170,7 @@ export default function CommunityGuestScreen() {
   return (
     <div id="community-screen">
       <Grid container spacing={1}>
-        <Grid item xs={2}>
+        {/* <Grid item xs={2}>
           <Button
             variant="contained"
             style={{
@@ -152,7 +216,7 @@ export default function CommunityGuestScreen() {
           >
             Key Word
           </Button>
-        </Grid>
+        </Grid> */}
 
         <Grid item xs={6}>
           <TextField
@@ -212,6 +276,10 @@ export default function CommunityGuestScreen() {
           setOpen={setOpenView}
           name={expandName}
           ownername={expandOwnerName}
+          thumbnail={expandThumbnail}
+          mapid={expandMapid}
+          keywords={expandKeywords}
+          key={expandMapid}
         />
       </div>
     </div>

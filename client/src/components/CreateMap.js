@@ -188,7 +188,7 @@ export default function CreateMap() {
       </IconButton>
       <div id="create-map-screen">
         <div>
-          <div>
+          {/* <div>
             <Button
               variant="contained"
               sx={{ maxWidth: 100 }}
@@ -223,7 +223,7 @@ export default function CreateMap() {
             >
               Export
             </Button>
-          </div>
+          </div> */}
 
           <Box
             id="img"

@@ -51,7 +51,6 @@ export default function ExpandedMapcard(props) {
   const [comment, setComment] = useState("");
   let navigate = useNavigate();
 
-
   useEffect(() => {
     if (props.mapid) {
       store.loadComments(props.mapid);
@@ -64,8 +63,12 @@ export default function ExpandedMapcard(props) {
 
   function handleClose() {
     props.setOpen(false);
-    //store.resetExpandedModal();
-    //navigate("/community");
+     if (window.location.pathname == "/community") {
+       navigate("/community");
+     } else if (window.location.pathname == "/communityguest") {
+       navigate("/communityguest");
+     }
+
   }
 
   async function handleExport(event, id) {
@@ -273,7 +276,7 @@ export default function ExpandedMapcard(props) {
             <Grid item>
               <Grid container direction="row" alignItems="stretch">
                 <Grid item xs={1}>
-                  <Avatar>C</Avatar>
+                  <Avatar sx={{ bgcolor: "#AEAFFF" }}> {map[0][0]}</Avatar>
                 </Grid>
 
                 <Grid item xs={4}>
@@ -317,6 +320,30 @@ export default function ExpandedMapcard(props) {
           </Grid>
         ))}
       </Box>
+    );
+  }
+  let keywords = props.keywords;
+  let keywordButtons = "";
+  if (keywords) {
+    console.log("KEYWORDS HERE: " + keywords);
+    keywordButtons = (
+      <Grid>
+        {keywords.map((k) => (
+          <Button
+            variant="contained"
+            style={{
+              borderRadius: 50,
+              backgroundColor: "rgba(255, 255, 255, .2)",
+              padding: "7px 14px",
+              margin: "20px 30px",
+              fontSize: "10px",
+              color: "#ffffff",
+            }}
+          >
+            {k}
+          </Button>
+        ))}
+      </Grid>
     );
   }
 
@@ -477,48 +504,7 @@ export default function ExpandedMapcard(props) {
                   </div>
                 </Card>
               </Box>
-
-              {/* <Button
-                  variant="contained"
-                  style={{
-                    borderRadius: 50,
-                    backgroundColor: "rgba(255, 255, 255, .2)",
-                    padding: "7px 14px",
-                    margin: "20px 30px",
-                    fontSize: "10px",
-                    color: "#ffffff",
-                  }}
-                >
-                  Keyword
-                </Button>
-
-                <Button
-                  variant="contained"
-                  style={{
-                    borderRadius: 50,
-                    backgroundColor: "rgba(255, 255, 255, .2)",
-                    padding: "7px 14px",
-                    margin: "20px 30px",
-                    fontSize: "10px",
-                    color: "#ffffff",
-                  }}
-                >
-                  Keyword
-                </Button>
-
-                <Button
-                  variant="contained"
-                  style={{
-                    borderRadius: 50,
-                    backgroundColor: "rgba(255, 255, 255, .2)",
-                    padding: "7px 14px",
-                    margin: "20px 30px",
-                    fontSize: "10px",
-                    color: "#ffffff",
-                  }}
-                >
-                  Keyword
-                </Button> */}
+                  {keywordButtons}
             </Grid>
           </Grid>
         </Box>

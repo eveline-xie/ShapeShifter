@@ -40,6 +40,7 @@ export default function CommunityScreen() {
   const [expandOwnerName, setExpandOwnerName] = useState("");
   const [expandThumbnail, setExpandThumbnail] = useState("");
   const [expandMapid, setExpandMapid] = useState("");
+  const [expandKeywords, setExpandKeywords] = useState([]);
 
   useEffect(() => {
     store.loadPublishedMaps();
@@ -91,6 +92,9 @@ export default function CommunityScreen() {
   const expandMapidSet = (show) => {
     setExpandMapid(show);
   };
+  const expandKeywordsSet = (show) => {
+    setExpandKeywords(show);
+  };
 
   const handleSearchKeyDown = async (evt) => {
     if (["Enter"].includes(evt.key)) {
@@ -99,47 +103,41 @@ export default function CommunityScreen() {
     }
   };
 
-  //  if (searchTerm) {
-  //    searchResult = <p>Search results for " {searchTerm}"</p>;
-  //  }
   let mapcards = "";
-  // if(store)
-  // mapcards = (
-  //     <List id="mapcards">
-  //         <MapCard
-  //             setOpenDelete={openDeleteModal}
-  //             setOpenExport={openExportModal}
-  //             setOpenFork={openForkModal}
-  //             setOpenView={openViewModal}
-  //         ></MapCard>
-  //     </List>
-  // );
-
+  
   if (store.publishedMaps) {
 
     if (searchFilter === true) {
       mapcards = (
         <List id="mapcards">
-          {store.publishedMaps.filter((map) => !map.name.indexOf(searchTerm) || !map.ownerUsername.indexOf(searchTerm) || map.keywords.some(keyword => !keyword.indexOf(searchTerm))).map((map) => (
-            <MapCard
-              id={map._id}
-              mapName={map.name}
-              ownerUsername={map.ownerUsername}
-              published={map.published.isPublished}
-              setOpenDelete={openDeleteModal}
-              setOpenExport={openExportModal}
-              setOpenFork={openForkModal}
-              setOpenView={openViewModal}
-              setExportName={exportNameSet}
-              setForkName={forkNameSet}
-              setExpandName={expandNameSet}
-              setExpandOwnerName={expandOwnerNameSet}
-              setExpandMapid={expandMapidSet}
-              thumbnail={map.thumbnail}
-              setExpandThumbnail={expandThumbnailSet}
-              key={map._id}
-            />
-          ))}
+          {store.publishedMaps
+            .filter(
+              (map) =>
+                map.name.split(" ").some(i => !i.indexOf(searchTerm)) ||
+                !map.ownerUsername.indexOf(searchTerm) ||
+                map.keywords.some((keyword) => !keyword.indexOf(searchTerm)))
+            .map((map) => (
+              <MapCard
+                id={map._id}
+                mapName={map.name}
+                ownerUsername={map.ownerUsername}
+                published={map.published.isPublished}
+                setOpenDelete={openDeleteModal}
+                setOpenExport={openExportModal}
+                setOpenFork={openForkModal}
+                setOpenView={openViewModal}
+                setExportName={exportNameSet}
+                setForkName={forkNameSet}
+                setExpandName={expandNameSet}
+                setExpandOwnerName={expandOwnerNameSet}
+                setExpandMapid={expandMapidSet}
+                thumbnail={map.thumbnail}
+                keywords={map.keywords}
+                setExpandThumbnail={expandThumbnailSet}
+                setExpandKeywords={expandKeywordsSet}
+                key={map._id}
+              />
+            ))}
         </List>
       );
     } else {
@@ -161,7 +159,9 @@ export default function CommunityScreen() {
               setExpandOwnerName={expandOwnerNameSet}
               setExpandMapid={expandMapidSet}
               thumbnail={map.thumbnail}
+              keywords={map.keywords}
               setExpandThumbnail={expandThumbnailSet}
+              setExpandKeywords={expandKeywordsSet}
               key={map._id}
             />
           ))}
@@ -235,16 +235,16 @@ export default function CommunityScreen() {
             onChange={handleSearch}
             onKeyDown={handleSearchKeyDown}
             sx={{ width: 400 }}
-          // InputProps={{
-          //   endAdornment: (
-          //     <InputAdornment position="end">
-          //       <SearchIcon />
-          //     </InputAdornment>
-          //   ),
-          // }}
-          // InputLabelProps={{
-          //   style: { color: "#ffffff" },
-          // }}
+            // InputProps={{
+            //   endAdornment: (
+            //     <InputAdornment position="end">
+            //       <SearchIcon />
+            //     </InputAdornment>
+            //   ),
+            // }}
+            // InputLabelProps={{
+            //   style: { color: "#ffffff" },
+            // }}
           />
         </Grid>
       </Grid>
@@ -277,6 +277,7 @@ export default function CommunityScreen() {
           ownername={expandOwnerName}
           thumbnail={expandThumbnail}
           mapid={expandMapid}
+          keywords={expandKeywords}
           key={expandMapid}
         />
       </div>
