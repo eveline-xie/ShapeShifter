@@ -77,7 +77,8 @@ export default function CreateMap() {
     store.publishMap();
   };
   const handleEdit = (event) => {
-    navigate("/editmap");
+    console.log(store.currentMap._id);
+    navigate("/editmap/" + store.currentMap._id);
   };
 
   async function isValid(email) {

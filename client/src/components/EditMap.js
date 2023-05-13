@@ -122,7 +122,7 @@ export default function EditMap() {
     return () => {
       // Remove the map
       newmap.remove();
-      if (window.location.pathname !== "/editmap") {
+      if (!window.location.pathname.includes("/editmap")) {
         store.clearAllTransactions();
       }
     };

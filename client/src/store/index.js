@@ -548,7 +548,7 @@ function GlobalStoreContextProvider(props) {
   }
 
   socket.on("add-polygon-response", (id, data) => {
-    if (id == store.currentMap._id) {
+    if (window.location.pathname.includes(id)) {
       const map = data;
       storeReducer({
         type: GlobalStoreActionType.LOAD_CURRENT_MAP,
@@ -579,7 +579,7 @@ function GlobalStoreContextProvider(props) {
   }
 
   socket.on("update-polygon-response", (id, data) => {
-    if (id == store.currentMap._id) {
+    if (window.location.pathname.includes(id)) {
       const map = data;
       storeReducer({
         type: GlobalStoreActionType.LOAD_CURRENT_MAP,
@@ -612,7 +612,7 @@ function GlobalStoreContextProvider(props) {
   }
 
   socket.on("delete-polygon-response", (id, data) => {
-    if (id == store.currentMap._id) {
+    if (window.location.pathname.includes(id)) {
       const map = data;
       storeReducer({
         type: GlobalStoreActionType.LOAD_CURRENT_MAP,
@@ -644,7 +644,7 @@ function GlobalStoreContextProvider(props) {
   }
 
   socket.on("merge-polygons-response", (id, data) => {
-    if (id == store.currentMap._id) {
+    if (window.location.pathname.includes(id)) {
       const map = data;
       storeReducer({
         type: GlobalStoreActionType.LOAD_CURRENT_MAP,
@@ -672,7 +672,7 @@ function GlobalStoreContextProvider(props) {
   }
 
   socket.on("undo-merge-polygons-response", (id, data) => {
-    if (id == store.currentMap._id) {
+    if (window.location.pathname.includes(id)) {
       const map = data;
       storeReducer({
         type: GlobalStoreActionType.LOAD_CURRENT_MAP,
