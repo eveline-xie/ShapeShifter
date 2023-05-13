@@ -238,7 +238,7 @@ export default function ExpandedMapcard(props) {
             <Grid item>
               <Grid container direction="row" alignItems="stretch">
                 <Grid item xs={1}>
-                  <Avatar>C</Avatar>
+                  <Avatar sx={{ bgcolor: "#AEAFFF" }}> {map[0][0]}</Avatar>
                 </Grid>
 
                 <Grid item xs={4}>
