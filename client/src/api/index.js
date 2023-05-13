@@ -14,8 +14,6 @@ axios.defaults.withCredentials = true;
 const api = axios.create({
   //baseURL: "https://shapeshifter-api.onrender.com"
   baseURL: "http://localhost:5000"
-  baseURL: "http://localhost:5000"
-  //baseURL: "https://shapeshifter-api.onrender.com"
 });
 
 export const getLoggedIn = () => api.get(`/auth/loggedIn`);
