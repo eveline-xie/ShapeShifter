@@ -104,10 +104,21 @@ export default function CommunityGuestScreen() {
       mapcards = (
         <List id="mapcards">
           {store.publishedMaps
-            .filter((map) =>
-              map.name.split(" ").some(i => !i.indexOf(searchTerm)) ||
-              !map.ownerUsername.indexOf(searchTerm) ||
-              map.keywords.some((keyword) => !keyword.indexOf(searchTerm)))
+            .filter(
+              (map) =>
+                map.name
+                  .split(" ")
+                  .some(
+                    (i) => !i.toLowerCase().indexOf(searchTerm.toLowerCase())
+                  ) ||
+                !map.ownerUsername
+                  .toLowerCase()
+                  .indexOf(searchTerm.toLowerCase()) ||
+                map.keywords.some(
+                  (keyword) =>
+                    !keyword.toLowerCase().indexOf(searchTerm.toLowerCase())
+                )
+            )
             .map((map) => (
               <MapCard
                 id={map._id}

@@ -73,6 +73,7 @@ export default function CreateMap() {
   };
   const handlePublish = (event) => {
     console.log(store.currentMap);
+    store.updateMapCustomProperties(name, keywords, collaborators);
     store.publishMap();
   };
   const handleEdit = (event) => {

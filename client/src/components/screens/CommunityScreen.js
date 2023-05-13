@@ -113,9 +113,19 @@ export default function CommunityScreen() {
           {store.publishedMaps
             .filter(
               (map) =>
-                map.name.split(" ").some(i => !i.indexOf(searchTerm)) ||
-                !map.ownerUsername.indexOf(searchTerm) ||
-                map.keywords.some((keyword) => !keyword.indexOf(searchTerm)))
+                map.name
+                  .split(" ")
+                  .some(
+                    (i) => !i.toLowerCase().indexOf(searchTerm.toLowerCase())
+                  ) ||
+                !map.ownerUsername
+                  .toLowerCase()
+                  .indexOf(searchTerm.toLowerCase()) ||
+                map.keywords.some(
+                  (keyword) =>
+                    !keyword.toLowerCase().indexOf(searchTerm.toLowerCase())
+                )
+            )
             .map((map) => (
               <MapCard
                 id={map._id}

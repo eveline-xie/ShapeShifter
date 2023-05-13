@@ -160,22 +160,35 @@ export default function HomeScreen() {
     if (searchFilter === true) {
       mapcards = (
         <List id="mapcards">
-          {store.userMaps.filter((map) => map.name.split(" ").some(i=> !i.indexOf(searchTerm)) || map.keywords.some(keyword => !keyword.indexOf(searchTerm))).map((map) => (
-            <MapCard
-              id={map._id}
-              mapName={map.name}
-              ownerUsername={map.ownerUsername}
-              published={map.published.isPublished}
-              setOpenDelete={openDeleteModal}
-              setOpenExport={openExportModal}
-              setOpenFork={openForkModal}
-              setExportName={exportNameSet}
-              setForkName={forkNameSet}
-              dropdown={dropdown}
-              key={map._id}
-              thumbnail={map.thumbnail}
-            />
-          ))}
+          {store.userMaps
+            .filter(
+              (map) =>
+                map.name
+                  .split(" ")
+                  .some(
+                    (i) => !i.toLowerCase().indexOf(searchTerm.toLowerCase())
+                  ) ||
+                map.keywords.some(
+                  (keyword) =>
+                    !keyword.toLowerCase().indexOf(searchTerm.toLowerCase())
+                )
+            )
+            .map((map) => (
+              <MapCard
+                id={map._id}
+                mapName={map.name}
+                ownerUsername={map.ownerUsername}
+                published={map.published.isPublished}
+                setOpenDelete={openDeleteModal}
+                setOpenExport={openExportModal}
+                setOpenFork={openForkModal}
+                setExportName={exportNameSet}
+                setForkName={forkNameSet}
+                dropdown={dropdown}
+                key={map._id}
+                thumbnail={map.thumbnail}
+              />
+            ))}
         </List>
       );
     } else {
