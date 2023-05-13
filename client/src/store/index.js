@@ -41,8 +41,8 @@ export const GlobalStoreActionType = {
 const tps = new jsTPS();
 
 const socket = new io(
-  //"http://localhost:5000"
-  "https://shapeshifter-api.onrender.com"
+  "http://localhost:5000"
+  //"https://shapeshifter-api.onrender.com"
   , {
     autoConnect: false,
   }
@@ -87,7 +87,7 @@ function GlobalStoreContextProvider(props) {
       case GlobalStoreActionType.LOAD_USER_MAPS: {
         return setStore({
           currentMap: store.currentMap,
-          userMaps: payload,
+          userMaps: payload.reverse(),
           publishedMaps: store.publishedMaps,
         });
       }
@@ -120,12 +120,12 @@ function GlobalStoreContextProvider(props) {
       }
       case GlobalStoreActionType.LOAD_PUBLISHED_MAPS: {
         return setStore({
-          publishedMaps: payload,
+          publishedMaps: payload.reverse(),
         });
       }
       case GlobalStoreActionType.LOAD_SHARED_MAPS: {
         return setStore({
-          sharedMaps: payload,
+          sharedMaps: payload.reverse(),
         });
       }
       case GlobalStoreActionType.LOAD_COMMENTS: {
