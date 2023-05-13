@@ -55,23 +55,23 @@ io.on('connection', (socket) => {
   });
   socket.on("add-polygon", async (id, feature) => {
     let map = await socketFunctions.addPolygonToMap(id, feature);
-    io.emit("add-polygon-response", map);
+    io.emit("add-polygon-response", id, map);
   });
   socket.on("update-polygon", async (id, prevPolygon, updatedPolygon) => {
     let map = await socketFunctions.updatePolygonOfMap(id, prevPolygon, updatedPolygon);
-    io.emit("update-polygon-response", map);
+    io.emit("update-polygon-response", id, map);
   });
   socket.on("delete-polygon", async (id, feature) => {
     let map = await socketFunctions.deletePolygonOfMap(id, feature);
-    io.emit("delete-polygon-response", map);
+    io.emit("delete-polygon-response", id, map);
   });
   socket.on("merge-polygons", async (id, polygonsToMerge, mergedPolygon) => {
     let map = await socketFunctions.mergePolygonsOfMap(id, polygonsToMerge, mergedPolygon);
-    io.emit("merge-polygons-response", map);
+    io.emit("merge-polygons-response", id, map);
   });
   socket.on("undo-merge-polygons", async (id, polygonsToMerge, mergedPolygon) => {
     let map = await socketFunctions.undoMergePolygonsOfMap(id, polygonsToMerge, mergedPolygon);
-    io.emit("undo-merge-polygons-response", map);
+    io.emit("undo-merge-polygons-response", id, map);
   });
 });
 // app.post('/auth/signup', (req, res) =>  {
