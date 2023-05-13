@@ -382,7 +382,7 @@ function GlobalStoreContextProvider(props) {
     const response = await api.getMapById(store.mapIdMarkedForExport);
     if (response.status === 201) {
       console.log(response.data.currentMap);
-      const map = response.data.currentMap;
+      const map = response.data;
       const json = JSON.stringify(map.geoJsonMap);
       console.log("download geojson", json)
       const blob = new Blob([json], { type: 'application/json' });
@@ -403,21 +403,19 @@ function GlobalStoreContextProvider(props) {
     const response = await api.getShpDbfFileById(store.mapIdMarkedForExport);
     //const response = await api.getMapById(store.mapIdMarkedForExport);
     if (response.status === 201) {
-      const map = response.data.currentMap;
-      console.log("before");
-      const shp = shpwrite.zip(map.geoJsonMap);
+      const map = response.data;
+      console.log(map);
       console.log("after");
-      console.log("downloading shpdbf", shp);
-      const blob = new Blob([shp], { type: 'application/zip' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = map.name + '.zip';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      // const blob = new Blob([shp], { type: 'application/zip' });
+      // const url = URL.createObjectURL(blob);
+      // const link = document.createElement('a');
+      // link.href = url;
+      // link.download = map.name + '.zip';
+      // document.body.appendChild(link);
+      // link.click();
+      // document.body.removeChild(link);
 
-      URL.revokeObjectURL(url);
+      // URL.revokeObjectURL(url);
 
       // shpjs.zip(map.geoJsonMap).then(function(content) {
       //     // content is a Blob containing the zipped shapefile
