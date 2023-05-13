@@ -197,6 +197,7 @@ export default function EditMap() {
     }
 
     layer.on("click", function () {
+      //console.log(currentLayer.feature.properties)
       if (mergeEnabled) {
         layer.setStyle({
           color: 'red'
@@ -288,7 +289,9 @@ export default function EditMap() {
 
   const handleEditSubregionName = (e) => {
     let regionName = "";
+    
     if (currentLayer) {
+      console.log(currentLayer.feature.properties)
       // Bind the tooltip to the layer and set its content
       currentLayer.bindTooltip(regionName, { permanent: true, direction: "center", fillColor: "blue" });
       // Set up the click event listener on the layer
@@ -297,11 +300,43 @@ export default function EditMap() {
         if (e.key === "Enter") {
           currentLayer.bindPopup(content.value);
           regionName = content.value;
+          console.log(regionName)
           currentLayer.setTooltipContent(content.value);
         }
+        console.log('got here')
+      if (currentLayer.feature.properties.hasOwnProperty('NAME_5')) {
+        console.log("5")
+        currentLayer.feature.properties['NAME_5'] = regionName.trim();
+      }
+      else if (currentLayer.feature.properties.hasOwnProperty('NAME_4')) {
+        console.log("4")
+        currentLayer.feature.properties['NAME_4'] = regionName.trim();
+      }
+      else if (currentLayer.feature.properties.hasOwnProperty('NAME_3')) {
+        console.log("3")
+        currentLayer.feature.properties['NAME_3'] = regionName.trim();
+      }
+      else if (currentLayer.feature.properties.hasOwnProperty('NAME_2')) {
+        console.log("2")
+        currentLayer.feature.properties['NAME_2']= regionName.trim();
+      }
+      else if (currentLayer.feature.properties.hasOwnProperty('NAME_1')) {
+        console.log('Name_1')
+        currentLayer.feature.properties['NAME_1']= regionName.trim();
+      }
+      else if (currentLayer.feature.properties.hasOwnProperty('NAME_0')) {
+        console.log("0")
+        currentLayer.feature.properties['NAME_0']= regionName.trim();
+      }
+      else if (currentLayer.feature.properties.hasOwnProperty('admin')) {
+        console.log("admin")
+        currentLayer.feature.properties['admin']= regionName.trim();
+      }
+      console.log(currentLayer.feature.properties)
       });
+      
       currentLayer.bindPopup(content).openPopup();
-
+     
     }
   }
 
