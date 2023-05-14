@@ -1200,14 +1200,14 @@ export default function EditMap() {
                   left: "90%",
                   transform: "translate(-50%, -50%)",
                   width: 280,
-                  height: 500,
+                  height: 300,
                   backgroundColor: "#145374",
                   color: "#FFE484",
                   border: "2px solid #000",
                   boxShadow: 24,
                   borderRadius: 10,
                   p: 4,
-                  overflowY: "scroll",
+                  overflowY: "auto",
                 }} >
                 <div>
                   <Button
@@ -1221,6 +1221,8 @@ export default function EditMap() {
                       fontSize: "10px",
                       color: "#000000",
                       size: "small",
+                      position: "absolute",
+                      right: "0%"
 
                     }}
                     onClick={handleCloseRegionProperties}
@@ -1228,7 +1230,7 @@ export default function EditMap() {
                     X
                   </Button>
                   {currentPolygon && (
-                    <div>
+                    <div style = {{paddingTop: "50px", paddingLeft: "10px"}}>
                       {Object.entries(currentPolygon.properties).map(([key, value]) => (
                         <div key={key}>
                           <span>{key}: </span>
@@ -1282,7 +1284,7 @@ export default function EditMap() {
                 boxShadow: 24,
                 borderRadius: 10,
                 p: 4,
-                overflowY: "scroll",
+                overflowY: "auto",
               }} >
               <div style = {{padding:"5px"}}>
                 <Button
