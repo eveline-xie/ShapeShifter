@@ -331,23 +331,22 @@ export default function EditMap() {
     setCurrentZoom(map.getZoom());
   }
   const handleAddProperty = (e) => {
-    let regionName = "";
+    let propertyValue = "";
+    let propertyKey = "";
 
     if (currentLayer) {
-      console.log("1:" + JSON.stringify(currentPolygon));
+      //console.log("1:" + JSON.stringify(currentPolygon));
       // Bind the tooltip to the layer and set its content
-      currentLayer.bindTooltip(regionName, { permanent: true, direction: "center", fillColor: "blue" });
-      // Set up the click event listener on the layer
-      var content = document.createElement("textarea");
-      content.addEventListener("keyup", function (e) {
-        if (e.key === "Enter") {
-          currentLayer.bindPopup(content.value);
-          regionName = content.value;
-          currentLayer.setTooltipContent(content.value);
-        }
-      });
-    }
+        console.log("not enabled");
+        setIsPropertiesOpen(true);
+        handleAddKeyValue(e);
+        return;
+      }
   }
+const handleAddKeyValue = (e) => {
+  console.log("here")
+}
+
   const handleEditSubregionName = (e) => {
 
     let regionName = "";
@@ -1298,6 +1297,9 @@ export default function EditMap() {
                       ))}
                     </div>
                   )}
+                  <IconButton color="inherit" onClick={handleAddKeyValue}>
+                    <PostAddIcon />
+                  </IconButton>
 
 
                 </div>
