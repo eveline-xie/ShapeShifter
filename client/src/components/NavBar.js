@@ -29,15 +29,13 @@ function NavBar() {
   const { store } = useContext(GlobalStoreContext);
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [username, setUsername] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
   const navigate = useNavigate();
   useEffect(() => {
     if (auth.user) {
-      setFirstName(auth.user.firstName);
-      setLastName(auth.user.lastName);
+      setUsername(auth.user.username);
     }
     if (auth.error) {
       setErrorMessage(auth.errMessage);
@@ -128,7 +126,7 @@ function NavBar() {
       <Box sx={{ flexGrow: 0 }} >
         <Tooltip title="Open settings">
           <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-            <Avatar sx={{ bgcolor: "#AEAFFF" }}>{firstName[0]}{lastName[0]}</Avatar>
+            <Avatar sx={{ bgcolor: "#AEAFFF" }}>{username[0]}</Avatar>
           </IconButton>
         </Tooltip>
         <Menu
