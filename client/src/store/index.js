@@ -46,8 +46,8 @@ export const GlobalStoreActionType = {
 const tps = new jsTPS();
 
 const socket = new io(
-  "http://localhost:5000"
-  //"https://shapeshifter-api.onrender.com"
+  //"http://localhost:5000"
+  "https://shapeshifter-api.onrender.com"
   , {
     autoConnect: false,
   }
@@ -688,7 +688,7 @@ function GlobalStoreContextProvider(props) {
 
 
 
-  store.updateThumbnailOfMap = async function (id) {
+  store.updateThumbnailOfMap = async function (id, path) {
     const response = await api.getMapById(id);
     if (response.status === 201) {
       let features = response.data.currentMap.geoJsonMap;
@@ -734,12 +734,15 @@ function GlobalStoreContextProvider(props) {
           storeReducer({
             type: GlobalStoreActionType.LOAD_CURRENT_MAP,
             payload: updatedMap
+          });
+          if (path == '/') {
+            auth.logoutUser();
+            auth.noError();
+            navigate("/");
           }
-          );
-
-          // IF IT'S A VALID LIST THEN LET'S START EDITING IT
-          //history.push("/playlist/" + newList._id);
-          navigate("/createmap");
+          else {
+            navigate(path);
+          }
         }
         else {
           console.log("API FAILED TO CREATE A NEW LIST");

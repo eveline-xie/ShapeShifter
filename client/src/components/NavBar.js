@@ -15,6 +15,7 @@ import AdbIcon from '@mui/icons-material/Adb';
 import { useNavigate } from 'react-router-dom'
 import { useState, useContext, useEffect } from "react";
 import AuthContext from "../auth";
+import GlobalStoreContext from "../store";
 
 /*
    This navbar is a functional React component that
@@ -25,6 +26,7 @@ const settings = ['Logout'];
 
 function NavBar() {
   const { auth } = useContext(AuthContext);
+  const { store } = useContext(GlobalStoreContext);
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [firstName, setFirstName] = useState("");
@@ -33,8 +35,10 @@ function NavBar() {
 
   const navigate = useNavigate();
   useEffect(() => {
-    if (auth.user) {setFirstName(auth.user.firstName);
-      setLastName(auth.user.lastName);}
+    if (auth.user) {
+      setFirstName(auth.user.firstName);
+      setLastName(auth.user.lastName);
+    }
     if (auth.error) {
       setErrorMessage(auth.errMessage);
     }
@@ -67,7 +71,12 @@ function NavBar() {
     else if (page == "SplashorHome") {
       if (auth.loggedIn) {
         auth.noError();
-        navigate('/home');
+        if (window.location.pathname.includes('/editmap')) {
+          store.updateThumbnailOfMap(store.currentMap._id, '/home');
+        }
+        else {
+          navigate('/home');
+        }
       }
       else {
         navigate('');
@@ -83,11 +92,16 @@ function NavBar() {
     }
   }
 
-  const handleLogout = () =>{
+  const handleLogout = () => {
     handleCloseUserMenu();
-    auth.logoutUser();
-    auth.noError();
-    navigate("/");
+    if (window.location.pathname.includes('/editmap')) {
+      store.updateThumbnailOfMap(store.currentMap._id, '/');
+    }
+    else {
+      auth.logoutUser();
+      auth.noError();
+      navigate("/");
+    }
   }
 
   let buttons =
@@ -111,42 +125,42 @@ function NavBar() {
   if (auth.loggedIn) {
     buttons = '';
     pfp = <div>
-    <Box sx={{ flexGrow: 0 }} >
-      <Tooltip title="Open settings">
-        <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-          <Avatar sx={{ bgcolor: "#AEAFFF" }}>{firstName[0]}{lastName[0]}</Avatar>
-        </IconButton>
-      </Tooltip>
-      <Menu
-        sx={{ mt: '45px' }}
-        id="menu-appbar"
-        anchorEl={anchorElUser}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        keepMounted
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        open={Boolean(anchorElUser)}
-        onClose={handleCloseUserMenu}
-      >
-        {settings.map((setting) => (
-          <MenuItem key={setting} onClick={handleLogout}>
-            <Typography textAlign="center">{setting}</Typography>
-          </MenuItem>
-        ))}
-      </Menu>
-    </Box>
-  </div>;
+      <Box sx={{ flexGrow: 0 }} >
+        <Tooltip title="Open settings">
+          <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+            <Avatar sx={{ bgcolor: "#AEAFFF" }}>{firstName[0]}{lastName[0]}</Avatar>
+          </IconButton>
+        </Tooltip>
+        <Menu
+          sx={{ mt: '45px' }}
+          id="menu-appbar"
+          anchorEl={anchorElUser}
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+          keepMounted
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+          open={Boolean(anchorElUser)}
+          onClose={handleCloseUserMenu}
+        >
+          {settings.map((setting) => (
+            <MenuItem key={setting} onClick={handleLogout}>
+              <Typography textAlign="center">{setting}</Typography>
+            </MenuItem>
+          ))}
+        </Menu>
+      </Box>
+    </div>;
   }
 
   let homeCommunity = ""
   if (window.location.pathname == "/home" || window.location.pathname == "/shared") {
     homeCommunity =
-    <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+      <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
         <Button
           key={"Community"}
           onClick={(event) => handleSwitchPage(event, "Community")}
@@ -154,11 +168,11 @@ function NavBar() {
         >
           Community
         </Button>
-    </Box>
+      </Box>
   }
   else if (window.location.pathname == "/community") {
     homeCommunity =
-    <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+      <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
         <Button
           key={"Home"}
           onClick={(event) => handleSwitchPage(event, "Home")}
@@ -166,7 +180,7 @@ function NavBar() {
         >
           Home
         </Button>
-    </Box>
+      </Box>
   }
 
   return (

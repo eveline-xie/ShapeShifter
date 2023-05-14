@@ -203,7 +203,8 @@ export default function EditMap() {
       }
       else if (country.properties.admin) {
         regionName = country.properties.admin;
-      }else{
+      }
+      else {
         regionName = country.properties.name
       }
       layer.bindTooltip(regionName, { permanent: true, direction: "center", fillColor: "blue" });
@@ -370,7 +371,8 @@ export default function EditMap() {
             console.log("3:" + JSON.stringify(renamedPolygon));
             console.log(renamedPolygon.properties.admin);
             console.log(currentPolygon.properties.admin);
-          }else{
+          }
+          else{
             console.log("created region")
             //currentLayer.feature.properties.admin = regionName.trim();
             renamedPolygon.properties.name = regionName.trim();
@@ -381,14 +383,6 @@ export default function EditMap() {
 
           store.addUpdatePolygonToMapTransaction(currentPolygon, renamedPolygon);
         }
-
-
-        // renamedPolygon.properties.name = regionName.trim();
-        // console.log("3:" +JSON.stringify(renamedPolygon));
-        // // currentPolygon.properties.name = regionName.trim();
-
-        // store.addUpdatePolygonToMapTransaction(currentPolygon, renamedPolygon);
-
       });
       currentLayer.bindPopup(content).openPopup();
 
@@ -905,7 +899,7 @@ export default function EditMap() {
         <IconButton
           aria-label="back"
           onClick={(event) => {
-            store.updateThumbnailOfMap(store.currentMap._id);
+            store.updateThumbnailOfMap(store.currentMap._id, '/createmap');
           }}
         >
           <ArrowBackIosIcon />
