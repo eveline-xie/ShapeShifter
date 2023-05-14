@@ -176,7 +176,43 @@ export default function CreateMap() {
      let temp_key = keywords.filter((i) => i !== item);
      setKeywords(temp_key);
    }
-
+   console.log(auth.user.username+", "+store.currentMap.ownerUsername);
+   let share = "";
+   if (auth.user.username === store.currentMap.ownerUsername) {
+     share = (
+       <div>
+         <TextField
+           margin="normal"
+           fullWidth
+           name="Invite Collaborators"
+           label="Invite Collaborators:"
+           //   type="Invite Collaborators"
+           variant="outlined"
+           // color="secondary"
+           focused
+           // defaultValue={store.currentMap.collaborators.toString()}
+           value={value}
+           placeholder="Type email addresses and press `Enter`"
+           // onChange={(e) => setValue(e.target.value)}
+           onKeyDown={handleKeyDown}
+           onChange={handleChange}
+         />
+         {error && <p className="collaborator-error">{error}</p>}
+         {collaborators.map((item) => (
+           <div className="tag-item" key={item}>
+             {item}
+             <button
+               type="button"
+               className="button"
+               onClick={() => handleDelete(item)}
+             >
+               &times;
+             </button>
+           </div>
+         ))}
+       </div>
+     );
+   }
   return (
     <div id="main-screen">
       <IconButton
@@ -295,7 +331,9 @@ export default function CreateMap() {
               onChange={handleKeywords}
               onKeyDown={handleKeywordKeyDown}
             />
-            {keywordError && <p className="collaborator-error">{keywordError}</p>}
+            {keywordError && (
+              <p className="collaborator-error">{keywordError}</p>
+            )}
             {keywords.map((item) => (
               <div className="tag-item" key={item}>
                 {item}
@@ -308,35 +346,7 @@ export default function CreateMap() {
                 </button>
               </div>
             ))}
-            <TextField
-              margin="normal"
-              fullWidth
-              name="Invite Collaborators"
-              label="Invite Collaborators:"
-              //   type="Invite Collaborators"
-              variant="outlined"
-              // color="secondary"
-              focused
-              // defaultValue={store.currentMap.collaborators.toString()}
-              value={value}
-              placeholder="Type email addresses and press `Enter`"
-              // onChange={(e) => setValue(e.target.value)}
-              onKeyDown={handleKeyDown}
-              onChange={handleChange}
-            />
-            {error && <p className="collaborator-error">{error}</p>}
-            {collaborators.map((item) => (
-              <div className="tag-item" key={item}>
-                {item}
-                <button
-                  type="button"
-                  className="button"
-                  onClick={() => handleDelete(item)}
-                >
-                  &times;
-                </button>
-              </div>
-            ))}
+            {share}
             <div>
               <Button
                 variant="contained"
