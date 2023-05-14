@@ -26,7 +26,17 @@ import 'leaflet-editable'
 import "leaflet/dist/leaflet.css";
 import { feature } from "topojson-client";
 import * as turf from '@turf/turf';
+import simplify from "simplify-geojson";
+/*
+simplify-geojson BSD-2-Clause license
+Copyright (c) <2022> <maxogden>.
 
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 
 /*
     This React component lets us edit the properties of a map, which only
@@ -49,6 +59,7 @@ export default function EditMap() {
   const [mergeButtonEnabled, setMergeButtonEnabled] = useState(true);
   const [splitButtonEnabled, setSplitButtonEnabled] = useState(false);
   const [propertiesButtonEnabled, setPropertiesButtonEnabled] = useState(false);
+  const [compressButtonEnabled, setCompressButtonEnabled] = useState(true);
 
   const [currentView, setCurrentView] = useState(null);
   const [currentZoom, setCurrentZoom] = useState(null);
@@ -130,6 +141,7 @@ export default function EditMap() {
 
     setAddButtonEnabled(true);
     setMergeButtonEnabled(true);
+    setCompressButtonEnabled(true);
 
     return () => {
       // Remove the map
@@ -247,6 +259,7 @@ export default function EditMap() {
 
           setAddButtonEnabled(true);
           setMergeButtonEnabled(true);
+          setCompressButtonEnabled(true);
 
           layer.disableEdit();
           if (country.properties !== undefined) {
@@ -275,6 +288,7 @@ export default function EditMap() {
 
           setAddButtonEnabled(false);
           setMergeButtonEnabled(false);
+          setCompressButtonEnabled(false);
 
           layer.enableEdit();
           selectRegion(layer);
@@ -425,6 +439,7 @@ export default function EditMap() {
   const handleStartPolygon = (e) => {
     setAddButtonEnabled(false);
     setMergeButtonEnabled(false);
+    setCompressButtonEnabled(false);
     if (map.editTools) {
       let polygon = map.editTools.startPolygon();
     }
@@ -433,6 +448,7 @@ export default function EditMap() {
   const handleFeatureAdd = (e) => {
     setAddButtonEnabled(true);
     setMergeButtonEnabled(true);
+    setCompressButtonEnabled(true);
     setSplitButtonEnabled(false);
 
     const feature = e.layer.toGeoJSON();
@@ -481,6 +497,7 @@ export default function EditMap() {
 
       setAddButtonEnabled(true);
       setMergeButtonEnabled(true);
+      setCompressButtonEnabled(true);
 
     }
   }
@@ -510,6 +527,7 @@ export default function EditMap() {
 
     setAddButtonEnabled(true);
     setMergeButtonEnabled(true);
+    setCompressButtonEnabled(true);
     //setTransaction([...transaction, { type: 'edit', feature }]);
   };
 
@@ -540,6 +558,7 @@ export default function EditMap() {
 
         setAddButtonEnabled(false);
         setMergeButtonEnabled(false);
+        setCompressButtonEnabled(false);
 
         setUndoButtonEnabled(true);
         setRedoButtonEnabled(true);
@@ -584,6 +603,7 @@ export default function EditMap() {
 
           setAddButtonEnabled(false);
           setMergeButtonEnabled(false);
+          setCompressButtonEnabled(false);
 
           setUndoButtonEnabled(true);
           setRedoButtonEnabled(true);
@@ -750,6 +770,7 @@ export default function EditMap() {
 
           setAddButtonEnabled(true);
           setMergeButtonEnabled(true);
+          setCompressButtonEnabled(true);
 
           setUndoButtonEnabled(true);
           setRedoButtonEnabled(true);
@@ -777,6 +798,7 @@ export default function EditMap() {
 
     setAddButtonEnabled(true);
     setMergeButtonEnabled(true);
+    setCompressButtonEnabled(true);
 
     prevPolygon = selectedPolygon;
     selectedPolygon = feature;
@@ -786,35 +808,36 @@ export default function EditMap() {
   const handleCompressMap = (e) => {
     console.log("current map: ")
     console.log(store.currentMap.geoJsonMap)
-    const feature = turf.feature(store.currentMap.geoJsonMap);
+    const feature = simplify(store.currentMap.geoJsonMap, 0.1);
+    //const feature = turf.feature(store.currentMap.geoJsonMap);
     console.log(feature)
 
     console.log("leaflet map: ")
     console.log(map)
     //console.log(feature)
     // Simplify the feature using the Turf simplify() function
-    const simplified = turf.simplify(feature, 0.01);
-    console.log(simplified)
-    const simplifiedFeature = turf.featureCollection(simplified).features.geometry.geometry;
-    console.log(simplifiedFeature)
+    //const simplified = turf.simplify(feature, 0.01);
+    //console.log(simplified)
+    //const simplifiedFeature = turf.featureCollection(simplified).features.geometry.geometry;
+    //console.log(simplifiedFeature)
     //L.geoJSON().clearLayers();
 
     // map.removeLayer(L.geoJSON(store.currentMap.geoJsonMap));
-    /*map.eachLayer(function (layer) {
+    map.eachLayer(function (layer) {
       if (layer instanceof L.GeoJSON) {
         layer.remove();
       }
     });
-    */
+    
 
-    var simplifiedGeojsonMapLayer = L.geoJson(simplifiedFeature, {
+    var simplifiedGeojsonMapLayer = L.geoJson(feature.features, {
       onEachFeature: onEachRegion
     });
     simplifiedGeojsonMapLayer.eachLayer(function (layer) {
       layer.addTo(map);
     });
 
-    store.currentMap.geoJsonMap = simplifiedFeature;
+    store.currentMap.geoJsonMap = feature;
     console.log("current map: ")
     console.log(store.currentMap.geoJsonMap)
   }
@@ -881,6 +904,7 @@ export default function EditMap() {
 
       setAddButtonEnabled(false);
       setMergeButtonEnabled(false);
+      setCompressButtonEnabled(false);
 
       setUndoButtonEnabled(true);
       setRedoButtonEnabled(true);
@@ -895,6 +919,7 @@ export default function EditMap() {
       setColorButtonEnabled(false);
       setDeleteButtonEnabled(false);
       setMergeButtonEnabled(false);
+      setCompressButtonEnabled(false);
       setPropertiesButtonEnabled(false);
 
       setAddButtonEnabled(false);
@@ -918,6 +943,7 @@ export default function EditMap() {
 
     setAddButtonEnabled(true);
     setMergeButtonEnabled(true);
+    setCompressButtonEnabled(true);
   }
   function handleRedo() {
     store.redo();
@@ -930,6 +956,7 @@ export default function EditMap() {
 
     setAddButtonEnabled(true);
     setMergeButtonEnabled(true);
+    setCompressButtonEnabled(true);
   }
 
   const handleRegionProperties = () => {
@@ -1137,6 +1164,7 @@ export default function EditMap() {
               <Tooltip title="Compress Map">
                 <span>
                   <IconButton
+                    disabled={!compressButtonEnabled}
                     size="large"
                     edge="start"
                     color="inherit"
@@ -1149,7 +1177,7 @@ export default function EditMap() {
                 </span>
               </Tooltip>
 
-              <Tooltip title="Region Properties">
+              <Tooltip title="Subregion Properties">
                 <span>
                   <IconButton
                     disabled={!propertiesButtonEnabled}
@@ -1172,14 +1200,14 @@ export default function EditMap() {
                   left: "90%",
                   transform: "translate(-50%, -50%)",
                   width: 280,
-                  height: 500,
+                  height: 300,
                   backgroundColor: "#145374",
                   color: "#FFE484",
                   border: "2px solid #000",
                   boxShadow: 24,
                   borderRadius: 10,
                   p: 4,
-                  overflowY: "scroll",
+                  overflowY: "auto",
                 }} >
                 <div>
                   <Button
@@ -1193,6 +1221,8 @@ export default function EditMap() {
                       fontSize: "10px",
                       color: "#000000",
                       size: "small",
+                      position: "absolute",
+                      right: "0%"
 
                     }}
                     onClick={handleCloseRegionProperties}
@@ -1200,7 +1230,7 @@ export default function EditMap() {
                     X
                   </Button>
                   {currentPolygon && (
-                    <div>
+                    <div style = {{paddingTop: "50px", paddingLeft: "10px"}}>
                       {Object.entries(currentPolygon.properties).map(([key, value]) => (
                         <div key={key}>
                           <span>{key}: </span>
@@ -1247,16 +1277,16 @@ export default function EditMap() {
                 top: "50%",
                 left: "50%",
                 transform: "translate(-50%, -50%)",
-                width: 500,
+                width: 800,
                 backgroundColor: "#145374",
                 color: "#FFE484",
                 border: "2px solid #000",
                 boxShadow: 24,
                 borderRadius: 10,
                 p: 4,
-                overflowY: "scroll",
+                overflowY: "auto",
               }} >
-              <div>
+              <div style = {{padding:"5px"}}>
                 <Button
                   variant="contained"
                   sx={{ maxWidth: 100 }}
@@ -1267,7 +1297,8 @@ export default function EditMap() {
                     margin: "10px 10px",
                     fontSize: "13px",
                     color: "#000000",
-
+                    position: "absolute",
+                    right: "0%"
                   }}
                   onClick={handleCloseInfo}
                 >
@@ -1332,6 +1363,11 @@ export default function EditMap() {
                     <CompressIcon />
                   </IconButton>
                   Click on this icon to compress the map. This will make the map less detailed as it will have less data. This action is irreversible.
+                <br></br>
+                <IconButton color="inherit">
+                  <ReceiptLong />
+                  </IconButton>
+                  Shows the properties of a selected subregion.
                 </Typography>
               </div>
             </Modal>
