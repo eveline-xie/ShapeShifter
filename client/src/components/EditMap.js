@@ -3,7 +3,7 @@ import IconButton from "@mui/material/IconButton";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import { useNavigate } from "react-router-dom";
 import MenuIcon from "@mui/icons-material/Menu";
-import { Button, Typography, Toolbar, Box, AppBar, Tooltip } from "@mui/material";
+import { Button, Typography, Toolbar, Box, AppBar, Tooltip, SliderMarkLabel } from "@mui/material";
 import UndoIcon from "@mui/icons-material/Undo";
 import RedoIcon from "@mui/icons-material/Redo";
 import AddIcon from "@mui/icons-material/Add";
@@ -15,7 +15,7 @@ import CallSplitIcon from "@mui/icons-material/CallSplit";
 import CircleIcon from "@mui/icons-material/Circle";
 import SouthAmericaIcon from "@mui/icons-material/SouthAmerica";
 import DeleteIcon from "@mui/icons-material/Delete";
-
+import ReceiptLong from "@mui/icons-material/ReceiptLong";
 import InfoIcon from "@mui/icons-material/Info";
 //import InfoModal from "../modals/InfoModal";
 import Modal from "@mui/material/Modal";
@@ -48,14 +48,16 @@ export default function EditMap() {
   const [deleteButtonEnabled, setDeleteButtonEnabled] = useState(false);
   const [mergeButtonEnabled, setMergeButtonEnabled] = useState(true);
   const [splitButtonEnabled, setSplitButtonEnabled] = useState(false);
-
-
+  const [propertiesButtonEnabled, setPropertiesButtonEnabled] = useState(false);
 
   const [currentView, setCurrentView] = useState(null);
   const [currentZoom, setCurrentZoom] = useState(null);
 
   const [currentPolygon, setCurrentPolygon] = useState(null);
   const [currentLayer, setCurrentLayer] = useState(null);
+
+  const [editingKey, setEditingKey] = useState(null);
+  const [editedValues, setEditedValues] = useState({});
 
   // const [prevPolygon, setPrevPolygon] = useState(null);
   // const [selectedPolygon, setSelectedPolygon] = useState(null);
@@ -77,6 +79,7 @@ export default function EditMap() {
 
   const [mergeEnabled, setMergeEnabled] = useState(false);
   const [splitEnabled, setSplitEnabled] = useState(false);
+  const [isPropertiesOpen, setIsPropertiesOpen] = useState(false);
   const [isInfoOpen, setIsInfoOpen] = useState(false);
 
   useEffect(() => {
@@ -119,6 +122,15 @@ export default function EditMap() {
     map = newmap;
     setAMap(newmap);
 
+    setRenameButtonEnabled(false);
+    setColorButtonEnabled(false);
+    setDeleteButtonEnabled(false);
+    setSplitButtonEnabled(false);
+    setPropertiesButtonEnabled(false);
+
+    setAddButtonEnabled(true);
+    setMergeButtonEnabled(true);
+
     return () => {
       // Remove the map
       newmap.remove();
@@ -128,18 +140,8 @@ export default function EditMap() {
     };
   }, [store.currentMap.geoJsonMap, mergeEnabled]);
 
-  const handleHelpIconClick = () => {
-    setIsInfoOpen(true);
-  }
 
-  const handleCloseInfo = () => {
-    setIsInfoOpen(false);
-  }
-  /*
-  const infoNameSet = (show) => {
-    setInfoName(show);
-  };
-  */
+
   function selectRegion(layer) {
     if (layer.color == undefined) {
       layer.setStyle({
@@ -239,6 +241,8 @@ export default function EditMap() {
           setColorButtonEnabled(false);
           setDeleteButtonEnabled(false);
           setSplitButtonEnabled(false);
+          setPropertiesButtonEnabled(false);
+
 
           setAddButtonEnabled(true);
           setMergeButtonEnabled(true);
@@ -266,6 +270,7 @@ export default function EditMap() {
           setColorButtonEnabled(true);
           setDeleteButtonEnabled(true);
           setSplitButtonEnabled(true);
+          setPropertiesButtonEnabled(true);
 
           setAddButtonEnabled(false);
           setMergeButtonEnabled(false);
@@ -471,6 +476,7 @@ export default function EditMap() {
       setColorButtonEnabled(false);
       setDeleteButtonEnabled(false);
       setSplitButtonEnabled(false);
+      setPropertiesButtonEnabled(false);
 
       setAddButtonEnabled(true);
       setMergeButtonEnabled(true);
@@ -499,6 +505,7 @@ export default function EditMap() {
     setColorButtonEnabled(false);
     setDeleteButtonEnabled(false);
     setSplitButtonEnabled(false);
+    setPropertiesButtonEnabled(false);
 
     setAddButtonEnabled(true);
     setMergeButtonEnabled(true);
@@ -528,6 +535,7 @@ export default function EditMap() {
         setColorButtonEnabled(true);
         setDeleteButtonEnabled(true);
         setSplitButtonEnabled(true);
+        setPropertiesButtonEnabled(true);
 
         setAddButtonEnabled(false);
         setMergeButtonEnabled(false);
@@ -716,6 +724,7 @@ export default function EditMap() {
         setColorButtonEnabled(false);
         setDeleteButtonEnabled(false);
         setSplitButtonEnabled(false);
+        setPropertiesButtonEnabled(false);
 
         setAddButtonEnabled(true);
         setMergeButtonEnabled(true);
@@ -740,6 +749,7 @@ export default function EditMap() {
     setColorButtonEnabled(false);
     setDeleteButtonEnabled(false);
     setSplitButtonEnabled(false);
+    setPropertiesButtonEnabled(false);
 
     setAddButtonEnabled(true);
     setMergeButtonEnabled(true);
@@ -809,6 +819,7 @@ export default function EditMap() {
       setColorButtonEnabled(false);
       setDeleteButtonEnabled(false);
       setSplitButtonEnabled(false);
+      setPropertiesButtonEnabled(false);
 
       setAddButtonEnabled(true);
 
@@ -820,6 +831,7 @@ export default function EditMap() {
       setColorButtonEnabled(false);
       setDeleteButtonEnabled(false);
       setSplitButtonEnabled(false);
+      setPropertiesButtonEnabled(false);
 
       setAddButtonEnabled(false);
 
@@ -841,6 +853,7 @@ export default function EditMap() {
       setColorButtonEnabled(true);
       setDeleteButtonEnabled(true);
       setSplitButtonEnabled(true);
+      setPropertiesButtonEnabled(true);
 
       setAddButtonEnabled(false);
       setMergeButtonEnabled(false);
@@ -858,6 +871,7 @@ export default function EditMap() {
       setColorButtonEnabled(false);
       setDeleteButtonEnabled(false);
       setMergeButtonEnabled(false);
+      setPropertiesButtonEnabled(false);
 
       setAddButtonEnabled(false);
       setAddButtonEnabled(false);
@@ -876,6 +890,7 @@ export default function EditMap() {
     setColorButtonEnabled(false);
     setDeleteButtonEnabled(false);
     setSplitButtonEnabled(false);
+    setPropertiesButtonEnabled(false);
 
     setAddButtonEnabled(true);
     setMergeButtonEnabled(true);
@@ -887,10 +902,68 @@ export default function EditMap() {
     setColorButtonEnabled(false);
     setDeleteButtonEnabled(false);
     setSplitButtonEnabled(false);
+    setPropertiesButtonEnabled(false);
 
     setAddButtonEnabled(true);
     setMergeButtonEnabled(true);
   }
+
+  const handleRegionProperties = () => {
+    setIsPropertiesOpen(true);
+    if (currentPolygon) {
+      console.log(currentPolygon.properties);
+    }
+  }
+  const handleCloseRegionProperties = () => {
+    setIsPropertiesOpen(false);
+  }
+
+  const handleDbClickValue = (key,value) => {
+    setEditingKey(key);
+    setEditedValues({ [key]: value });
+  };
+  const handleValueChange = (e) => {
+    console.log("value change");
+    console.log(e.target.value);
+    const { value } = e.target;
+    setEditedValues({ [editingKey]: value });
+  };
+  const handleBlur = () => {
+
+    console.log(editedValues[editingKey]);
+
+    // const propertiesDictionaryArray = [];
+    // for (const key in currentPolygon.properties) {
+    //   propertiesDictionaryArray.push({ [key]: currentPolygon.properties[key] });
+    // }
+    // console.log(propertiesDictionaryArray);
+
+    let modifiedPropertiesPolygon = JSON.parse(JSON.stringify(currentPolygon));
+
+    for (const key in modifiedPropertiesPolygon.properties) {
+      if (key === editingKey){
+        // console.log("hhhhh:"+modifiedPropertiesPolygon.properties[editingKey] );
+        modifiedPropertiesPolygon.properties[editingKey] = editedValues[editingKey];
+      }
+    }
+    console.log("current:"+JSON.stringify(currentPolygon));
+    console.log("modified"+JSON.stringify(modifiedPropertiesPolygon));
+
+    store.addUpdatePolygonToMapTransaction(currentPolygon, modifiedPropertiesPolygon);
+
+    setEditingKey(null);
+    setEditedValues({});
+  };
+
+
+  const handleHelpIconClick = () => {
+    setIsInfoOpen(true);
+  }
+  const handleCloseInfo = () => {
+    setIsInfoOpen(false);
+  }
+
+
 
 
   return (
@@ -1052,6 +1125,82 @@ export default function EditMap() {
                 </span>
               </Tooltip>
 
+              <Tooltip title="Region Properties">
+                <span>
+                  <IconButton
+                    disabled={!propertiesButtonEnabled}
+                    size="large"
+                    edge="start"
+                    color="inherit"
+                    aria-label="menu"
+                    sx={{ mr: 2 }}
+                    onClick={handleRegionProperties}
+                  >
+                    <ReceiptLong />
+                  </IconButton>
+                </span>
+              </Tooltip>
+
+              <Modal open={isPropertiesOpen} onClose={handleCloseRegionProperties}
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "90%",
+                  transform: "translate(-50%, -50%)",
+                  width: 280,
+                  height: 500,
+                  backgroundColor: "#145374",
+                  color: "#FFE484",
+                  border: "2px solid #000",
+                  boxShadow: 24,
+                  borderRadius: 10,
+                  p: 4,
+                  overflowY: "scroll",
+                }} >
+                <div>
+                  <Button
+                    variant="contained"
+                    sx={{ maxWidth: 100 }}
+                    style={{
+                      borderRadius: 50,
+                      backgroundColor: "#FFE484",
+                      padding: "7px 34px",
+                      margin: "10px 10px",
+                      fontSize: "10px",
+                      color: "#000000",
+                      size: "small",
+
+                    }}
+                    onClick={handleCloseRegionProperties}
+                  >
+                    X
+                  </Button>
+                  {currentPolygon && (
+                    <div>
+                      {Object.entries(currentPolygon.properties).map(([key, value]) => (
+                        <div key={key}>
+                          <span>{key}: </span>
+                          {editingKey === key ? (
+                            <input
+                              type="text"
+                              value={editedValues[key] || ''}
+                              onChange={handleValueChange}
+                              onBlur={handleBlur}
+                              autoFocus
+                            />
+                          ) : (
+                            <span onDoubleClick={() => handleDbClickValue(key,value)}>{value}</span>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+
+                </div>
+              </Modal>
+
+
               <Tooltip title="Info">
                 <span>
                   <IconButton
@@ -1062,14 +1211,12 @@ export default function EditMap() {
                     sx={{ mr: 2 }}
                     onClick={handleHelpIconClick}
                   >
-
-
                     <InfoIcon />
                   </IconButton>
                 </span>
               </Tooltip>
-
             </Toolbar>
+
             <Modal open={isInfoOpen} onClose={handleCloseInfo}
               style={{
                 position: "absolute",
@@ -1161,6 +1308,7 @@ export default function EditMap() {
                 </Typography>
               </div>
             </Modal>
+
           </AppBar>
         </Box>
       </div>
