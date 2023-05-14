@@ -1274,10 +1274,11 @@ export default function EditMap() {
             <Modal open={isInfoOpen} onClose={handleCloseInfo}
               style={{
                 position: "absolute",
-                top: "50%",
+                top: "55%",
                 left: "50%",
                 transform: "translate(-50%, -50%)",
                 width: 800,
+                height: 600,
                 backgroundColor: "#145374",
                 color: "#FFE484",
                 border: "2px solid #000",
@@ -1304,8 +1305,17 @@ export default function EditMap() {
                 >
                   X
                 </Button>
-                <Typography id="modal-modal-title" variant="h6" component="h2">
-                  Hover over an icon to see its purpose.
+                <Typography id="modal-modal-title" variant="h6" component="h2" style = {{padding:"5px", margin:"10px"}}>
+                  
+                Hover over an icon to see its purpose.
+                  <br></br><br></br>
+                Click on a subregion to select it. It will be highlighted.
+                  The white squares are its corresponding vertices. 
+                  <br></br>Click on a translucent square to add the vertex to the subregion.<br></br>
+                  Click on an opaque square to delete the vertex. <br></br>Hold and drag an opaque square to move the vertex.
+                  <br></br>
+                  To unselect a subregion, click it again.
+                  <br></br>
                   <br></br>
                   <IconButton
                     color="inherit">
@@ -1319,11 +1329,7 @@ export default function EditMap() {
                   </IconButton>
                   Redo a change.
                   <br></br>
-                  Click on a subregion to select it. It will be highlighted.
-                  The white squares are its corresponding vertices.
-                  <br></br>
-                  To unselect a subregion, click it again.
-                  <br></br>
+                  
                   <IconButton color="inherit">
                     <BorderColorIcon />
                   </IconButton>
