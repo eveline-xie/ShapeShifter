@@ -325,7 +325,7 @@ export default function HomeScreen() {
             </Box>
             <CardMedia
               component="img"
-              sx={{ width: 400, m: 4, pl: "30%" }}
+              sx={{ width: 400, m: 4, pl: "20%" }}
               image="logo.png"
               alt="Live from space album cover"
             />
