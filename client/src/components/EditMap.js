@@ -17,6 +17,7 @@ import SouthAmericaIcon from "@mui/icons-material/SouthAmerica";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ReceiptLong from "@mui/icons-material/ReceiptLong";
 import InfoIcon from "@mui/icons-material/Info";
+import PostAddIcon from '@mui/icons-material/PostAdd';
 //import InfoModal from "../modals/InfoModal";
 import Modal from "@mui/material/Modal";
 import GlobalStoreContext from "../store";
@@ -60,6 +61,7 @@ export default function EditMap() {
   const [splitButtonEnabled, setSplitButtonEnabled] = useState(false);
   const [propertiesButtonEnabled, setPropertiesButtonEnabled] = useState(false);
   const [compressButtonEnabled, setCompressButtonEnabled] = useState(true);
+  const [propertyButtonEnabled, setPropertyButtonEnabled] = useState(false);
 
   const [currentView, setCurrentView] = useState(null);
   const [currentZoom, setCurrentZoom] = useState(null);
@@ -135,6 +137,7 @@ export default function EditMap() {
 
     setRenameButtonEnabled(false);
     setColorButtonEnabled(false);
+    setPropertyButtonEnabled(false);
     setDeleteButtonEnabled(false);
     setSplitButtonEnabled(false);
     setPropertiesButtonEnabled(false);
@@ -252,6 +255,7 @@ export default function EditMap() {
         if (layer.editEnabled()) {
           setRenameButtonEnabled(false);
           setColorButtonEnabled(false);
+          setPropertyButtonEnabled(false);
           setDeleteButtonEnabled(false);
           setSplitButtonEnabled(false);
           setPropertiesButtonEnabled(false);
@@ -282,6 +286,7 @@ export default function EditMap() {
           console.log("selecting region");
           setRenameButtonEnabled(true);
           setColorButtonEnabled(true);
+          setPropertyButtonEnabled(true);
           setDeleteButtonEnabled(true);
           setSplitButtonEnabled(true);
           setPropertiesButtonEnabled(true);
@@ -325,7 +330,9 @@ export default function EditMap() {
     setCurrentView(map.getCenter());
     setCurrentZoom(map.getZoom());
   }
-
+  const handleAddProperty = (e) => {
+    
+  }
   const handleEditSubregionName = (e) => {
 
     let regionName = "";
@@ -491,6 +498,7 @@ export default function EditMap() {
 
       setRenameButtonEnabled(false);
       setColorButtonEnabled(false);
+      setPropertyButtonEnabled(false);
       setDeleteButtonEnabled(false);
       setSplitButtonEnabled(false);
       setPropertiesButtonEnabled(false);
@@ -521,6 +529,7 @@ export default function EditMap() {
 
     setRenameButtonEnabled(false);
     setColorButtonEnabled(false);
+    setPropertyButtonEnabled(false);
     setDeleteButtonEnabled(false);
     setSplitButtonEnabled(false);
     setPropertiesButtonEnabled(false);
@@ -552,6 +561,7 @@ export default function EditMap() {
 
         setRenameButtonEnabled(true);
         setColorButtonEnabled(true);
+        setPropertyButtonEnabled(true);
         setDeleteButtonEnabled(true);
         setSplitButtonEnabled(true);
         setPropertiesButtonEnabled(true);
@@ -597,6 +607,7 @@ export default function EditMap() {
           console.log("didnt split anything");
           setRenameButtonEnabled(true);
           setColorButtonEnabled(true);
+          setPropertyButtonEnabled(true);
           setDeleteButtonEnabled(true);
           setSplitButtonEnabled(true);
           setPropertiesButtonEnabled(true);
@@ -764,6 +775,7 @@ export default function EditMap() {
 
           setRenameButtonEnabled(false);
           setColorButtonEnabled(false);
+          setPropertyButtonEnabled(false);
           setDeleteButtonEnabled(false);
           setSplitButtonEnabled(false);
           setPropertiesButtonEnabled(false);
@@ -792,6 +804,7 @@ export default function EditMap() {
 
     setRenameButtonEnabled(false);
     setColorButtonEnabled(false);
+    setPropertyButtonEnabled(false);
     setDeleteButtonEnabled(false);
     setSplitButtonEnabled(false);
     setPropertiesButtonEnabled(false);
@@ -864,6 +877,7 @@ export default function EditMap() {
 
       setRenameButtonEnabled(false);
       setColorButtonEnabled(false);
+      setPropertyButtonEnabled(false);
       setDeleteButtonEnabled(false);
       setSplitButtonEnabled(false);
       setPropertiesButtonEnabled(false);
@@ -876,6 +890,7 @@ export default function EditMap() {
     else {
       setRenameButtonEnabled(false);
       setColorButtonEnabled(false);
+      setPropertyButtonEnabled(false);
       setDeleteButtonEnabled(false);
       setSplitButtonEnabled(false);
       setPropertiesButtonEnabled(false);
@@ -898,6 +913,7 @@ export default function EditMap() {
 
       setRenameButtonEnabled(true);
       setColorButtonEnabled(true);
+      setPropertyButtonEnabled(true);
       setDeleteButtonEnabled(true);
       setSplitButtonEnabled(true);
       setPropertiesButtonEnabled(true);
@@ -917,6 +933,7 @@ export default function EditMap() {
       }
       setRenameButtonEnabled(false);
       setColorButtonEnabled(false);
+      setPropertyButtonEnabled(false);
       setDeleteButtonEnabled(false);
       setMergeButtonEnabled(false);
       setCompressButtonEnabled(false);
@@ -937,6 +954,7 @@ export default function EditMap() {
 
     setRenameButtonEnabled(false);
     setColorButtonEnabled(false);
+    setPropertyButtonEnabled(false);
     setDeleteButtonEnabled(false);
     setSplitButtonEnabled(false);
     setPropertiesButtonEnabled(false);
@@ -950,6 +968,7 @@ export default function EditMap() {
 
     setRenameButtonEnabled(false);
     setColorButtonEnabled(false);
+    setPropertyButtonEnabled(false);
     setDeleteButtonEnabled(false);
     setSplitButtonEnabled(false);
     setPropertiesButtonEnabled(false);
@@ -1077,6 +1096,21 @@ export default function EditMap() {
                     onClick={handleEditSubregionName}
                   >
                     <BorderColorIcon />
+                  </IconButton>
+                </span>
+              </Tooltip>
+              <Tooltip title="Add Property">
+                <span>
+                  <IconButton
+                    disabled={!propertyButtonEnabled}
+                    size="large"
+                    edge="start"
+                    color="inherit"
+                    aria-label="menu"
+                    sx={{ mr: 2 }}
+                    onClick={handleAddProperty}
+                  >
+                    <PostAddIcon />
                   </IconButton>
                 </span>
               </Tooltip>
