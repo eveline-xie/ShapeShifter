@@ -3,7 +3,7 @@ import IconButton from "@mui/material/IconButton";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import { useNavigate } from "react-router-dom";
 import MenuIcon from "@mui/icons-material/Menu";
-import { Button, Typography, Toolbar, Box, AppBar, Tooltip } from "@mui/material";
+import { Button, Typography, Toolbar, Box, AppBar, Tooltip, SliderMarkLabel } from "@mui/material";
 import UndoIcon from "@mui/icons-material/Undo";
 import RedoIcon from "@mui/icons-material/Redo";
 import AddIcon from "@mui/icons-material/Add";
@@ -15,7 +15,7 @@ import CallSplitIcon from "@mui/icons-material/CallSplit";
 import CircleIcon from "@mui/icons-material/Circle";
 import SouthAmericaIcon from "@mui/icons-material/SouthAmerica";
 import DeleteIcon from "@mui/icons-material/Delete";
-
+import ReceiptLong from "@mui/icons-material/ReceiptLong";
 import InfoIcon from "@mui/icons-material/Info";
 //import InfoModal from "../modals/InfoModal";
 import Modal from "@mui/material/Modal";
@@ -121,6 +121,15 @@ export default function EditMap() {
     })
     map = newmap;
     setAMap(newmap);
+
+    setRenameButtonEnabled(false);
+    setColorButtonEnabled(false);
+    setDeleteButtonEnabled(false);
+    setSplitButtonEnabled(false);
+    setPropertiesButtonEnabled(false);
+
+    setAddButtonEnabled(true);
+    setMergeButtonEnabled(true);
 
     return () => {
       // Remove the map
@@ -1133,7 +1142,7 @@ export default function EditMap() {
                     sx={{ mr: 2 }}
                     onClick={handleRegionProperties}
                   >
-                    <InfoIcon />
+                    <ReceiptLong />
                   </IconButton>
                 </span>
               </Tooltip>
@@ -1142,9 +1151,10 @@ export default function EditMap() {
                 style={{
                   position: "absolute",
                   top: "50%",
-                  left: "50%",
+                  left: "90%",
                   transform: "translate(-50%, -50%)",
-                  width: 500,
+                  width: 280,
+                  height: 500,
                   backgroundColor: "#145374",
                   color: "#FFE484",
                   border: "2px solid #000",
@@ -1162,8 +1172,9 @@ export default function EditMap() {
                       backgroundColor: "#FFE484",
                       padding: "7px 34px",
                       margin: "10px 10px",
-                      fontSize: "13px",
+                      fontSize: "10px",
                       color: "#000000",
+                      size: "small",
 
                     }}
                     onClick={handleCloseRegionProperties}
