@@ -1282,6 +1282,7 @@ export default function EditMap() {
                   <IconButton color="inherit">
                     <AddIcon />
                   </IconButton>
+                  Add a subregion.
                   With no subregion selected, begin clicking to add vertices.
                   Once there you are done outlining the subregion, click on the last vertex you added.
                   <br></br>
@@ -1293,13 +1294,15 @@ export default function EditMap() {
                   <IconButton color="inherit">
                     <MergeIcon />
                   </IconButton>
+                  Merge two subregions.
                   Click on the Merge button and then select two subregions. They will be merged after you have selected the second subregion.
                   Keep in mind that colors from selected subregions will not be inherited.
                   <br></br>
                   <IconButton color="inherit">
                     <CallSplitIcon />
                   </IconButton>
-                  The text for Split has not been added.
+                  Split a selected subregion into two.
+                  Click two vertices on a subregion to split the subregion along the line connecting those vertices.
                   <br></br>
                   <IconButton color="inherit">
                     <CompressIcon />
