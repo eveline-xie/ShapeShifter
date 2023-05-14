@@ -19,7 +19,7 @@ router.post("/map", auth.verify, MapController.createNewMap);
 router.put("/update-map-props", auth.verify, MapController.updateMapCustomProperties);
 router.get("/load-user-maps", auth.verify, MapController.loadUserMaps);
 router.get("/load-user-maps-no-geojson", auth.verify, MapController.loadUserMapsNoGeoJson);
-router.get("/map/:id", auth.verify, MapController.getMapById);
+router.get("/map/:id", MapController.getMapById);
 router.get("/shpdbfmap/:id", auth.verify, MapController.getShpDbfFileById);
 router.put("/remove-shared-map", auth.verify, MapController.removeSharedMap);
 

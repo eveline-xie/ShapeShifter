@@ -47,7 +47,7 @@ const tps = new jsTPS();
 
 const socket = new io(
   "http://localhost:5000"
-  // "https://shapeshifter-api.onrender.com"
+  //"https://shapeshifter-api.onrender.com"
   , {
     autoConnect: false,
   }
@@ -486,7 +486,7 @@ function GlobalStoreContextProvider(props) {
       const map = response.data.currentMap;
 
       const params = new URLSearchParams([['json', JSON.stringify(map.geoJsonMap)], ['outputName', map.name]]);
-      const shp = await axios.post('https://ogre.adc4gis.com/convertJson', params, {responseType: 'blob'});
+      const shp = await axios.post('https://ogre.adc4gis.com/convertJson', params, { responseType: 'blob' });
       //const blob = new Blob([shp.data], { type: 'application/zip' });
       const url = URL.createObjectURL(shp.data);
 
@@ -547,12 +547,14 @@ function GlobalStoreContextProvider(props) {
     socket.emit("add-polygon", store.currentMap._id, feature);
   }
 
-  socket.on("add-polygon-response", (data) => {
-    const map = data;
-    storeReducer({
-      type: GlobalStoreActionType.LOAD_CURRENT_MAP,
-      payload: map
-    })
+  socket.on("add-polygon-response", (id, data) => {
+    if (window.location.pathname.includes(id)) {
+      const map = data;
+      storeReducer({
+        type: GlobalStoreActionType.LOAD_CURRENT_MAP,
+        payload: map
+      })
+    }
   });
 
   store.addUpdatePolygonToMapTransaction = function (prevPolygon, updatedPolygon) {
@@ -576,12 +578,14 @@ function GlobalStoreContextProvider(props) {
     socket.emit("update-polygon", store.currentMap._id, prevPolygon, updatedPolygon);
   }
 
-  socket.on("update-polygon-response", (data) => {
-    const map = data;
-    storeReducer({
-      type: GlobalStoreActionType.LOAD_CURRENT_MAP,
-      payload: map
-    })
+  socket.on("update-polygon-response", (id, data) => {
+    if (window.location.pathname.includes(id)) {
+      const map = data;
+      storeReducer({
+        type: GlobalStoreActionType.LOAD_CURRENT_MAP,
+        payload: map
+      })
+    }
   });
 
   store.addDeletePolygonOfMapTransaction = function (feature) {
@@ -607,12 +611,14 @@ function GlobalStoreContextProvider(props) {
     socket.emit("delete-polygon", store.currentMap._id, feature);
   }
 
-  socket.on("delete-polygon-response", (data) => {
-    const map = data;
-    storeReducer({
-      type: GlobalStoreActionType.LOAD_CURRENT_MAP,
-      payload: map
-    })
+  socket.on("delete-polygon-response", (id, data) => {
+    if (window.location.pathname.includes(id)) {
+      const map = data;
+      storeReducer({
+        type: GlobalStoreActionType.LOAD_CURRENT_MAP,
+        payload: map
+      })
+    }
   });
 
   store.addmergePolygonsOfMapTransaction = function (polygonsToMerge, mergedPolygon) {
@@ -637,12 +643,14 @@ function GlobalStoreContextProvider(props) {
     socket.emit("merge-polygons", store.currentMap._id, polygonsToMerge, mergedPolygon);
   }
 
-  socket.on("merge-polygons-response", (data) => {
-    const map = data;
-    storeReducer({
-      type: GlobalStoreActionType.LOAD_CURRENT_MAP,
-      payload: map
-    })
+  socket.on("merge-polygons-response", (id, data) => {
+    if (window.location.pathname.includes(id)) {
+      const map = data;
+      storeReducer({
+        type: GlobalStoreActionType.LOAD_CURRENT_MAP,
+        payload: map
+      })
+    }
   });
 
   // store.undoMergePolygonsOfMap = async function (polygonsToMerge, mergedPolygon) {
@@ -663,12 +671,14 @@ function GlobalStoreContextProvider(props) {
     socket.emit("undo-merge-polygons", store.currentMap._id, polygonsToMerge, mergedPolygon);
   }
 
-  socket.on("undo-merge-polygons-response", (data) => {
-    const map = data;
-    storeReducer({
-      type: GlobalStoreActionType.LOAD_CURRENT_MAP,
-      payload: map
-    })
+  socket.on("undo-merge-polygons-response", (id, data) => {
+    if (window.location.pathname.includes(id)) {
+      const map = data;
+      storeReducer({
+        type: GlobalStoreActionType.LOAD_CURRENT_MAP,
+        payload: map
+      })
+    }
   });
 
   store.addSplitPolygonsOfMapTransaction = function (polygonToSplit, splitPolygons) {

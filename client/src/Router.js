@@ -42,7 +42,7 @@ const Router = () => {
             <Route path="/signup" element={<SignupScreen />} />
             <Route path="/home" element={<HomeScreen />} />
             <Route path="/createmap" element={<CreateMap />} />
-            <Route path="/editmap" element={<EditMap />} />
+            <Route path="/editmap/:id" element={<EditMap />} />
             <Route path="/forgotpassword" element={<ForgotPassword />} />
             <Route path="/resetpassword" element={<ResetPassword />} />
             <Route path="/community" element={<CommunityScreen />} />
