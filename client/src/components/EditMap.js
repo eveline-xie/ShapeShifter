@@ -1177,7 +1177,7 @@ export default function EditMap() {
                 </span>
               </Tooltip>
 
-              <Tooltip title="Region Properties">
+              <Tooltip title="Subregion Properties">
                 <span>
                   <IconButton
                     disabled={!propertiesButtonEnabled}
@@ -1275,7 +1275,7 @@ export default function EditMap() {
                 top: "50%",
                 left: "50%",
                 transform: "translate(-50%, -50%)",
-                width: 500,
+                width: 800,
                 backgroundColor: "#145374",
                 color: "#FFE484",
                 border: "2px solid #000",
@@ -1284,7 +1284,7 @@ export default function EditMap() {
                 p: 4,
                 overflowY: "scroll",
               }} >
-              <div>
+              <div style = {{padding:"5px"}}>
                 <Button
                   variant="contained"
                   sx={{ maxWidth: 100 }}
@@ -1295,7 +1295,8 @@ export default function EditMap() {
                     margin: "10px 10px",
                     fontSize: "13px",
                     color: "#000000",
-
+                    position: "absolute",
+                    right: "0%"
                   }}
                   onClick={handleCloseInfo}
                 >
@@ -1360,6 +1361,11 @@ export default function EditMap() {
                     <CompressIcon />
                   </IconButton>
                   Click on this icon to compress the map. This will make the map less detailed as it will have less data. This action is irreversible.
+                <br></br>
+                <IconButton color="inherit">
+                  <ReceiptLong />
+                  </IconButton>
+                  Shows the properties of a selected subregion.
                 </Typography>
               </div>
             </Modal>
