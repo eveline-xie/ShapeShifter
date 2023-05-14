@@ -19,7 +19,6 @@ import { useState, useEffect } from "react";
 import GlobalStoreContext from "../store";
 import { useNavigate } from "react-router-dom";
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
-import geo_file from './custom.geo.json'
 import { useRef } from "react";
 import L from 'leaflet';
 /*
