@@ -1078,11 +1078,13 @@ const handleAddKeyValue = (e) => {
         //console.log("modified" + JSON.stringify(modifiedPropertiesPolygon));
     
         store.addUpdatePolygonToMapTransaction(currentPolygon, modifiedPropertiesPolygon);
-    
+        
+
         setEditedValues({});
         setEditingProperties(false);
 
-        setEditingKey(null);}
+        setEditingKey(null);
+}
       }
     });
 
@@ -1428,6 +1430,9 @@ else {
                   To unselect a subregion, click it again.
                   <br></br>
                   <br></br>
+                Changes made are saved automatically. You can undo or redo if you made changes. You can not undo or redo previous changes from your last session.
+                <br></br>
+                <br></br>
                   <IconButton
                     color="inherit">
                     <UndoIcon />
