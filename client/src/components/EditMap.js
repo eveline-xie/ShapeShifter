@@ -877,6 +877,9 @@ export default function EditMap() {
     store.currentMap.geoJsonMap = feature;
     console.log("current map: ");
     console.log(store.currentMap.geoJsonMap);
+
+    setIsCompressOpen(false);
+
   };
   /*
   const handleInfo = (e) => {
