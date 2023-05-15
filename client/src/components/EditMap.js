@@ -3,11 +3,19 @@ import IconButton from "@mui/material/IconButton";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import { useNavigate } from "react-router-dom";
 import MenuIcon from "@mui/icons-material/Menu";
-import { Button, Typography, Toolbar, Box, AppBar, Tooltip, SliderMarkLabel } from "@mui/material";
+import {
+  Button,
+  Typography,
+  Toolbar,
+  Box,
+  AppBar,
+  Tooltip,
+  SliderMarkLabel,
+} from "@mui/material";
 import UndoIcon from "@mui/icons-material/Undo";
 import RedoIcon from "@mui/icons-material/Redo";
 import AddIcon from "@mui/icons-material/Add";
-import CompressIcon from '@mui/icons-material/Compress';
+import CompressIcon from "@mui/icons-material/Compress";
 import FormatColorFillIcon from "@mui/icons-material/FormatColorFill";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import MergeIcon from "@mui/icons-material/Merge";
@@ -17,16 +25,16 @@ import SouthAmericaIcon from "@mui/icons-material/SouthAmerica";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ReceiptLong from "@mui/icons-material/ReceiptLong";
 import InfoIcon from "@mui/icons-material/Info";
-import PostAddIcon from '@mui/icons-material/PostAdd';
+import PostAddIcon from "@mui/icons-material/PostAdd";
 //import InfoModal from "../modals/InfoModal";
 import Modal from "@mui/material/Modal";
 import GlobalStoreContext from "../store";
-import { useContext, useEffect, useState } from 'react'
-import L from 'leaflet';
-import 'leaflet-editable'
+import { useContext, useEffect, useState } from "react";
+import L from "leaflet";
+import "leaflet-editable";
 import "leaflet/dist/leaflet.css";
 import { feature } from "topojson-client";
-import * as turf from '@turf/turf';
+import * as turf from "@turf/turf";
 import simplify from "simplify-geojson";
 /*
 simplify-geojson BSD-2-Clause license
@@ -79,7 +87,6 @@ export default function EditMap() {
   // const [prevLayer, setPrevLayer] = useState(null);
   // const [selectedLayer, setSelectedLayer] = useState(null);
 
-
   let map = null;
   const [aMap, setAMap] = useState(null);
   if (map == null) {
@@ -89,13 +96,14 @@ export default function EditMap() {
   let selectedPolygon = null;
   let prevLayer = null;
   let selectedLayer = null;
-  let changedColor = '';
+  let changedColor = "";
   let regionsToMerge = [];
 
   const [mergeEnabled, setMergeEnabled] = useState(false);
   const [splitEnabled, setSplitEnabled] = useState(false);
   const [isPropertiesOpen, setIsPropertiesOpen] = useState(false);
   const [isInfoOpen, setIsInfoOpen] = useState(false);
+  const [isCompressOpen, setIsCompressOpen] = useState(false);
 
   useEffect(() => {
     console.log("reloading map");
@@ -105,35 +113,33 @@ export default function EditMap() {
     var bounds = L.latLngBounds(southWest, northEast);
 
     var newmap;
-    newmap = L.map('my-map', { editable: true, maxBounds: bounds });
-    var geojsonMap =
-      L.geoJson(store.currentMap.geoJsonMap, {
-        onEachFeature: onEachRegion
-      });
+    newmap = L.map("my-map", { editable: true, maxBounds: bounds });
+    var geojsonMap = L.geoJson(store.currentMap.geoJsonMap, {
+      onEachFeature: onEachRegion,
+    });
     if (currentView) {
       newmap.setView(currentView, currentZoom);
-    }
-    else {
+    } else {
       var bounds = geojsonMap.getBounds();
       newmap.fitBounds(bounds);
     }
 
     newmap.editTools.featuresLayer.addTo(newmap);
-    newmap.on('editable:drawing:end', handleFeatureAdd);
+    newmap.on("editable:drawing:end", handleFeatureAdd);
     //newmap.on('editable:vertex:dragstart', handleFeatureStartMoveVertex);
-    newmap.on('editable:vertex:dragend', handleFeatureEndMoveVertex);
-    newmap.on('editable:vertex:new', handleSplitFeature);
-    newmap.on('editable:vertex:deleted', handleFeatureDeleteVertex);
-    newmap.on('moveend', handleSetView);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    newmap.on("editable:vertex:dragend", handleFeatureEndMoveVertex);
+    newmap.on("editable:vertex:new", handleSplitFeature);
+    newmap.on("editable:vertex:deleted", handleFeatureDeleteVertex);
+    newmap.on("moveend", handleSetView);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-      minZoom: 2
+      minZoom: 2,
     }).addTo(newmap);
 
     geojsonMap.eachLayer(function (layer) {
       layer.addTo(newmap);
-    })
+    });
     map = newmap;
     setAMap(newmap);
 
@@ -157,19 +163,17 @@ export default function EditMap() {
     };
   }, [store.currentMap.geoJsonMap, mergeEnabled]);
 
-
-
   function selectRegion(layer) {
     if (layer.color == undefined) {
       layer.setStyle({
-        color: 'yellow'
+        color: "yellow",
       });
       layer.selected = true;
       selectedRegions.push(layer);
       //setRenameButtonEnabled(true)
     } else {
       layer.setStyle({
-        color: layer.color
+        color: layer.color,
       });
       layer.selected = true;
       selectedRegions.push(layer);
@@ -181,7 +185,7 @@ export default function EditMap() {
     if (color == null) {
       // console.log("2:" + layer.color);
       layer.setStyle({
-        color: '#3388FF'
+        color: "#3388FF",
       });
       layer.selected = false;
       const index = selectedRegions.indexOf(layer);
@@ -189,7 +193,7 @@ export default function EditMap() {
       //setRenameButtonEnabled(false)
     } else {
       layer.setStyle({
-        color: color
+        color: color,
       });
       layer.selected = false;
       const index = selectedRegions.indexOf(layer);
@@ -204,33 +208,30 @@ export default function EditMap() {
     if (country.properties !== undefined) {
       if (country.properties.NAME_5) {
         regionName = country.properties.NAME_5;
-      }
-      else if (country.properties.NAME_4) {
+      } else if (country.properties.NAME_4) {
         regionName = country.properties.NAME_4;
-      }
-      else if (country.properties.NAME_3) {
+      } else if (country.properties.NAME_3) {
         regionName = country.properties.NAME_3;
-      }
-      else if (country.properties.NAME_2) {
+      } else if (country.properties.NAME_2) {
         regionName = country.properties.NAME_2;
-      }
-      else if (country.properties.NAME_1) {
+      } else if (country.properties.NAME_1) {
         regionName = country.properties.NAME_1;
-      }
-      else if (country.properties.NAME_0) {
+      } else if (country.properties.NAME_0) {
         regionName = country.properties.NAME_0;
-      }
-      else if (country.properties.admin) {
+      } else if (country.properties.admin) {
         regionName = country.properties.admin;
+      } else {
+        regionName = country.properties.name;
       }
-      else {
-        regionName = country.properties.name
-      }
-      layer.bindTooltip(regionName, { permanent: true, direction: "center", fillColor: "blue" });
+      layer.bindTooltip(regionName, {
+        permanent: true,
+        direction: "center",
+        fillColor: "blue",
+      });
       if (country.properties.color) {
         layer.setStyle({
-          color: country.properties.color
-        })
+          color: country.properties.color,
+        });
       }
     }
 
@@ -238,22 +239,27 @@ export default function EditMap() {
       //console.log(currentLayer.feature.properties)
       if (mergeEnabled) {
         layer.setStyle({
-          color: 'red'
+          color: "red",
         });
         if (regionsToMerge.indexOf(layer) == -1) {
           regionsToMerge.push(layer);
         }
         if (regionsToMerge.length == 2) {
-          let merged = turf.union(regionsToMerge[0].feature, regionsToMerge[1].feature);
+          let merged = turf.union(
+            regionsToMerge[0].feature,
+            regionsToMerge[1].feature
+          );
           map.removeLayer(regionsToMerge[0]);
           map.removeLayer(regionsToMerge[1]);
           L.geoJSON(merged, { onEachFeature: onEachRegion }).addTo(map);
-          merged.properties = {name: "Untitled"};
-          store.addmergePolygonsOfMapTransaction([regionsToMerge[0].feature, regionsToMerge[1].feature], merged);
+          merged.properties = { name: "Untitled" };
+          store.addmergePolygonsOfMapTransaction(
+            [regionsToMerge[0].feature, regionsToMerge[1].feature],
+            merged
+          );
           handleEnableMerge();
         }
-      }
-      else {
+      } else {
         if (layer.editEnabled()) {
           setRenameButtonEnabled(false);
           setColorButtonEnabled(false);
@@ -261,7 +267,6 @@ export default function EditMap() {
           setDeleteButtonEnabled(false);
           setSplitButtonEnabled(false);
           setPropertiesButtonEnabled(false);
-
 
           setAddButtonEnabled(true);
           setMergeButtonEnabled(true);
@@ -272,19 +277,16 @@ export default function EditMap() {
             console.log("there are properties");
             if (country.properties.color) {
               deSelect(layer, country.properties.color);
-            }
-            else {
+            } else {
               deSelect(layer, null);
             }
-          }
-          else {
+          } else {
             deSelect(layer, null);
           }
 
           selectedPolygon = null;
           selectedLayer = null;
-        }
-        else {
+        } else {
           console.log("selecting region");
           setRenameButtonEnabled(true);
           setColorButtonEnabled(true);
@@ -307,12 +309,10 @@ export default function EditMap() {
             if (prevPolygon.properties !== undefined) {
               if (prevPolygon.properties.color) {
                 deSelect(prevLayer, prevPolygon.properties.color);
-              }
-              else {
+              } else {
                 deSelect(prevLayer, null);
               }
-            }
-            else {
+            } else {
               deSelect(prevLayer, null);
             }
           }
@@ -325,42 +325,39 @@ export default function EditMap() {
           setCurrentLayer(layer);
         }
       }
-    })
+    });
   }
 
   const handleSetView = (e) => {
     setCurrentView(map.getCenter());
     setCurrentZoom(map.getZoom());
-  }
-  const handleAddProperty = (e) => {
+  };
+
+  /* If the Region Properties modal is open, and click on the "add custom property" icon in the modal
+    show the text inputs
+  */
+  const handleAddKeyValue = (e) => {
+    //console.log("here")
+
     if (currentLayer) {
+      setEditingProperties(true);
       //console.log("1:" + JSON.stringify(currentPolygon));
       // Bind the tooltip to the layer and set its content
-        //console.log("not enabled");
-        setIsPropertiesOpen(true);
-        handleAddKeyValue(e);
-      }
-  }
-const handleAddKeyValue = (e) => {
-  //console.log("here")
-  let propertyValue = "";
-  let propertyKey = "";
-  if (currentLayer) {
-    setEditingProperties(true);
-    //console.log("1:" + JSON.stringify(currentPolygon));
-    // Bind the tooltip to the layer and set its content
-    //setEditingProperties(false);
-  }
-}
+      //setEditingProperties(false);
+    }
+  };
 
   const handleEditSubregionName = (e) => {
-
     let regionName = "";
 
     if (currentLayer) {
       console.log("1:" + JSON.stringify(currentPolygon));
       // Bind the tooltip to the layer and set its content
-      currentLayer.bindTooltip(regionName, { permanent: true, direction: "center", fillColor: "blue" });
+      currentLayer.bindTooltip(regionName, {
+        permanent: true,
+        direction: "center",
+        fillColor: "blue",
+      });
       // Set up the click event listener on the layer
       var content = document.createElement("textarea");
       content.addEventListener("keyup", function (e) {
@@ -372,55 +369,48 @@ const handleAddKeyValue = (e) => {
           let renamedPolygon = JSON.parse(JSON.stringify(currentPolygon));
           console.log("2:" + JSON.stringify(renamedPolygon));
 
-          if (currentLayer.feature.properties.hasOwnProperty('NAME_5')) {
-            console.log("5")
+          if (currentLayer.feature.properties.hasOwnProperty("NAME_5")) {
+            console.log("5");
             //currentLayer.feature.properties.NAME_5 = regionName.trim();
             //trim gets rid of the '/n' which apparently is there even though console logging regionName does not have '/n'
             renamedPolygon.properties.NAME_5 = regionName.trim();
             console.log("3:" + JSON.stringify(renamedPolygon));
-          }
-          else if (currentLayer.feature.properties.hasOwnProperty('NAME_4')) {
-            console.log("4")
+          } else if (currentLayer.feature.properties.hasOwnProperty("NAME_4")) {
+            console.log("4");
             //currentLayer.feature.properties.NAME_4 = regionName.trim();
             renamedPolygon.properties.NAME_4 = regionName.trim();
             console.log("3:" + JSON.stringify(renamedPolygon));
-          }
-          else if (currentLayer.feature.properties.hasOwnProperty('NAME_3')) {
-            console.log("3")
+          } else if (currentLayer.feature.properties.hasOwnProperty("NAME_3")) {
+            console.log("3");
             //currentLayer.feature.properties.NAME_3 = regionName.trim();
             renamedPolygon.properties.NAME_3 = regionName.trim();
             console.log("3:" + JSON.stringify(renamedPolygon));
-          }
-          else if (currentLayer.feature.properties.hasOwnProperty('NAME_2')) {
-            console.log("2")
+          } else if (currentLayer.feature.properties.hasOwnProperty("NAME_2")) {
+            console.log("2");
             //currentLayer.feature.properties.NAME_2 = regionName.trim();
             renamedPolygon.properties.NAME_2 = regionName.trim();
             console.log("3:" + JSON.stringify(renamedPolygon));
-          }
-          else if (currentLayer.feature.properties.hasOwnProperty('NAME_1')) {
-            console.log('Name_1')
+          } else if (currentLayer.feature.properties.hasOwnProperty("NAME_1")) {
+            console.log("Name_1");
             //currentLayer.feature.properties.NAME_1 = regionName.trim();
             renamedPolygon.properties.NAME_1 = regionName.trim();
             console.log("3:" + JSON.stringify(renamedPolygon));
             console.log(renamedPolygon.properties.NAME_1);
             console.log(currentPolygon.properties.NAME_1);
-          }
-          else if (currentLayer.feature.properties.hasOwnProperty('NAME_0')) {
-            console.log("0")
+          } else if (currentLayer.feature.properties.hasOwnProperty("NAME_0")) {
+            console.log("0");
             //currentLayer.feature.properties.NAME_0 = regionName.trim();
             renamedPolygon.properties.NAME_0 = regionName.trim();
             console.log("3:" + JSON.stringify(renamedPolygon));
-          }
-          else if (currentLayer.feature.properties.hasOwnProperty('admin')) {
-            console.log("admin")
+          } else if (currentLayer.feature.properties.hasOwnProperty("admin")) {
+            console.log("admin");
             //currentLayer.feature.properties.admin = regionName.trim();
             renamedPolygon.properties.admin = regionName.trim();
             console.log("3:" + JSON.stringify(renamedPolygon));
             console.log(renamedPolygon.properties.admin);
             console.log(currentPolygon.properties.admin);
-          }
-          else {
-            console.log("created region")
+          } else {
+            console.log("created region");
             //currentLayer.feature.properties.admin = regionName.trim();
             renamedPolygon.properties.name = regionName.trim();
             console.log("3:" + JSON.stringify(renamedPolygon));
@@ -428,40 +418,44 @@ const handleAddKeyValue = (e) => {
             console.log(currentPolygon.properties.name);
           }
 
-          store.addUpdatePolygonToMapTransaction(currentPolygon, renamedPolygon);
+          store.addUpdatePolygonToMapTransaction(
+            currentPolygon,
+            renamedPolygon
+          );
         }
       });
       currentLayer.bindPopup(content).openPopup();
-
     }
-  }
+  };
 
   const handleChangeColor = (e) => {
     console.log("changeColor");
     if (currentLayer) {
-      const colorPicker = document.createElement('input');
-      colorPicker.type = 'color';
-      colorPicker.id = 'colorpicker';
+      const colorPicker = document.createElement("input");
+      colorPicker.type = "color";
+      colorPicker.id = "colorpicker";
 
       colorPicker.addEventListener("change", function () {
-
         changedColor = colorPicker.value;
         console.log("Selected color:", changedColor);
 
         currentLayer.color = changedColor;
         currentLayer.setStyle({
-          color: changedColor
+          color: changedColor,
         });
         let changedColorPolygon = JSON.parse(JSON.stringify(currentPolygon));
 
         changedColorPolygon.properties.color = changedColor;
 
-        store.addUpdatePolygonToMapTransaction(currentPolygon, changedColorPolygon);
+        store.addUpdatePolygonToMapTransaction(
+          currentPolygon,
+          changedColorPolygon
+        );
       });
       document.body.appendChild(colorPicker);
       colorPicker.click();
     }
-  }
+  };
 
   const handleStartPolygon = (e) => {
     setAddButtonEnabled(false);
@@ -470,7 +464,7 @@ const handleAddKeyValue = (e) => {
     if (map.editTools) {
       let polygon = map.editTools.startPolygon();
     }
-  }
+  };
 
   const handleFeatureAdd = (e) => {
     setAddButtonEnabled(true);
@@ -479,7 +473,7 @@ const handleAddKeyValue = (e) => {
     setSplitButtonEnabled(false);
 
     const feature = e.layer.toGeoJSON();
-    if (feature.geometry.type !== 'LineString') {
+    if (feature.geometry.type !== "LineString") {
       onEachRegion(feature, e.layer);
 
       console.log("adding", feature);
@@ -496,8 +490,7 @@ const handleAddKeyValue = (e) => {
 
       selectedLayer = e.layer;
       selectedPolygon = feature;
-    }
-    else {
+    } else {
       e.layer.disableEdit();
     }
 
@@ -526,9 +519,8 @@ const handleAddKeyValue = (e) => {
       setAddButtonEnabled(true);
       setMergeButtonEnabled(true);
       setCompressButtonEnabled(true);
-
     }
-  }
+  };
 
   // const handleFeatureStartMoveVertex = (e) => {
   //   const feature = e.layer.toGeoJSON();
@@ -561,7 +553,6 @@ const handleAddKeyValue = (e) => {
   };
 
   const handleSplitFeature = (e) => {
-
     console.log("added new vertex");
     console.log(e.layer.toGeoJSON());
     let lineString = e.layer.toGeoJSON();
@@ -574,8 +565,10 @@ const handleAddKeyValue = (e) => {
       let lineCoords = turf.getCoords(lineString);
       let pointOne = turf.point(lineCoords[0]);
       let pointTwo = turf.point(lineCoords[1]);
-      if (turf.booleanPointInPolygon(pointOne, selectedPolygon) ||
-        turf.booleanPointInPolygon(pointTwo, selectedPolygon)) {
+      if (
+        turf.booleanPointInPolygon(pointOne, selectedPolygon) ||
+        turf.booleanPointInPolygon(pointTwo, selectedPolygon)
+      ) {
         console.log("contains vertex");
         //deSelect(currentLayer, null);
 
@@ -594,8 +587,7 @@ const handleAddKeyValue = (e) => {
         setRedoButtonEnabled(true);
 
         setSplitEnabled(false);
-      }
-      else {
+      } else {
         console.log("linecoords", lineCoords);
 
         if (lineCoords[0][0] > lineCoords[1][0]) {
@@ -604,7 +596,9 @@ const handleAddKeyValue = (e) => {
           lineCoords[1] = temp;
         }
 
-        let slope = (lineCoords[1][1] - lineCoords[0][1]) / (lineCoords[1][0] - lineCoords[0][0]);
+        let slope =
+          (lineCoords[1][1] - lineCoords[0][1]) /
+          (lineCoords[1][0] - lineCoords[0][0]);
         if (!isFinite(slope)) {
           slope = 9999;
         }
@@ -612,7 +606,10 @@ const handleAddKeyValue = (e) => {
         console.log("slope", slope);
         console.log("intercept", intercept);
 
-        lineCoords.push([lineCoords[0][0] - .00001, lineCoords[0][1] - .00001]);
+        lineCoords.push([
+          lineCoords[0][0] - 0.00001,
+          lineCoords[0][1] - 0.00001,
+        ]);
         console.log("linecoords before", lineCoords);
 
         let thickLineString = turf.lineString(lineCoords);
@@ -623,7 +620,10 @@ const handleAddKeyValue = (e) => {
         let polygonHalves = turf.difference(selectedPolygon, thickLinePolygon);
         console.log("difference is", polygonHalves);
 
-        if (selectedPolygon.geometry.coordinates.length == polygonHalves.geometry.coordinates.length) {
+        if (
+          selectedPolygon.geometry.coordinates.length ==
+          polygonHalves.geometry.coordinates.length
+        ) {
           console.log("didnt split anything");
           setRenameButtonEnabled(true);
           setColorButtonEnabled(true);
@@ -640,77 +640,64 @@ const handleAddKeyValue = (e) => {
           setRedoButtonEnabled(true);
 
           setSplitEnabled(false);
-
-        }
-        else {
+        } else {
           let largerLineCoords = [];
-          if (slope > .17) {
+          if (slope > 0.17) {
             if ((-85 - intercept) / slope < -500) {
-              largerLineCoords.push([-500, slope * (-500) + intercept]);
-            }
-            else {
+              largerLineCoords.push([-500, slope * -500 + intercept]);
+            } else {
               largerLineCoords.push([(-85 - intercept) / slope, -85]);
             }
             largerLineCoords.push(lineCoords[0]);
             largerLineCoords.push(lineCoords[1]);
             if ((85 - intercept) / slope > 500) {
-              largerLineCoords.push([500, slope * (500) + intercept]);
-            }
-            else {
+              largerLineCoords.push([500, slope * 500 + intercept]);
+            } else {
               largerLineCoords.push([(85 - intercept) / slope, 85]);
             }
             largerLineCoords.push([-500, 85]);
             largerLineCoords.push([-500, -85]);
-          }
-          else if (slope > 0) {
+          } else if (slope > 0) {
             if ((-85 - intercept) / slope < -500) {
-              largerLineCoords.push([-500, slope * (-500) + intercept]);
-            }
-            else {
+              largerLineCoords.push([-500, slope * -500 + intercept]);
+            } else {
               largerLineCoords.push([(-85 - intercept) / slope, -85]);
             }
             largerLineCoords.push(lineCoords[0]);
             largerLineCoords.push(lineCoords[1]);
             if ((85 - intercept) / slope > 500) {
-              largerLineCoords.push([500, slope * (500) + intercept]);
-            }
-            else {
+              largerLineCoords.push([500, slope * 500 + intercept]);
+            } else {
               largerLineCoords.push([(85 - intercept) / slope, 85]);
             }
             largerLineCoords.push([500, 85]);
             largerLineCoords.push([-500, 85]);
-          }
-          else if (slope > -.17) {
+          } else if (slope > -0.17) {
             if ((85 - intercept) / slope < -500) {
-              largerLineCoords.push([-500, slope * (-500) + intercept]);
-            }
-            else {
+              largerLineCoords.push([-500, slope * -500 + intercept]);
+            } else {
               largerLineCoords.push([(85 - intercept) / slope, 85]);
             }
             largerLineCoords.push(lineCoords[0]);
             largerLineCoords.push(lineCoords[1]);
             if ((-85 - intercept) / slope > 500) {
-              largerLineCoords.push([500, slope * (500) + intercept]);
-            }
-            else {
+              largerLineCoords.push([500, slope * 500 + intercept]);
+            } else {
               largerLineCoords.push([(-85 - intercept) / slope, -85]);
             }
             largerLineCoords.push([500, 85]);
             largerLineCoords.push([-500, 85]);
-          }
-          else {
+          } else {
             if ((85 - intercept) / slope < -500) {
-              largerLineCoords.push([-500, slope * (-500) + intercept]);
-            }
-            else {
+              largerLineCoords.push([-500, slope * -500 + intercept]);
+            } else {
               largerLineCoords.push([(85 - intercept) / slope, 85]);
             }
             largerLineCoords.push(lineCoords[0]);
             largerLineCoords.push(lineCoords[1]);
             if ((-85 - intercept) / slope > 500) {
-              largerLineCoords.push([500, slope * (500) + intercept]);
-            }
-            else {
+              largerLineCoords.push([500, slope * 500 + intercept]);
+            } else {
               largerLineCoords.push([(-85 - intercept) / slope, -85]);
             }
             largerLineCoords.push([500, -85]);
@@ -731,8 +718,7 @@ const handleAddKeyValue = (e) => {
             let point = turf.pointOnFeature(currPoly);
             if (turf.booleanPointInPolygon(point, halfScreenPolygon)) {
               firstHalfCoords.push(currPolyCoords);
-            }
-            else {
+            } else {
               secondHalfCoords.push(currPolyCoords);
             }
           }
@@ -742,22 +728,69 @@ const handleAddKeyValue = (e) => {
           var secondHalfPolys;
           if (firstHalfCoords.length == 1) {
             firstHalfPolys = turf.polygon(firstHalfCoords[0]);
-          }
-          else {
+          } else {
             firstHalfPolys = turf.multiPolygon(firstHalfCoords);
           }
           if (secondHalfCoords.length == 1) {
             secondHalfPolys = turf.polygon(secondHalfCoords[0]);
-          }
-          else {
+          } else {
             secondHalfPolys = turf.multiPolygon(secondHalfCoords);
           }
 
-          if (selectedPolygon.properties.hasOwnProperty('NAME_5')) {
+          if (selectedPolygon.properties.hasOwnProperty("NAME_5")) {
             //currentLayer.feature.properties.NAME_5 = regionName.trim();
             //trim gets rid of the '/n' which apparently is there even though console logging regionName does not have '/n'
-            firstHalfPolys.properties = { NAME_5: selectedPolygon.properties.NAME_5 }
-            secondHalfPolys.properties = { NAME_5: selectedPolygon.properties.NAME_5 + "2" }
+            firstHalfPolys.properties = {
+              NAME_5: selectedPolygon.properties.NAME_5,
+            };
+            secondHalfPolys.properties = {
+              NAME_5: selectedPolygon.properties.NAME_5 + "2",
+            };
+          } else if (selectedPolygon.properties.hasOwnProperty("NAME_4")) {
+            firstHalfPolys.properties = {
+              NAME_4: selectedPolygon.properties.NAME_5,
+            };
+            secondHalfPolys.properties = {
+              NAME_4: selectedPolygon.properties.NAME_5 + "2",
+            };
+          } else if (selectedPolygon.properties.hasOwnProperty("NAME_3")) {
+            firstHalfPolys.properties = {
+              NAME_3: selectedPolygon.properties.NAME_4,
+            };
+            secondHalfPolys.properties = {
+              NAME_3: selectedPolygon.properties.NAME_4 + "2",
+            };
+          } else if (selectedPolygon.properties.hasOwnProperty("NAME_2")) {
+            firstHalfPolys.properties = {
+              NAME_2: selectedPolygon.properties.NAME_3,
+            };
+            secondHalfPolys.properties = {
+              NAME_2: selectedPolygon.properties.NAME_3 + "2",
+            };
+          } else if (selectedPolygon.properties.hasOwnProperty("NAME_1")) {
+            firstHalfPolys.properties = {
+              NAME_1: selectedPolygon.properties.NAME_1,
+            };
+            secondHalfPolys.properties = {
+              NAME_1: selectedPolygon.properties.NAME_1 + "2",
+            };
+          } else if (selectedPolygon.properties.hasOwnProperty("NAME_0")) {
+            firstHalfPolys.properties = {
+              NAME_0: selectedPolygon.properties.NAME_0,
+            };
+            secondHalfPolys.properties = {
+              NAME_0: selectedPolygon.properties.NAME_0 + "2",
+            };
+          } else if (selectedPolygon.properties.hasOwnProperty("admin")) {
+            firstHalfPolys.properties = {
+              admin: selectedPolygon.properties.admin,
+            };
+            secondHalfPolys.properties = {
+              admin: selectedPolygon.properties.admin + "2",
+            };
+          } else {
+            firstHalfPolys.properties = { name: "Untitled" };
+            secondHalfPolys.properties = { name: "Untitled" };
           }
           else if (selectedPolygon.properties.hasOwnProperty('NAME_4')) {
             firstHalfPolys.properties = { NAME_4: selectedPolygon.properties.NAME_4 }
@@ -807,13 +840,14 @@ const handleAddKeyValue = (e) => {
           setUndoButtonEnabled(true);
           setRedoButtonEnabled(true);
 
-          store.addSplitPolygonsOfMapTransaction(selectedPolygon, [firstHalfPolys, secondHalfPolys]);
+          store.addSplitPolygonsOfMapTransaction(selectedPolygon, [
+            firstHalfPolys,
+            secondHalfPolys,
+          ]);
         }
-
       }
-
     }
-  }
+  };
 
   const handleFeatureDeleteVertex = (e) => {
     const feature = e.layer.toGeoJSON();
@@ -835,18 +869,17 @@ const handleAddKeyValue = (e) => {
 
     prevPolygon = selectedPolygon;
     selectedPolygon = feature;
-
-  }
+  };
 
   const handleCompressMap = (e) => {
-    console.log("current map: ")
-    console.log(store.currentMap.geoJsonMap)
+    console.log("current map: ");
+    console.log(store.currentMap.geoJsonMap);
     const feature = simplify(store.currentMap.geoJsonMap, 0.1);
     //const feature = turf.feature(store.currentMap.geoJsonMap);
-    console.log(feature)
+    console.log(feature);
 
-    console.log("leaflet map: ")
-    console.log(map)
+    console.log("leaflet map: ");
+    console.log(map);
     //console.log(feature)
     // Simplify the feature using the Turf simplify() function
     //const simplified = turf.simplify(feature, 0.01);
@@ -861,20 +894,22 @@ const handleAddKeyValue = (e) => {
         layer.remove();
       }
     });
-    
 
     var simplifiedGeojsonMapLayer = L.geoJson(feature.features, {
-      onEachFeature: onEachRegion
+      onEachFeature: onEachRegion,
     });
     simplifiedGeojsonMapLayer.eachLayer(function (layer) {
       layer.addTo(map);
     });
 
     store.currentMap.geoJsonMap = feature;
-    console.log("current map: ")
-    console.log(store.currentMap.geoJsonMap)
-  }
-/*
+    console.log("current map: ");
+    console.log(store.currentMap.geoJsonMap);
+
+    setIsCompressOpen(false);
+
+  };
+  /*
   const handleInfo = (e) => {
     // var text = document.getElementById("infoText");
     // if (text.style.display == "none") {
@@ -906,8 +941,7 @@ const handleAddKeyValue = (e) => {
 
       setUndoButtonEnabled(true);
       setRedoButtonEnabled(true);
-    }
-    else {
+    } else {
       setRenameButtonEnabled(false);
       setColorButtonEnabled(false);
       //setPropertyButtonEnabled(false);
@@ -921,9 +955,7 @@ const handleAddKeyValue = (e) => {
       setRedoButtonEnabled(false);
     }
     setMergeEnabled(!mergeEnabled);
-
-
-  }
+  };
 
   const handleEnableSplit = () => {
     console.log(splitEnabled);
@@ -944,8 +976,7 @@ const handleAddKeyValue = (e) => {
 
       setUndoButtonEnabled(true);
       setRedoButtonEnabled(true);
-    }
-    else {
+    } else {
       if (currentPolygon !== null) {
         if (map.editTools) {
           let polygon = map.editTools.startPolyline();
@@ -966,10 +997,9 @@ const handleAddKeyValue = (e) => {
       setRedoButtonEnabled(false);
     }
     setSplitEnabled(!splitEnabled);
-  }
+  };
 
   function handleUndo() {
-
     store.undo();
 
     setRenameButtonEnabled(false);
@@ -1003,25 +1033,34 @@ const handleAddKeyValue = (e) => {
     if (currentPolygon) {
       console.log(currentPolygon.properties);
     }
-  }
+  };
   const handleCloseRegionProperties = () => {
     setIsPropertiesOpen(false);
   }
 
+  const handleCloseCompress = () => {
+    setIsCompressOpen(false);
+  };
+
+  const handleCompress = () => {
+    console.log("handle compress");
+    setIsCompressOpen(true);
+  };
   const handleDbClickValue = (key, value) => {
     setEditingKey(key);
     setEditedValues({ [key]: value });
   };
+  
   const handleValueChange = (e) => {
     console.log("value change");
     console.log(e.target.value);
     const { value } = e.target;
     setEditedValues({ [editingKey]: value });
   };
+
   const handleBlur = () => {
-
     console.log(editedValues[editingKey]);
-
+    // var found = false;
     // const propertiesDictionaryArray = [];
     // for (const key in currentPolygon.properties) {
     //   propertiesDictionaryArray.push({ [key]: currentPolygon.properties[key] });
@@ -1033,81 +1072,145 @@ const handleAddKeyValue = (e) => {
     for (const key in modifiedPropertiesPolygon.properties) {
       if (key === editingKey) {
         // console.log("hhhhh:"+modifiedPropertiesPolygon.properties[editingKey] );
-        modifiedPropertiesPolygon.properties[editingKey] = editedValues[editingKey];
+        //found = true;
+        modifiedPropertiesPolygon.properties[editingKey] =
+          editedValues[editingKey];
       }
     }
-    console.log("current:" + JSON.stringify(currentPolygon));
-    console.log("modified" + JSON.stringify(modifiedPropertiesPolygon));
+    /*   if (found ===false){
+      modifiedPropertiesPolygon.properties[editingKey] = editedValues[editingKey];
+    }
+    */
 
-    store.addUpdatePolygonToMapTransaction(currentPolygon, modifiedPropertiesPolygon);
+    //console.log("current:" + JSON.stringify(currentPolygon));
+    //console.log("modified" + JSON.stringify(modifiedPropertiesPolygon));
+
+    store.addUpdatePolygonToMapTransaction(
+      currentPolygon,
+      modifiedPropertiesPolygon
+    );
 
     setEditingKey(null);
     setEditedValues({});
+    setEditingProperties(false);
+    setIsPropertiesOpen(false);
   };
-
 
   const handleHelpIconClick = () => {
     setIsInfoOpen(true);
-  }
+  };
   const handleCloseInfo = () => {
     setIsInfoOpen(false);
-  }
+  };
+  const handleKeyChange = (e) => {
+    console.log("key change");
 
-let propertiesContents = "";
+    document
+      .getElementById("key-change")
+      .addEventListener("keyup", function (e) {
+        if (e.key === "Enter") {
+          setEditingKey(e.target.value);
+          console.log(editingKey);
+        }
+      });
+  };
 
-if (!editingProperties){
-  propertiesContents = (
-    currentPolygon && (
-      <div style = {{paddingTop: "50px", paddingLeft: "10px"}}>
+  const handleKeyValueChange = (e) => {
+    console.log("value change");
+    document
+      .getElementById("value-change")
+      .addEventListener("keyup", function (e) {
+        if (e.key === "Enter") {
+          if (editingKey !== null) {
+            let modifiedPropertiesPolygon = JSON.parse(
+              JSON.stringify(currentPolygon)
+            );
+
+            modifiedPropertiesPolygon.properties[editingKey] = e.target.value;
+
+            //console.log("current:" + JSON.stringify(currentPolygon));
+            //console.log("modified" + JSON.stringify(modifiedPropertiesPolygon));
+
+            store.addUpdatePolygonToMapTransaction(
+              currentPolygon,
+              modifiedPropertiesPolygon
+            );
+
+            setEditedValues({});
+            setEditingProperties(false);
+            setEditingKey(null);
+            setIsPropertiesOpen(false);
+          }
+        }
+      });
+  };
+
+  let propertiesContents = "";
+
+  if (!editingProperties) {
+    propertiesContents = currentPolygon && (
+      <div style={{ paddingTop: "50px", paddingLeft: "10px" }}>
         {Object.entries(currentPolygon.properties).map(([key, value]) => (
           <div key={key}>
             <span>{key}: </span>
             {editingKey === key ? (
               <input
                 type="text"
-                value={editedValues[key] || ''}
+                value={editedValues[key] || ""}
                 onChange={handleValueChange}
                 onBlur={handleBlur}
                 autoFocus
               />
             ) : (
-              <span onDoubleClick={() => handleDbClickValue(key, value)}>{value}</span>
+              <span onDoubleClick={() => handleDbClickValue(key, value)}>
+                {value}
+              </span>
             )}
           </div>
         ))}
       </div>
-    )
-  );
-}
-else {
-  propertiesContents = (
-    currentPolygon && (
-      <div style = {{paddingTop: "50px", paddingLeft: "10px"}}>
+    );
+  } else {
+    propertiesContents = currentPolygon && (
+      <div style={{ paddingTop: "50px", paddingLeft: "10px" }}>
         {Object.entries(currentPolygon.properties).map(([key, value]) => (
           <div key={key}>
             <span>{key}: </span>
             {editingKey === key ? (
               <input
                 type="text"
-                value={editedValues[key] || ''}
+                value={editedValues[key] || ""}
                 onChange={handleValueChange}
                 onBlur={handleBlur}
                 autoFocus
               />
             ) : (
-              <span onDoubleClick={() => handleDbClickValue(key, value)}>{value}</span>
+              <span onDoubleClick={() => handleDbClickValue(key, value)}>
+                {value}
+              </span>
             )}
           </div>
-          
-        ))}   
-	      <input type="text" class="property input" name="key" style={{width: "100px", marginRight: "5px"}} />:  
-	      <input type="text" class="property input" name="value" style={{width: "100px", marginLeft: "5px"}}/>      
+        ))}
+        <input
+          type="text"
+          id="key-change"
+          class="property input"
+          name="key"
+          style={{ width: "100px", marginRight: "5px" }}
+          onChange={handleKeyChange}
+        />
+        :
+        <input
+          type="text"
+          id="value-change"
+          class="property input"
+          name="value"
+          style={{ width: "100px", marginLeft: "5px" }}
+          onChange={handleKeyValueChange}
+        />
       </div>
-    )
-    
-  );
-}
-
+    );
+  }
 
   return (
     <div>
@@ -1115,7 +1218,7 @@ else {
         <IconButton
           aria-label="back"
           onClick={(event) => {
-            store.updateThumbnailOfMap(store.currentMap._id, '/createmap');
+            store.updateThumbnailOfMap(store.currentMap._id, "/createmap");
           }}
         >
           <ArrowBackIosIcon />
@@ -1127,7 +1230,7 @@ else {
               <Tooltip title="Undo">
                 <span>
                   <IconButton
-                    disabled={(!store.canUndo() || !undoButtonEnabled)}
+                    disabled={!store.canUndo() || !undoButtonEnabled}
                     size="large"
                     edge="start"
                     color="inherit"
@@ -1143,7 +1246,7 @@ else {
               <Tooltip title="Redo">
                 <span>
                   <IconButton
-                    disabled={(!store.canRedo() || !redoButtonEnabled)}
+                    disabled={!store.canRedo() || !redoButtonEnabled}
                     size="large"
                     edge="start"
                     color="inherit"
@@ -1169,21 +1272,6 @@ else {
                     onClick={handleEditSubregionName}
                   >
                     <BorderColorIcon />
-                  </IconButton>
-                </span>
-              </Tooltip>
-              <Tooltip title="Add Property">
-                <span>
-                  <IconButton
-                    disabled={!propertyButtonEnabled}
-                    size="large"
-                    edge="start"
-                    color="inherit"
-                    aria-label="menu"
-                    sx={{ mr: 2 }}
-                    onClick={handleAddProperty}
-                  >
-                    <PostAddIcon />
                   </IconButton>
                 </span>
               </Tooltip>
@@ -1277,12 +1365,97 @@ else {
                     color="inherit"
                     aria-label="menu"
                     sx={{ mr: 2 }}
-                    onClick={handleCompressMap}
+                    onClick={handleCompress}
                   >
                     <CompressIcon />
                   </IconButton>
                 </span>
               </Tooltip>
+
+              <Modal
+                open={isCompressOpen}
+                onClose={handleCloseCompress}
+                style={{
+                  position: "absolute",
+                  top: "40%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  width: 380,
+                  height: 200,
+                  backgroundColor: "#145374",
+                  color: "#FFE484",
+                  border: "2px solid #000",
+                  boxShadow: 24,
+                  borderRadius: 10,
+                  p: 4,
+                  overflowY: "auto",
+                }}
+              >
+                <div>
+                  <div>
+                    <Button
+                      variant="contained"
+                      sx={{ maxWidth: 100 }}
+                      style={{
+                        borderRadius: 50,
+                        backgroundColor: "#FFE484",
+                        padding: "7px 34px",
+                        margin: "10px 10px",
+                        fontSize: "10px",
+                        color: "#000000",
+                        size: "small",
+                        position: "absolute",
+                        right: "0%",
+                      }}
+                      onClick={handleCloseCompress}
+                    >
+                      X
+                    </Button>
+                  </div>
+
+                  <br></br>
+                  <br></br>
+                  <Typography
+                    id="modal-modal-title"
+                    variant="h6"
+                    component="h2"
+                    style={{ padding: "5px", margin: "10px" }}
+                  >
+                    Are you sure you want to Compress, this cannot be undone.
+                  </Typography>
+
+                  <Button
+                    variant="contained"
+                    sx={{ maxWidth: 100 }}
+                    style={{
+                      borderRadius: 50,
+                      backgroundColor: "#AEAFFF",
+                      padding: "7px 34px",
+                      margin: "10px 10px",
+                      fontSize: "13px",
+                      color: "#000000",
+                    }}
+                    onClick={handleCompressMap}
+                  >
+                    Confirm
+                  </Button>
+                  <Button
+                    variant="contained"
+                    sx={{ maxWidth: 100 }}
+                    style={{
+                      borderRadius: 50,
+                      backgroundColor: "#FFE484",
+                      padding: "7px 34px",
+                      margin: "10px 10px",
+                      fontSize: "13px",
+                      color: "#000000",
+                    }}
+                    onClick={handleCloseCompress}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </Modal>
 
               <Tooltip title="Subregion Properties">
                 <span>
@@ -1300,7 +1473,9 @@ else {
                 </span>
               </Tooltip>
 
-              <Modal open={isPropertiesOpen} onClose={handleCloseRegionProperties}
+              <Modal
+                open={isPropertiesOpen}
+                onClose={handleCloseRegionProperties}
                 style={{
                   position: "absolute",
                   top: "50%",
@@ -1315,7 +1490,8 @@ else {
                   borderRadius: 10,
                   p: 4,
                   overflowY: "auto",
-                }} >
+                }}
+              >
                 <div>
                   <Button
                     variant="contained"
@@ -1329,8 +1505,7 @@ else {
                       color: "#000000",
                       size: "small",
                       position: "absolute",
-                      right: "0%"
-
+                      right: "0%",
                     }}
                     onClick={handleCloseRegionProperties}
                   >
@@ -1340,11 +1515,8 @@ else {
                   <IconButton color="inherit" onClick={handleAddKeyValue}>
                     <PostAddIcon />
                   </IconButton>
-
-
                 </div>
               </Modal>
-
 
               <Tooltip title="Info">
                 <span>
@@ -1362,7 +1534,9 @@ else {
               </Tooltip>
             </Toolbar>
 
-            <Modal open={isInfoOpen} onClose={handleCloseInfo}
+            <Modal
+              open={isInfoOpen}
+              onClose={handleCloseInfo}
               style={{
                 position: "absolute",
                 top: "55%",
@@ -1377,8 +1551,9 @@ else {
                 borderRadius: 10,
                 p: 4,
                 overflowY: "auto",
-              }} >
-              <div style = {{padding:"5px"}}>
+              }}
+            >
+              <div style={{ padding: "5px" }}>
                 <Button
                   variant="contained"
                   sx={{ maxWidth: 100 }}
@@ -1390,58 +1565,63 @@ else {
                     fontSize: "13px",
                     color: "#000000",
                     position: "absolute",
-                    right: "0%"
+                    right: "0%",
                   }}
                   onClick={handleCloseInfo}
                 >
                   X
                 </Button>
-                <Typography id="modal-modal-title" variant="h6" component="h2" style = {{padding:"5px", margin:"10px"}}>
-                  
-                Hover over an icon to see its purpose.
-                  <br></br><br></br>
-                Click on a subregion to select it. It will be highlighted.
-                  The white squares are its corresponding vertices. 
-                  <br></br>Click on a translucent square to add the vertex to the subregion.<br></br>
-                  Click on an opaque square to delete the vertex. <br></br>Hold and drag an opaque square to move the vertex.
+                <Typography
+                  id="modal-modal-title"
+                  variant="h6"
+                  component="h2"
+                  style={{ padding: "5px", margin: "10px" }}
+                >
+                  Hover over an icon to see its purpose.
+                  <br></br>
+                  <br></br>
+                  Click on a subregion to select it. It will be highlighted. The
+                  white squares are its corresponding vertices.
+                  <br></br>Click on a translucent square to add the vertex to
+                  the subregion.<br></br>
+                  Click on an opaque square to delete the vertex. <br></br>Hold
+                  and drag an opaque square to move the vertex.
                   <br></br>
                   To unselect a subregion, click it again.
                   <br></br>
                   <br></br>
-                  <IconButton
-                    color="inherit">
+                  Changes made are saved automatically. You can undo or redo if
+                  you made changes. You can not undo or redo previous changes
+                  from your last session.
+                  <br></br>
+                  <br></br>
+                  <IconButton color="inherit">
                     <UndoIcon />
                   </IconButton>
                   Undo a change.
                   <br></br>
-                  <IconButton
-                    color="inherit">
+                  <IconButton color="inherit">
                     <RedoIcon />
                   </IconButton>
                   Redo a change.
                   <br></br>
-                  
                   <IconButton color="inherit">
                     <BorderColorIcon />
                   </IconButton>
                   Rename a selected subregion.
                   <br></br>
                   <IconButton color="inherit">
-                    <PostAddIcon />
-                  </IconButton>
-                  Add custom properties to a selected subregion.
-                  <br></br>
-                  <IconButton color="inherit">
                     <FormatColorFillIcon />
                   </IconButton>
-                  Change the color for a selected subregion. Click on the map to confirm.
+                  Change the color for a selected subregion. Click on the map to
+                  confirm.
                   <br></br>
                   <IconButton color="inherit">
                     <AddIcon />
                   </IconButton>
-                  Add a subregion.
-                  Begin clicking to add vertices.
-                  Once you are done outlining the subregion, click on the last vertex you added.
+                  Add a subregion. Begin clicking to add vertices. Once you are
+                  done outlining the subregion, click on the last vertex you
+                  added.
                   <br></br>
                   <IconButton color="inherit">
                     <DeleteIcon />
@@ -1451,29 +1631,39 @@ else {
                   <IconButton color="inherit">
                     <MergeIcon />
                   </IconButton>
-                  Merge two subregions.
-                  Click on the Merge button and then select two subregions. They will be merged after you have selected the second subregion.
-                  Keep in mind that colors from selected subregions will not be inherited.
+                  Merge two subregions. Click on the Merge button and then
+                  select two subregions. They will be merged after you have
+                  selected the second subregion. Keep in mind that colors from
+                  selected subregions will not be inherited.
                   <br></br>
                   <IconButton color="inherit">
                     <CallSplitIcon />
                   </IconButton>
-                  Split a selected subregion into two.
-                  Click two vertices on a subregion to split the subregion along the line connecting those vertices.
+                  Split a selected subregion into two. Click two vertices on a
+                  subregion to split the subregion along the line connecting
+                  those vertices.
                   <br></br>
                   <IconButton color="inherit">
                     <CompressIcon />
                   </IconButton>
-                  Compress the map. This will make the map less detailed as it will have less data. This action is irreversible.
-                <br></br>
-                <IconButton color="inherit">
-                  <ReceiptLong />
+                  Compress the map. This will make the map less detailed as it
+                  will have less data. This action is irreversible.
+                  <br></br>
+                  <IconButton color="inherit">
+                    <ReceiptLong />
                   </IconButton>
-                  Shows the properties of a selected subregion. You can doubleclick a property to edit it. 
+                  Shows the properties of a selected subregion. You can
+                  doubleclick a property to edit it.
+                  <br></br>
+                  <IconButton color="inherit">
+                    <PostAddIcon />
+                  </IconButton>
+                  Add custom properties to a selected subregion. This button is
+                  in the Subregion Properties popup. You must enter a value in
+                  both inputs. Enter to submit the change.
                 </Typography>
               </div>
             </Modal>
-
           </AppBar>
         </Box>
       </div>

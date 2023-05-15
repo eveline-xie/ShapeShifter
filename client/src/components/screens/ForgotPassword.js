@@ -189,7 +189,7 @@ export default function ForgotPassword() {
     </Grid>
   );
 
-  if (input) {
+  if (input & !auth.error) {
     form =
       // <div id="emailsent-text">
       //   <a onClick={handleReset}>Email sent! Check your mailbox :)</a>
