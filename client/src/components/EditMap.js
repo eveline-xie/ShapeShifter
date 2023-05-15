@@ -1021,7 +1021,7 @@ const handleAddKeyValue = (e) => {
   const handleBlur = () => {
 
     console.log(editedValues[editingKey]);
-
+    var found = false;
     // const propertiesDictionaryArray = [];
     // for (const key in currentPolygon.properties) {
     //   propertiesDictionaryArray.push({ [key]: currentPolygon.properties[key] });
@@ -1033,9 +1033,14 @@ const handleAddKeyValue = (e) => {
     for (const key in modifiedPropertiesPolygon.properties) {
       if (key === editingKey) {
         // console.log("hhhhh:"+modifiedPropertiesPolygon.properties[editingKey] );
+        found = true;
         modifiedPropertiesPolygon.properties[editingKey] = editedValues[editingKey];
       }
     }
+    if (found ===false){
+      modifiedPropertiesPolygon.properties[editingKey] = editedValues[editingKey];
+    }
+    
     console.log("current:" + JSON.stringify(currentPolygon));
     console.log("modified" + JSON.stringify(modifiedPropertiesPolygon));
 
@@ -1052,6 +1057,14 @@ const handleAddKeyValue = (e) => {
   const handleCloseInfo = () => {
     setIsInfoOpen(false);
   }
+  const handleKeyChange = (e) => {
+    console.log("key change");
+    console.log(e.target.value);
+    const { key } = e.target;
+    setEditingKey(key);
+  };
+
+
 
 let propertiesContents = "";
 
@@ -1100,8 +1113,8 @@ else {
           </div>
           
         ))}   
-	      <input type="text" class="property input" name="key" style={{width: "100px", marginRight: "5px"}} />:  
-	      <input type="text" class="property input" name="value" style={{width: "100px", marginLeft: "5px"}}/>      
+	      <input type="text" class="property input" name="key" style={{width: "100px", marginRight: "5px"}} onChange={handleKeyChange} />:  
+	      <input type="text" class="property input" name="value" style={{width: "100px", marginLeft: "5px" }} onChange={handleValueChange}/>      
       </div>
     )
     

@@ -215,11 +215,7 @@ export default function CreateMap() {
    }
   return (
     <div id="main-screen">
-      {/* <div style = {{
-          position: "fixed",
-          left: "5%",
-          paddingBottom: "10px"
-        }}> */}
+      
       <IconButton
         aria-label="back"
         onClick={(event) => {
@@ -230,12 +226,7 @@ export default function CreateMap() {
         <ArrowBackIosIcon />
         Home
       </IconButton>
-      {/* </div> */}
-      {/* <div id="create-map-screen" style = {{
-          position: "fixed",
-          top: "25%",
-          left: "20%"
-        }}> */}
+      <div id="create-map-screen" >
         <div>
           {/* <div>
             <Button
