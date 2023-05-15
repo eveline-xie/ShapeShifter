@@ -1023,12 +1023,14 @@ export default function EditMap() {
     setEditingKey(key);
     setEditedValues({ [key]: value });
   };
+  
   const handleValueChange = (e) => {
     console.log("value change");
     console.log(e.target.value);
     const { value } = e.target;
     setEditedValues({ [editingKey]: value });
   };
+
   const handleBlur = () => {
     console.log(editedValues[editingKey]);
     // var found = false;
@@ -1064,6 +1066,7 @@ export default function EditMap() {
     setEditingKey(null);
     setEditedValues({});
     setEditingProperties(false);
+    setIsPropertiesOpen(false);
   };
 
   const handleHelpIconClick = () => {
@@ -1108,8 +1111,8 @@ export default function EditMap() {
 
             setEditedValues({});
             setEditingProperties(false);
-
             setEditingKey(null);
+            setIsPropertiesOpen(false);
           }
         }
       });
