@@ -1023,7 +1023,7 @@ export default function EditMap() {
     setEditingKey(key);
     setEditedValues({ [key]: value });
   };
-  
+
   const handleValueChange = (e) => {
     console.log("value change");
     console.log(e.target.value);
@@ -1135,8 +1135,20 @@ export default function EditMap() {
                 autoFocus
               />
             ) : (
+              // <span onDoubleClick={() => handleDbClickValue(key, value)}>
+              //   {value}
+              // </span>
               <span onDoubleClick={() => handleDbClickValue(key, value)}>
-                {value}
+                {value ? (
+                  value
+                ) : (
+                  <span
+                    onDoubleClick={() => handleDbClickValue(key, null)}
+                    // style={{ backgroundColor: 'gray' }}
+                  >
+                     /
+                  </span>
+                )}
               </span>
             )}
           </div>
