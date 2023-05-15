@@ -114,12 +114,14 @@ function GlobalStoreContextProvider(props) {
           userMaps: store.userMaps,
           publishedMaps: store.publishedMaps,
           mapIdMarkedForExport: payload,
+          sharedMaps: store.sharedMaps,
         });
       }
       case GlobalStoreActionType.FORK_MAP: {
         return setStore({
           currentMap: store.currentMap,
           userMaps: store.userMaps,
+          sharedMaps: store.sharedMaps,
           publishedMaps: store.publishedMaps,
         });
       }
