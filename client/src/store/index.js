@@ -688,7 +688,25 @@ function GlobalStoreContextProvider(props) {
     tps.addTransaction(transaction);
   }
 
+  store.compressMap = async function () {
+    console.log("map to compress", store.currentMap);
+    let top = topoServer.topology({ foo: store.currentMap.geoJsonMap });
+    let top2 = topoSimplify.presimplify(top);
+    let top3 = topoSimplify.simplify(top2, store.currentMap.compressionLevel + .01);
+    let newmap = topoClient.feature(top3, "foo");
+    console.log("emitting compress");
+    socket.emit("compress-map", store.currentMap._id, newmap, store.currentMap.compressionLevel + .01);
+  }
 
+  socket.on("compress-map-response", (id, data) => {
+    if (window.location.pathname.includes(id)) {
+      const map = data;
+      storeReducer({
+        type: GlobalStoreActionType.LOAD_CURRENT_MAP,
+        payload: map
+      })
+    }
+  });
 
   store.updateThumbnailOfMap = async function (id, path) {
     const response = await api.getMapById(id);

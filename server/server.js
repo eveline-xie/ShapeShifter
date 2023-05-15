@@ -73,6 +73,10 @@ io.on('connection', (socket) => {
     let map = await socketFunctions.undoMergePolygonsOfMap(id, polygonsToMerge, mergedPolygon);
     io.emit("undo-merge-polygons-response", id, map);
   });
+  socket.on("compress-map", async (id, newMap, newCompressionLevel) => {
+    let map = await socketFunctions.compressMap(id, newMap, newCompressionLevel);
+    io.emit("compress-map-response", id, map);
+  });
 });
 // app.post('/auth/signup', (req, res) =>  {
 //     console.log("signup!!!");

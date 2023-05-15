@@ -740,57 +740,8 @@ export default function EditMap() {
           if (selectedPolygon.properties.hasOwnProperty("NAME_5")) {
             //currentLayer.feature.properties.NAME_5 = regionName.trim();
             //trim gets rid of the '/n' which apparently is there even though console logging regionName does not have '/n'
-            firstHalfPolys.properties = {
-              NAME_5: selectedPolygon.properties.NAME_5,
-            };
-            secondHalfPolys.properties = {
-              NAME_5: selectedPolygon.properties.NAME_5 + "2",
-            };
-          } else if (selectedPolygon.properties.hasOwnProperty("NAME_4")) {
-            firstHalfPolys.properties = {
-              NAME_4: selectedPolygon.properties.NAME_5,
-            };
-            secondHalfPolys.properties = {
-              NAME_4: selectedPolygon.properties.NAME_5 + "2",
-            };
-          } else if (selectedPolygon.properties.hasOwnProperty("NAME_3")) {
-            firstHalfPolys.properties = {
-              NAME_3: selectedPolygon.properties.NAME_4,
-            };
-            secondHalfPolys.properties = {
-              NAME_3: selectedPolygon.properties.NAME_4 + "2",
-            };
-          } else if (selectedPolygon.properties.hasOwnProperty("NAME_2")) {
-            firstHalfPolys.properties = {
-              NAME_2: selectedPolygon.properties.NAME_3,
-            };
-            secondHalfPolys.properties = {
-              NAME_2: selectedPolygon.properties.NAME_3 + "2",
-            };
-          } else if (selectedPolygon.properties.hasOwnProperty("NAME_1")) {
-            firstHalfPolys.properties = {
-              NAME_1: selectedPolygon.properties.NAME_1,
-            };
-            secondHalfPolys.properties = {
-              NAME_1: selectedPolygon.properties.NAME_1 + "2",
-            };
-          } else if (selectedPolygon.properties.hasOwnProperty("NAME_0")) {
-            firstHalfPolys.properties = {
-              NAME_0: selectedPolygon.properties.NAME_0,
-            };
-            secondHalfPolys.properties = {
-              NAME_0: selectedPolygon.properties.NAME_0 + "2",
-            };
-          } else if (selectedPolygon.properties.hasOwnProperty("admin")) {
-            firstHalfPolys.properties = {
-              admin: selectedPolygon.properties.admin,
-            };
-            secondHalfPolys.properties = {
-              admin: selectedPolygon.properties.admin + "2",
-            };
-          } else {
-            firstHalfPolys.properties = { name: "Untitled" };
-            secondHalfPolys.properties = { name: "Untitled" };
+            firstHalfPolys.properties = {NAME_5: selectedPolygon.properties.NAME_5};
+            secondHalfPolys.properties = {NAME_5: selectedPolygon.properties.NAME_5 + "2"};
           }
           else if (selectedPolygon.properties.hasOwnProperty('NAME_4')) {
             firstHalfPolys.properties = { NAME_4: selectedPolygon.properties.NAME_4 }
@@ -874,39 +825,41 @@ export default function EditMap() {
   const handleCompressMap = (e) => {
     console.log("current map: ");
     console.log(store.currentMap.geoJsonMap);
-    const feature = simplify(store.currentMap.geoJsonMap, 0.1);
-    //const feature = turf.feature(store.currentMap.geoJsonMap);
-    console.log(feature);
-
-    console.log("leaflet map: ");
-    console.log(map);
-    //console.log(feature)
-    // Simplify the feature using the Turf simplify() function
-    //const simplified = turf.simplify(feature, 0.01);
-    //console.log(simplified)
-    //const simplifiedFeature = turf.featureCollection(simplified).features.geometry.geometry;
-    //console.log(simplifiedFeature)
-    //L.geoJSON().clearLayers();
-
-    // map.removeLayer(L.geoJSON(store.currentMap.geoJsonMap));
-    map.eachLayer(function (layer) {
-      if (layer instanceof L.GeoJSON) {
-        layer.remove();
-      }
-    });
-
-    var simplifiedGeojsonMapLayer = L.geoJson(feature.features, {
-      onEachFeature: onEachRegion,
-    });
-    simplifiedGeojsonMapLayer.eachLayer(function (layer) {
-      layer.addTo(map);
-    });
-
-    store.currentMap.geoJsonMap = feature;
-    console.log("current map: ");
-    console.log(store.currentMap.geoJsonMap);
-
     setIsCompressOpen(false);
+    store.compressMap();
+    // const feature = simplify(store.currentMap.geoJsonMap, 0.1);
+    // //const feature = turf.feature(store.currentMap.geoJsonMap);
+    // console.log(feature);
+
+    // console.log("leaflet map: ");
+    // console.log(map);
+    // //console.log(feature)
+    // // Simplify the feature using the Turf simplify() function
+    // //const simplified = turf.simplify(feature, 0.01);
+    // //console.log(simplified)
+    // //const simplifiedFeature = turf.featureCollection(simplified).features.geometry.geometry;
+    // //console.log(simplifiedFeature)
+    // //L.geoJSON().clearLayers();
+
+    // // map.removeLayer(L.geoJSON(store.currentMap.geoJsonMap));
+    // map.eachLayer(function (layer) {
+    //   if (layer instanceof L.GeoJSON) {
+    //     layer.remove();
+    //   }
+    // });
+
+    // var simplifiedGeojsonMapLayer = L.geoJson(feature.features, {
+    //   onEachFeature: onEachRegion,
+    // });
+    // simplifiedGeojsonMapLayer.eachLayer(function (layer) {
+    //   layer.addTo(map);
+    // });
+
+    // store.currentMap.geoJsonMap = feature;
+    // console.log("current map: ");
+    // console.log(store.currentMap.geoJsonMap);
+
+    // setIsCompressOpen(false);
 
   };
   /*
@@ -918,7 +871,7 @@ export default function EditMap() {
     //   text.style.display = "none";
     // }
   }
-*/
+  */
   const handleEnableMerge = () => {
     console.log("merge enabled:", !mergeEnabled);
     if (mergeEnabled) {
@@ -1050,7 +1003,7 @@ export default function EditMap() {
     setEditingKey(key);
     setEditedValues({ [key]: value });
   };
-  
+
   const handleValueChange = (e) => {
     console.log("value change");
     console.log(e.target.value);
