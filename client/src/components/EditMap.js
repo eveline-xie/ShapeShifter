@@ -63,6 +63,8 @@ export default function EditMap() {
   const [compressButtonEnabled, setCompressButtonEnabled] = useState(true);
   const [propertyButtonEnabled, setPropertyButtonEnabled] = useState(false);
 
+  const [editingProperties, setEditingProperties] = useState(false);
+
   const [currentView, setCurrentView] = useState(null);
   const [currentZoom, setCurrentZoom] = useState(null);
 
@@ -331,20 +333,24 @@ export default function EditMap() {
     setCurrentZoom(map.getZoom());
   }
   const handleAddProperty = (e) => {
-    let propertyValue = "";
-    let propertyKey = "";
-
     if (currentLayer) {
       //console.log("1:" + JSON.stringify(currentPolygon));
       // Bind the tooltip to the layer and set its content
-        console.log("not enabled");
+        //console.log("not enabled");
         setIsPropertiesOpen(true);
         handleAddKeyValue(e);
-        return;
       }
   }
 const handleAddKeyValue = (e) => {
-  console.log("here")
+  //console.log("here")
+  let propertyValue = "";
+  let propertyKey = "";
+  if (currentLayer) {
+    setEditingProperties(true);
+    //console.log("1:" + JSON.stringify(currentPolygon));
+    // Bind the tooltip to the layer and set its content
+    //setEditingProperties(false);
+  }
 }
 
   const handleEditSubregionName = (e) => {
@@ -1047,7 +1053,60 @@ const handleAddKeyValue = (e) => {
     setIsInfoOpen(false);
   }
 
+let propertiesContents = "";
 
+if (!editingProperties){
+  propertiesContents = (
+    currentPolygon && (
+      <div style = {{paddingTop: "50px", paddingLeft: "10px"}}>
+        {Object.entries(currentPolygon.properties).map(([key, value]) => (
+          <div key={key}>
+            <span>{key}: </span>
+            {editingKey === key ? (
+              <input
+                type="text"
+                value={editedValues[key] || ''}
+                onChange={handleValueChange}
+                onBlur={handleBlur}
+                autoFocus
+              />
+            ) : (
+              <span onDoubleClick={() => handleDbClickValue(key, value)}>{value}</span>
+            )}
+          </div>
+        ))}
+      </div>
+    )
+  );
+}
+else {
+  propertiesContents = (
+    currentPolygon && (
+      <div style = {{paddingTop: "50px", paddingLeft: "10px"}}>
+        {Object.entries(currentPolygon.properties).map(([key, value]) => (
+          <div key={key}>
+            <span>{key}: </span>
+            {editingKey === key ? (
+              <input
+                type="text"
+                value={editedValues[key] || ''}
+                onChange={handleValueChange}
+                onBlur={handleBlur}
+                autoFocus
+              />
+            ) : (
+              <span onDoubleClick={() => handleDbClickValue(key, value)}>{value}</span>
+            )}
+          </div>
+          
+        ))}   
+	      <input type="text" class="property input" name="key" style={{width: "100px", marginRight: "5px"}} />:  
+	      <input type="text" class="property input" name="value" style={{width: "100px", marginLeft: "5px"}}/>      
+      </div>
+    )
+    
+  );
+}
 
 
   return (
@@ -1277,26 +1336,7 @@ const handleAddKeyValue = (e) => {
                   >
                     X
                   </Button>
-                  {currentPolygon && (
-                    <div style = {{paddingTop: "50px", paddingLeft: "10px"}}>
-                      {Object.entries(currentPolygon.properties).map(([key, value]) => (
-                        <div key={key}>
-                          <span>{key}: </span>
-                          {editingKey === key ? (
-                            <input
-                              type="text"
-                              value={editedValues[key] || ''}
-                              onChange={handleValueChange}
-                              onBlur={handleBlur}
-                              autoFocus
-                            />
-                          ) : (
-                            <span onDoubleClick={() => handleDbClickValue(key, value)}>{value}</span>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                  {propertiesContents}
                   <IconButton color="inherit" onClick={handleAddKeyValue}>
                     <PostAddIcon />
                   </IconButton>
