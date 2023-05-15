@@ -183,10 +183,21 @@ async function deleteMapById(req, res) {
     console.log("id to delete", req.params.id);
     const map = await Map.findById({ _id: req.params.id });
     const loggedInUser = await User.findOne({ email: map.ownerEmail });
+    if(map.collaborators){
+        await removeMapFromShared(map.collaborators, map._id);
+    }
     await (Map.findOneAndDelete({ _id: req.params.id }));
     loggedInUser.mapsIOwn.splice(loggedInUser.mapsIOwn.indexOf(map._id), 1);
     loggedInUser.save();
     return res.status(201).json({});
+}
+
+async function removeMapFromShared(collaborators, id){
+    for(let i=0; i<collaborators.length;i++){
+        const user = await await User.findOne({ email: collaborators[i] });
+        user.sharedWithMe.splice(user.sharedWithMe.indexOf(id), 1);
+        user.save()
+    }
 }
 
 async function addPolygonToMap(req, res) {
