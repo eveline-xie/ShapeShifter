@@ -332,19 +332,24 @@ export default function EditMap() {
     setCurrentView(map.getCenter());
     setCurrentZoom(map.getZoom());
   }
+  /* If the Region Properties modal is not open, and click on the "add custom property" icon in the toolbar
+      open the modal
+  */
   const handleAddProperty = (e) => {
     if (currentLayer) {
       //console.log("1:" + JSON.stringify(currentPolygon));
       // Bind the tooltip to the layer and set its content
         //console.log("not enabled");
         setIsPropertiesOpen(true);
-        handleAddKeyValue(e);
+        handleAddKeyValue();
       }
   }
+  /* If the Region Properties modal is open, and click on the "add custom property" icon in the modal
+    show the text inputs
+  */
 const handleAddKeyValue = (e) => {
   //console.log("here")
-  let propertyValue = "";
-  let propertyKey = "";
+
   if (currentLayer) {
     setEditingProperties(true);
     //console.log("1:" + JSON.stringify(currentPolygon));
@@ -1021,7 +1026,7 @@ const handleAddKeyValue = (e) => {
   const handleBlur = () => {
 
     console.log(editedValues[editingKey]);
-    var found = false;
+   // var found = false;
     // const propertiesDictionaryArray = [];
     // for (const key in currentPolygon.properties) {
     //   propertiesDictionaryArray.push({ [key]: currentPolygon.properties[key] });
@@ -1033,21 +1038,23 @@ const handleAddKeyValue = (e) => {
     for (const key in modifiedPropertiesPolygon.properties) {
       if (key === editingKey) {
         // console.log("hhhhh:"+modifiedPropertiesPolygon.properties[editingKey] );
-        found = true;
+        //found = true;
         modifiedPropertiesPolygon.properties[editingKey] = editedValues[editingKey];
       }
     }
-    if (found ===false){
+    /*   if (found ===false){
       modifiedPropertiesPolygon.properties[editingKey] = editedValues[editingKey];
     }
+    */
     
-    console.log("current:" + JSON.stringify(currentPolygon));
-    console.log("modified" + JSON.stringify(modifiedPropertiesPolygon));
+    //console.log("current:" + JSON.stringify(currentPolygon));
+    //console.log("modified" + JSON.stringify(modifiedPropertiesPolygon));
 
     store.addUpdatePolygonToMapTransaction(currentPolygon, modifiedPropertiesPolygon);
 
     setEditingKey(null);
     setEditedValues({});
+    setEditingProperties(false);
   };
 
 
@@ -1059,12 +1066,26 @@ const handleAddKeyValue = (e) => {
   }
   const handleKeyChange = (e) => {
     console.log("key change");
-    console.log(e.target.value);
-    const { key } = e.target;
-    setEditingKey(key);
+
+    document.getElementById("key-change").addEventListener("keyup", function (e) {
+      if (e.key === "Enter") {
+        setEditingKey(e.target.value);
+        console.log(editingKey);
+      }
+    });
   };
 
+  const handleKeyValueChange = (e) => {
+    console.log("value change");
+    document.getElementById("value-change").addEventListener("keyup", function (e) {
+      if (e.key === "Enter") {
+        currentPolygon.properties[editingKey]=e.target.value;
+        setEditingProperties(false);
+        setEditingKey(null);
+      }
+    });
 
+  };
 
 let propertiesContents = "";
 
@@ -1113,8 +1134,8 @@ else {
           </div>
           
         ))}   
-	      <input type="text" class="property input" name="key" style={{width: "100px", marginRight: "5px"}} onChange={handleKeyChange} />:  
-	      <input type="text" class="property input" name="value" style={{width: "100px", marginLeft: "5px" }} onChange={handleValueChange}/>      
+	      <input type="text" id = "key-change" class="property input" name="key" style={{width: "100px", marginRight: "5px"}} onChange={handleKeyChange} />:  
+	      <input type="text" id = "value-change" class="property input" name="value" style={{width: "100px", marginLeft: "5px" }} onChange={handleKeyValueChange}/>      
       </div>
     )
     
