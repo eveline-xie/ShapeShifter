@@ -388,6 +388,6 @@ export default function CreateMap() {
           </FormControl>
         </div>
       </div>
-    </div>
+    // </div>
   );
 }
