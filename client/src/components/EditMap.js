@@ -332,18 +332,7 @@ export default function EditMap() {
     setCurrentView(map.getCenter());
     setCurrentZoom(map.getZoom());
   }
-  /* If the Region Properties modal is not open, and click on the "add custom property" icon in the toolbar
-      open the modal
-  */
-  const handleAddProperty = (e) => {
-    if (currentLayer) {
-      //console.log("1:" + JSON.stringify(currentPolygon));
-      // Bind the tooltip to the layer and set its content
-        //console.log("not enabled");
-        setIsPropertiesOpen(true);
-        handleAddKeyValue();
-      }
-  }
+
   /* If the Region Properties modal is open, and click on the "add custom property" icon in the modal
     show the text inputs
   */
@@ -1079,9 +1068,23 @@ const handleAddKeyValue = (e) => {
     console.log("value change");
     document.getElementById("value-change").addEventListener("keyup", function (e) {
       if (e.key === "Enter") {
-        currentPolygon.properties[editingKey]=e.target.value;
+        if (editingKey!==null){
+
+        let modifiedPropertiesPolygon = JSON.parse(JSON.stringify(currentPolygon));
+
+        modifiedPropertiesPolygon.properties[editingKey]=e.target.value;
+        
+        //console.log("current:" + JSON.stringify(currentPolygon));
+        //console.log("modified" + JSON.stringify(modifiedPropertiesPolygon));
+    
+        store.addUpdatePolygonToMapTransaction(currentPolygon, modifiedPropertiesPolygon);
+        
+
+        setEditedValues({});
         setEditingProperties(false);
+
         setEditingKey(null);
+}
       }
     });
 
@@ -1203,21 +1206,6 @@ else {
                     onClick={handleEditSubregionName}
                   >
                     <BorderColorIcon />
-                  </IconButton>
-                </span>
-              </Tooltip>
-              <Tooltip title="Add Property">
-                <span>
-                  <IconButton
-                    disabled={!propertyButtonEnabled}
-                    size="large"
-                    edge="start"
-                    color="inherit"
-                    aria-label="menu"
-                    sx={{ mr: 2 }}
-                    onClick={handleAddProperty}
-                  >
-                    <PostAddIcon />
                   </IconButton>
                 </span>
               </Tooltip>
@@ -1442,6 +1430,9 @@ else {
                   To unselect a subregion, click it again.
                   <br></br>
                   <br></br>
+                Changes made are saved automatically. You can undo or redo if you made changes. You can not undo or redo previous changes from your last session.
+                <br></br>
+                <br></br>
                   <IconButton
                     color="inherit">
                     <UndoIcon />
@@ -1460,11 +1451,7 @@ else {
                   </IconButton>
                   Rename a selected subregion.
                   <br></br>
-                  <IconButton color="inherit">
-                    <PostAddIcon />
-                  </IconButton>
-                  Add custom properties to a selected subregion.
-                  <br></br>
+                  
                   <IconButton color="inherit">
                     <FormatColorFillIcon />
                   </IconButton>
@@ -1504,6 +1491,13 @@ else {
                   <ReceiptLong />
                   </IconButton>
                   Shows the properties of a selected subregion. You can doubleclick a property to edit it. 
+                  <br></br>
+                  <IconButton color="inherit">
+                    <PostAddIcon />
+                  </IconButton>
+                  Add custom properties to a selected subregion. This button is in the Subregion Properties popup. 
+                  You must enter a value in both inputs. Enter to submit the change.
+
                 </Typography>
               </div>
             </Modal>
