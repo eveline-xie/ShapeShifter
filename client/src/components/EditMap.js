@@ -17,6 +17,7 @@ import SouthAmericaIcon from "@mui/icons-material/SouthAmerica";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ReceiptLong from "@mui/icons-material/ReceiptLong";
 import InfoIcon from "@mui/icons-material/Info";
+import PostAddIcon from '@mui/icons-material/PostAdd';
 //import InfoModal from "../modals/InfoModal";
 import Modal from "@mui/material/Modal";
 import GlobalStoreContext from "../store";
@@ -60,6 +61,9 @@ export default function EditMap() {
   const [splitButtonEnabled, setSplitButtonEnabled] = useState(false);
   const [propertiesButtonEnabled, setPropertiesButtonEnabled] = useState(false);
   const [compressButtonEnabled, setCompressButtonEnabled] = useState(true);
+  const [propertyButtonEnabled, setPropertyButtonEnabled] = useState(false);
+
+  const [editingProperties, setEditingProperties] = useState(false);
 
   const [currentView, setCurrentView] = useState(null);
   const [currentZoom, setCurrentZoom] = useState(null);
@@ -135,6 +139,7 @@ export default function EditMap() {
 
     setRenameButtonEnabled(false);
     setColorButtonEnabled(false);
+    setPropertyButtonEnabled(false);
     setDeleteButtonEnabled(false);
     setSplitButtonEnabled(false);
     setPropertiesButtonEnabled(false);
@@ -252,6 +257,7 @@ export default function EditMap() {
         if (layer.editEnabled()) {
           setRenameButtonEnabled(false);
           setColorButtonEnabled(false);
+          setPropertyButtonEnabled(false);
           setDeleteButtonEnabled(false);
           setSplitButtonEnabled(false);
           setPropertiesButtonEnabled(false);
@@ -282,6 +288,7 @@ export default function EditMap() {
           console.log("selecting region");
           setRenameButtonEnabled(true);
           setColorButtonEnabled(true);
+          setPropertyButtonEnabled(true);
           setDeleteButtonEnabled(true);
           setSplitButtonEnabled(true);
           setPropertiesButtonEnabled(true);
@@ -325,6 +332,26 @@ export default function EditMap() {
     setCurrentView(map.getCenter());
     setCurrentZoom(map.getZoom());
   }
+  const handleAddProperty = (e) => {
+    if (currentLayer) {
+      //console.log("1:" + JSON.stringify(currentPolygon));
+      // Bind the tooltip to the layer and set its content
+        //console.log("not enabled");
+        setIsPropertiesOpen(true);
+        handleAddKeyValue(e);
+      }
+  }
+const handleAddKeyValue = (e) => {
+  //console.log("here")
+  let propertyValue = "";
+  let propertyKey = "";
+  if (currentLayer) {
+    setEditingProperties(true);
+    //console.log("1:" + JSON.stringify(currentPolygon));
+    // Bind the tooltip to the layer and set its content
+    //setEditingProperties(false);
+  }
+}
 
   const handleEditSubregionName = (e) => {
 
@@ -491,6 +518,7 @@ export default function EditMap() {
 
       setRenameButtonEnabled(false);
       setColorButtonEnabled(false);
+      //setPropertyButtonEnabled(false);
       setDeleteButtonEnabled(false);
       setSplitButtonEnabled(false);
       setPropertiesButtonEnabled(false);
@@ -521,6 +549,7 @@ export default function EditMap() {
 
     setRenameButtonEnabled(false);
     setColorButtonEnabled(false);
+    //setPropertyButtonEnabled(false);
     setDeleteButtonEnabled(false);
     setSplitButtonEnabled(false);
     setPropertiesButtonEnabled(false);
@@ -552,6 +581,7 @@ export default function EditMap() {
 
         setRenameButtonEnabled(true);
         setColorButtonEnabled(true);
+        //setPropertyButtonEnabled(true);
         setDeleteButtonEnabled(true);
         setSplitButtonEnabled(true);
         setPropertiesButtonEnabled(true);
@@ -597,6 +627,7 @@ export default function EditMap() {
           console.log("didnt split anything");
           setRenameButtonEnabled(true);
           setColorButtonEnabled(true);
+          //setPropertyButtonEnabled(true);
           setDeleteButtonEnabled(true);
           setSplitButtonEnabled(true);
           setPropertiesButtonEnabled(true);
@@ -764,6 +795,7 @@ export default function EditMap() {
 
           setRenameButtonEnabled(false);
           setColorButtonEnabled(false);
+          //setPropertyButtonEnabled(false);
           setDeleteButtonEnabled(false);
           setSplitButtonEnabled(false);
           setPropertiesButtonEnabled(false);
@@ -792,6 +824,7 @@ export default function EditMap() {
 
     setRenameButtonEnabled(false);
     setColorButtonEnabled(false);
+    //setPropertyButtonEnabled(false);
     setDeleteButtonEnabled(false);
     setSplitButtonEnabled(false);
     setPropertiesButtonEnabled(false);
@@ -841,7 +874,7 @@ export default function EditMap() {
     console.log("current map: ")
     console.log(store.currentMap.geoJsonMap)
   }
-
+/*
   const handleInfo = (e) => {
     // var text = document.getElementById("infoText");
     // if (text.style.display == "none") {
@@ -850,7 +883,7 @@ export default function EditMap() {
     //   text.style.display = "none";
     // }
   }
-
+*/
   const handleEnableMerge = () => {
     console.log("merge enabled:", !mergeEnabled);
     if (mergeEnabled) {
@@ -864,6 +897,7 @@ export default function EditMap() {
 
       setRenameButtonEnabled(false);
       setColorButtonEnabled(false);
+      //setPropertyButtonEnabled(false);
       setDeleteButtonEnabled(false);
       setSplitButtonEnabled(false);
       setPropertiesButtonEnabled(false);
@@ -876,6 +910,7 @@ export default function EditMap() {
     else {
       setRenameButtonEnabled(false);
       setColorButtonEnabled(false);
+      //setPropertyButtonEnabled(false);
       setDeleteButtonEnabled(false);
       setSplitButtonEnabled(false);
       setPropertiesButtonEnabled(false);
@@ -898,6 +933,7 @@ export default function EditMap() {
 
       setRenameButtonEnabled(true);
       setColorButtonEnabled(true);
+      //setPropertyButtonEnabled(true);
       setDeleteButtonEnabled(true);
       setSplitButtonEnabled(true);
       setPropertiesButtonEnabled(true);
@@ -917,6 +953,7 @@ export default function EditMap() {
       }
       setRenameButtonEnabled(false);
       setColorButtonEnabled(false);
+      //setPropertyButtonEnabled(false);
       setDeleteButtonEnabled(false);
       setMergeButtonEnabled(false);
       setCompressButtonEnabled(false);
@@ -937,6 +974,7 @@ export default function EditMap() {
 
     setRenameButtonEnabled(false);
     setColorButtonEnabled(false);
+    //setPropertyButtonEnabled(false);
     setDeleteButtonEnabled(false);
     setSplitButtonEnabled(false);
     setPropertiesButtonEnabled(false);
@@ -950,6 +988,7 @@ export default function EditMap() {
 
     setRenameButtonEnabled(false);
     setColorButtonEnabled(false);
+    //setPropertyButtonEnabled(false);
     setDeleteButtonEnabled(false);
     setSplitButtonEnabled(false);
     setPropertiesButtonEnabled(false);
@@ -1014,7 +1053,60 @@ export default function EditMap() {
     setIsInfoOpen(false);
   }
 
+let propertiesContents = "";
 
+if (!editingProperties){
+  propertiesContents = (
+    currentPolygon && (
+      <div style = {{paddingTop: "50px", paddingLeft: "10px"}}>
+        {Object.entries(currentPolygon.properties).map(([key, value]) => (
+          <div key={key}>
+            <span>{key}: </span>
+            {editingKey === key ? (
+              <input
+                type="text"
+                value={editedValues[key] || ''}
+                onChange={handleValueChange}
+                onBlur={handleBlur}
+                autoFocus
+              />
+            ) : (
+              <span onDoubleClick={() => handleDbClickValue(key, value)}>{value}</span>
+            )}
+          </div>
+        ))}
+      </div>
+    )
+  );
+}
+else {
+  propertiesContents = (
+    currentPolygon && (
+      <div style = {{paddingTop: "50px", paddingLeft: "10px"}}>
+        {Object.entries(currentPolygon.properties).map(([key, value]) => (
+          <div key={key}>
+            <span>{key}: </span>
+            {editingKey === key ? (
+              <input
+                type="text"
+                value={editedValues[key] || ''}
+                onChange={handleValueChange}
+                onBlur={handleBlur}
+                autoFocus
+              />
+            ) : (
+              <span onDoubleClick={() => handleDbClickValue(key, value)}>{value}</span>
+            )}
+          </div>
+          
+        ))}   
+	      <input type="text" class="property input" name="key" style={{width: "100px", marginRight: "5px"}} />:  
+	      <input type="text" class="property input" name="value" style={{width: "100px", marginLeft: "5px"}}/>      
+      </div>
+    )
+    
+  );
+}
 
 
   return (
@@ -1077,6 +1169,21 @@ export default function EditMap() {
                     onClick={handleEditSubregionName}
                   >
                     <BorderColorIcon />
+                  </IconButton>
+                </span>
+              </Tooltip>
+              <Tooltip title="Add Property">
+                <span>
+                  <IconButton
+                    disabled={!propertyButtonEnabled}
+                    size="large"
+                    edge="start"
+                    color="inherit"
+                    aria-label="menu"
+                    sx={{ mr: 2 }}
+                    onClick={handleAddProperty}
+                  >
+                    <PostAddIcon />
                   </IconButton>
                 </span>
               </Tooltip>
@@ -1229,26 +1336,10 @@ export default function EditMap() {
                   >
                     X
                   </Button>
-                  {currentPolygon && (
-                    <div style = {{paddingTop: "50px", paddingLeft: "10px"}}>
-                      {Object.entries(currentPolygon.properties).map(([key, value]) => (
-                        <div key={key}>
-                          <span>{key}: </span>
-                          {editingKey === key ? (
-                            <input
-                              type="text"
-                              value={editedValues[key] || ''}
-                              onChange={handleValueChange}
-                              onBlur={handleBlur}
-                              autoFocus
-                            />
-                          ) : (
-                            <span onDoubleClick={() => handleDbClickValue(key, value)}>{value}</span>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                  {propertiesContents}
+                  <IconButton color="inherit" onClick={handleAddKeyValue}>
+                    <PostAddIcon />
+                  </IconButton>
 
 
                 </div>
@@ -1274,10 +1365,11 @@ export default function EditMap() {
             <Modal open={isInfoOpen} onClose={handleCloseInfo}
               style={{
                 position: "absolute",
-                top: "50%",
+                top: "55%",
                 left: "50%",
                 transform: "translate(-50%, -50%)",
                 width: 800,
+                height: 600,
                 backgroundColor: "#145374",
                 color: "#FFE484",
                 border: "2px solid #000",
@@ -1304,8 +1396,17 @@ export default function EditMap() {
                 >
                   X
                 </Button>
-                <Typography id="modal-modal-title" variant="h6" component="h2">
-                  Hover over an icon to see its purpose.
+                <Typography id="modal-modal-title" variant="h6" component="h2" style = {{padding:"5px", margin:"10px"}}>
+                  
+                Hover over an icon to see its purpose.
+                  <br></br><br></br>
+                Click on a subregion to select it. It will be highlighted.
+                  The white squares are its corresponding vertices. 
+                  <br></br>Click on a translucent square to add the vertex to the subregion.<br></br>
+                  Click on an opaque square to delete the vertex. <br></br>Hold and drag an opaque square to move the vertex.
+                  <br></br>
+                  To unselect a subregion, click it again.
+                  <br></br>
                   <br></br>
                   <IconButton
                     color="inherit">
@@ -1319,15 +1420,16 @@ export default function EditMap() {
                   </IconButton>
                   Redo a change.
                   <br></br>
-                  Click on a subregion to select it. It will be highlighted.
-                  The white squares are its corresponding vertices.
-                  <br></br>
-                  To unselect a subregion, click it again.
-                  <br></br>
+                  
                   <IconButton color="inherit">
                     <BorderColorIcon />
                   </IconButton>
                   Rename a selected subregion.
+                  <br></br>
+                  <IconButton color="inherit">
+                    <PostAddIcon />
+                  </IconButton>
+                  Add custom properties to a selected subregion.
                   <br></br>
                   <IconButton color="inherit">
                     <FormatColorFillIcon />
@@ -1338,8 +1440,8 @@ export default function EditMap() {
                     <AddIcon />
                   </IconButton>
                   Add a subregion.
-                  With no subregion selected, begin clicking to add vertices.
-                  Once there you are done outlining the subregion, click on the last vertex you added.
+                  Begin clicking to add vertices.
+                  Once you are done outlining the subregion, click on the last vertex you added.
                   <br></br>
                   <IconButton color="inherit">
                     <DeleteIcon />
@@ -1362,12 +1464,12 @@ export default function EditMap() {
                   <IconButton color="inherit">
                     <CompressIcon />
                   </IconButton>
-                  Click on this icon to compress the map. This will make the map less detailed as it will have less data. This action is irreversible.
+                  Compress the map. This will make the map less detailed as it will have less data. This action is irreversible.
                 <br></br>
                 <IconButton color="inherit">
                   <ReceiptLong />
                   </IconButton>
-                  Shows the properties of a selected subregion.
+                  Shows the properties of a selected subregion. You can doubleclick a property to edit it. 
                 </Typography>
               </div>
             </Modal>
