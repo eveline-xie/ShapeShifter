@@ -1069,8 +1069,19 @@ const handleAddKeyValue = (e) => {
     document.getElementById("value-change").addEventListener("keyup", function (e) {
       if (e.key === "Enter") {
         if (editingKey!==null){
-        currentPolygon.properties[editingKey]=e.target.value;
+
+        let modifiedPropertiesPolygon = JSON.parse(JSON.stringify(currentPolygon));
+
+        modifiedPropertiesPolygon.properties[editingKey]=e.target.value;
+        
+        //console.log("current:" + JSON.stringify(currentPolygon));
+        //console.log("modified" + JSON.stringify(modifiedPropertiesPolygon));
+    
+        store.addUpdatePolygonToMapTransaction(currentPolygon, modifiedPropertiesPolygon);
+    
+        setEditedValues({});
         setEditingProperties(false);
+
         setEditingKey(null);}
       }
     });
