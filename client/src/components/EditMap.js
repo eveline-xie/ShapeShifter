@@ -760,16 +760,16 @@ const handleAddKeyValue = (e) => {
             secondHalfPolys.properties = { NAME_5: selectedPolygon.properties.NAME_5 + "2" }
           }
           else if (selectedPolygon.properties.hasOwnProperty('NAME_4')) {
-            firstHalfPolys.properties = { NAME_4: selectedPolygon.properties.NAME_5 }
-            secondHalfPolys.properties = { NAME_4: selectedPolygon.properties.NAME_5 + "2" }
+            firstHalfPolys.properties = { NAME_4: selectedPolygon.properties.NAME_4 }
+            secondHalfPolys.properties = { NAME_4: selectedPolygon.properties.NAME_4 + "2" }
           }
           else if (selectedPolygon.properties.hasOwnProperty('NAME_3')) {
-            firstHalfPolys.properties = { NAME_3: selectedPolygon.properties.NAME_4 }
-            secondHalfPolys.properties = { NAME_3: selectedPolygon.properties.NAME_4 + "2" }
+            firstHalfPolys.properties = { NAME_3: selectedPolygon.properties.NAME_3 }
+            secondHalfPolys.properties = { NAME_3: selectedPolygon.properties.NAME_3 + "2" }
           }
           else if (selectedPolygon.properties.hasOwnProperty('NAME_2')) {
-            firstHalfPolys.properties = { NAME_2: selectedPolygon.properties.NAME_3 }
-            secondHalfPolys.properties = { NAME_2: selectedPolygon.properties.NAME_3 + "2" }
+            firstHalfPolys.properties = { NAME_2: selectedPolygon.properties.NAME_2 }
+            secondHalfPolys.properties = { NAME_2: selectedPolygon.properties.NAME_2 + "2" }
           }
           else if (selectedPolygon.properties.hasOwnProperty('NAME_1')) {
             firstHalfPolys.properties = { NAME_1: selectedPolygon.properties.NAME_1 }
