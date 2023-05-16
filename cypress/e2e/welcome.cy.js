@@ -332,6 +332,7 @@ it('user goes to signup from login page', () => {
     cy.get('[id=mapcards]').eq(0).contains('Delete').click()
     
     cy.get(['id=delete-modal']).get('button').contains('Confirm').click()
+    cy.wait(4000)
     //cy.get('#file-submit').click()
   })
   
