@@ -186,7 +186,7 @@ function sendRecoveryEmail(email, token) {
   });
 
   const mailOptions = {
-    from: "ShapeshifterMap@outlook.com",
+    from: "ShapeShifter-416@outlook.com",
     to: `${email}`,
     subject: "Reset Password Verification Code",
     text:
@@ -309,7 +309,7 @@ function sendCollaboratorEmail(email) {
   });
 
   const mailOptions = {
-    from: "ShapeshifterMap@outlook.com",
+    from: "ShapeShifter-416@outlook.com",
     to: `${email}`,
     subject: "Map Shared With You",
     text: "Someone has invited you to edit the map",

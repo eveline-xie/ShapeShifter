@@ -52,6 +52,7 @@ export default function ForgotPassword() {
     // }
     const userData = email;
     auth.forgotPassword(userData);
+    auth.noError();
     if (errorMessage === "") {
        setInput(true);
     }
