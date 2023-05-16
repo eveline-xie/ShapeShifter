@@ -1030,8 +1030,6 @@ export default function EditMap() {
 
 
   const handleValueChange = (e) => {
-    console.log("value change");
-    console.log(e.target.value);
     const { value } = e.target;
     setEditedValues({ [editingKey]: value });
   };
@@ -1054,12 +1052,12 @@ export default function EditMap() {
           //found = true;
           modifiedPropertiesPolygon.properties[editingKey] =
             editedValues[editingKey];
-          store.addUpdatePolygonToMapTransaction(
-            currentPolygon,
-            modifiedPropertiesPolygon
-          );
         }
       }
+      store.addUpdatePolygonToMapTransaction(
+        currentPolygon,
+        modifiedPropertiesPolygon
+      );
       /*   if (found ===false){
         modifiedPropertiesPolygon.properties[editingKey] = editedValues[editingKey];
       }
