@@ -329,6 +329,11 @@ export default function EditMap() {
           setCurrentPolygon(layer.toGeoJSON());
           setCurrentLayer(layer);
         }
+
+        setEditedValues({});
+        setEditingProperties(false);
+        setEditingKey(null);
+        setIsPropertiesOpen(false);
       }
     });
   }
