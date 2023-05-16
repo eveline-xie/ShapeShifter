@@ -208,11 +208,22 @@ async function undoMergePolygonsOfMap(id, polygonsToMerge, mergedPolygon) {
     return map;
 }
 
+async function compressMap(id, newMap, newCompressionLevel) {
+    console.log("compress level", newCompressionLevel);
+    const map = await Map.findOne({ _id: id });
+    map.geoJsonMap = "";
+    map.geoJsonMap = newMap;
+    map.compressionLevel = "";
+    map.compressionLevel = newCompressionLevel;
+    await map.save();
+    return map;
+}
+
 module.exports = {
     addPolygonToMap,
     updatePolygonOfMap,
     deletePolygonOfMap,
     mergePolygonsOfMap,
-    undoMergePolygonsOfMap
-    
+    undoMergePolygonsOfMap,
+    compressMap
 };

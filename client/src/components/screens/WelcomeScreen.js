@@ -15,9 +15,10 @@ export default function SplashScreen() {
   const { auth } = useContext(AuthContext);
   function handleGuest(event) {
     console.log("guest log in rn");
-    // if (!auth.loggedIn) 
-    navigate("/communityguest");
-    // else navigate("/community");
+    if (!auth.loggedIn) {
+      navigate("/communityguest");
+    }
+    else {navigate("/community");}
 
     //auth.guestLogin();
   }

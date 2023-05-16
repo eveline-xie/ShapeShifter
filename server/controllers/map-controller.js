@@ -29,11 +29,9 @@ async function createNewMap(req, res) {
         geoJsonMap: body.map,
         collaborators: [],
         keywords: [],
-        published: {
-            isPublished: false, publishedDate: new Date(),
-            //   ,thumbnail: thumbnailUrl 
-        },
-        thumbnail: req.body.thumbnail
+        published: {isPublished: false, publishedDate: new Date()},
+        thumbnail: req.body.thumbnail,
+        compressionLevel: .005,
     })
 
     if (!map) {
@@ -94,7 +92,8 @@ async function loadUserMapsNoGeoJson(req, res) {
                 collaborators: maps[i].collaborators,
                 keywords: maps[i].keywords,
                 published: maps[i].published,
-                thumbnail: maps[i].thumbnail
+                thumbnail: maps[i].thumbnail,
+                compressionLevel: maps[i].compressionLevel,
             }
         )
     }
@@ -167,6 +166,7 @@ async function duplicateMapById(req, res) {
         keywords: [],
         published: { isPublished: false, publishedDate: new Date() },
         thumbnail: mapToDupe.thumbnail,
+        compressionLevel: mapToDupe.compressionLevel,
     });
     if (!map) {
         return res.status(400).json({ success: false, error: err })
@@ -483,6 +483,7 @@ async function loadPublishedMaps(req, res) {
             keywords: maps[i].keywords,
             published: maps[i].published,
             thumbnail: maps[i].thumbnail,
+            compressionLevel: maps[i].compressionLevel
         });
     }
     return res.status(201).json({
@@ -505,6 +506,7 @@ async function loadGuestPublishedMaps(req, res) {
       keywords: maps[i].keywords,
       published: maps[i].published,
       thumbnail: maps[i].thumbnail,
+      compressionLevel: maps[i].compressionLevel
     });
   }
   return res.status(201).json({
@@ -533,7 +535,8 @@ async function loadSharedMaps(req, res) {
             collaborators: map.collaborators,
             keywords: map.keywords,
             published: map.published,
-            thumbnail: map.thumbnail
+            thumbnail: map.thumbnail,
+            compressionLevel: map.compressionLevel
         });
     }
     // console.log(maps);
