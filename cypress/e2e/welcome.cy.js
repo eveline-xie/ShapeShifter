@@ -25,7 +25,20 @@ describe('welcome page', () => {
   })
   */
 
-/*
+
+  it('the user logs in to an account that does not exist', () => {
+    cy.visit('https://shapershifter.onrender.com')
+    //cy.get('form')
+    cy.contains('Login').click()
+      cy.get('[id=username]').type('smithy')
+      cy.get('[id=password]').type('thisisapassword1234')
+
+
+    cy.get('button').contains('Log In').click()
+    //cy.get('button').contains('Login').click()
+    cy.get('div').contains('Can not find user')
+  })
+
   it('the user logs in to an account wrong', () => {
     cy.visit('https://shapershifter.onrender.com')
     //cy.get('form')
@@ -36,9 +49,9 @@ describe('welcome page', () => {
 
     cy.get('button').contains('Log In').click()
     //cy.get('button').contains('Login').click()
-    cy.get('div').contains('Incorrect email/username or password!')
+    cy.get('div').contains('Wrong username or password.')
   })
-*/
+
 
 it('user goes to sign up page', () => {
   cy.visit('https://shapershifter.onrender.com')
@@ -46,10 +59,19 @@ it('user goes to sign up page', () => {
   cy.url().should('include','/signup')
 })
 
+
+
 it('user goes to login page', () => {
   cy.visit('https://shapershifter.onrender.com')
   cy.contains('Login').click()
   cy.url().should('include','/login')
+})
+
+it('user goes to signup from login page', () => {
+  cy.visit('https://shapershifter.onrender.com')
+  cy.contains('Login').click()
+  cy.contains('Need an account? Sign up now!').click()
+  cy.url().should('include','/signup')
 })
 
   it('the user logs in to an account', () => {
@@ -138,8 +160,20 @@ it('user goes to login page', () => {
     cy.get('button').contains('Log In')
       .click()
     cy.contains('Community').click()
-    cy.get('[id=mapcards]').eq(0).contains('View').click()
+    cy.url().should('include', '/community')
     
+  })
+
+  it('the logged in user wants to view community maps', () => {
+    cy.visit('https://shapershifter.onrender.com')
+    cy.contains('Login').click()
+      cy.get('[id=username]').type('smithy')
+      cy.get('[id=password]').type('thisisapassword123')
+    cy.get('button').contains('Log In')
+      .click()
+    cy.contains('Community').click()
+    cy.get('[id=mapcards]').eq(0).contains('View').click()
+    cy.contains('X').should('exist');
   })
 
 
