@@ -1722,7 +1722,7 @@ export default function EditMap() {
                   </IconButton>
                   Add custom properties to a selected subregion. This button is
                   in the Subregion Properties popup. You must enter a value in
-                  both inputs. Enter to submit the change.
+                  both inputs. Enter to submit the change. You must press enter for each input.
                 </Typography>
               </div>
             </Modal>

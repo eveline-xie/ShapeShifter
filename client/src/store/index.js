@@ -47,7 +47,7 @@ const tps = new jsTPS();
 
 const socket = new io(
   //"http://localhost:5000"
-   "https://shapeshifter-api.onrender.com"
+  "https://shapeshifter-api.onrender.com"
   , {
     autoConnect: false,
   }
@@ -694,6 +694,37 @@ function GlobalStoreContextProvider(props) {
     let top2 = topoSimplify.presimplify(top);
     let top3 = topoSimplify.simplify(top2, compressionInputValue);
     let newmap = topoClient.feature(top3, "foo");
+    newmap.features.forEach(function (feature) {
+      if (feature.geometry.type === 'MultiPolygon') {
+        for (var i = feature.geometry.coordinates.length - 1; i >= 0; i--) {
+          var polygon = feature.geometry.coordinates[i];
+          var filteredPolygon = polygon.filter(function (ring) {
+            return !(ring.length === 4 && ring[0][0] === ring[1][0] && ring[0][1] === ring[1][1] && ring[1][0] === ring[2][0] && ring[1][1] === ring[2][1] && ring[2][0] === ring[0][0] && ring[2][1] === ring[0][1]);
+          });
+          if (filteredPolygon.length === 0) {
+            feature.geometry.coordinates.splice(i, 1);
+          } else {
+            feature.geometry.coordinates[i] = filteredPolygon;
+          }
+        }
+      }
+    });
+
+    newmap.features = newmap.features.map(feature => {
+      if (feature.geometry.type === 'MultiPolygon' && feature.geometry.coordinates.length === 1) {
+        // If the feature is a MultiPolygon with only 1 Polygon, convert it to a Polygon
+        return {
+          ...feature,
+          geometry: {
+            type: 'Polygon',
+            coordinates: feature.geometry.coordinates[0]
+          }
+        };
+      } else {
+        // Otherwise, keep the original feature
+        return feature;
+      }
+    });
     console.log("emitting compress");
     socket.emit("compress-map", store.currentMap._id, newmap, compressionInputValue);
   }
