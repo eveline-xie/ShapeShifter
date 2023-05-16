@@ -105,7 +105,7 @@ it('user goes to signup from login page', () => {
     //cy.get('[id=create-map]').children()
     cy.contains('DBF').click()
     cy.get('input[type=file]').eq(1).selectFile('cypress/fixtures/USA_adm1.dbf', {force: true})
-    cy.wait(6000)
+    cy.wait(8000)
     //cy.wait(4000)
     //cy.url().should('include', '/createmap')
     //cy.get('#file-submit').click()
