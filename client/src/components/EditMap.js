@@ -1225,14 +1225,14 @@ export default function EditMap() {
           onChange={handleKeyChange}
         />
         :
-        <input
+        {/* <input
           type="text"
           id="value-change"
           class="property input"
           name="value"
           style={{ width: "100px", marginLeft: "5px" }}
           onChange={handleKeyValueChange}
-        />
+        /> */}
       </div>
     );
   }
