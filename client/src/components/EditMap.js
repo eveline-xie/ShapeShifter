@@ -1159,7 +1159,42 @@ export default function EditMap() {
         ))}
       </div>
     );
-  } else {
+  } 
+  else if (editingProperties && editingKey) {
+    propertiesContents = currentPolygon && (
+      <div style={{ paddingTop: "50px", paddingLeft: "10px" }}>
+        {Object.entries(currentPolygon.properties).map(([key, value]) => (
+          <div key={key}>
+            <span>{key}: </span>
+            {editingKey === key ? (
+              <input
+                type="text"
+                value={editedValues[key] || ""}
+                onChange={handleValueChange}
+                onBlur={handleBlur}
+                autoFocus
+              />
+            ) : (
+              <span onDoubleClick={() => handleDbClickValue(key, value)}>
+                {value}
+              </span>
+            )}
+          </div>
+        ))}
+        {editingKey}
+        :
+        <input
+          type="text"
+          id="value-change"
+          class="property input"
+          name="value"
+          style={{ width: "100px", marginLeft: "5px" }}
+          onChange={handleKeyValueChange}
+        />
+      </div>
+    );
+  }
+  else {
     propertiesContents = currentPolygon && (
       <div style={{ paddingTop: "50px", paddingLeft: "10px" }}>
         {Object.entries(currentPolygon.properties).map(([key, value]) => (
