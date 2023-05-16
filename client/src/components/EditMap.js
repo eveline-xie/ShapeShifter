@@ -1692,9 +1692,7 @@ export default function EditMap() {
                   <IconButton color="inherit">
                     <CallSplitIcon />
                   </IconButton>
-                  Split a selected subregion into two. Click two vertices on a
-                  subregion to split the subregion along the line connecting
-                  those vertices.
+                  Split a selected subregion into two. Click in two places outside the selected subregion to place vertices. The subregion will be split along the line connecting those vertices.
                   <br></br>
                   <IconButton color="inherit">
                     <CompressIcon />
