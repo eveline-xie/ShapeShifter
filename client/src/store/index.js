@@ -732,7 +732,6 @@ function GlobalStoreContextProvider(props) {
   socket.on("compress-map-response", (id, data) => {
     if (window.location.pathname.includes(id)) {
       const map = data;
-      tps.clearAllTransactions();
       storeReducer({
         type: GlobalStoreActionType.LOAD_CURRENT_MAP,
         payload: map

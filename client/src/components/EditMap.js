@@ -81,6 +81,7 @@ export default function EditMap() {
   const [currentLayer, setCurrentLayer] = useState(null);
 
   const [editingKey, setEditingKey] = useState(null);
+  const [editingValue, setEditingValue] = useState(null);
   const [editedValues, setEditedValues] = useState({});
 
   // const [prevPolygon, setPrevPolygon] = useState(null);
@@ -1094,34 +1095,32 @@ export default function EditMap() {
   };
 
   const handleKeyValueChange = (e) => {
-    console.log("value change");
-    document
-      .getElementById("value-change")
-      .addEventListener("keyup", function (e) {
-        if (e.key === "Enter") {
-          if (editingKey !== null) {
-            let modifiedPropertiesPolygon = JSON.parse(
-              JSON.stringify(currentPolygon)
-            );
-
-            modifiedPropertiesPolygon.properties[editingKey] = e.target.value;
-
-            //console.log("current:" + JSON.stringify(currentPolygon));
-            //console.log("modified" + JSON.stringify(modifiedPropertiesPolygon));
-
-            store.addUpdatePolygonToMapTransaction(
-              currentPolygon,
-              modifiedPropertiesPolygon
-            );
-
-            setEditedValues({});
-            setEditingProperties(false);
-            setEditingKey(null);
-            setIsPropertiesOpen(false);
-          }
-        }
-      });
+    setEditingValue(e.target.value);
   };
+
+  const handleKeyValueSubmit = (e) => {
+    if (e.key === "Enter") {
+      if (editingKey !== null) {
+        let modifiedPropertiesPolygon = JSON.parse(
+          JSON.stringify(currentPolygon)
+        );
+        modifiedPropertiesPolygon.properties[editingKey] = e.target.value;
+
+        //console.log("current:" + JSON.stringify(currentPolygon));
+        //console.log("modified" + JSON.stringify(modifiedPropertiesPolygon));
+
+        store.addUpdatePolygonToMapTransaction(
+          currentPolygon,
+          modifiedPropertiesPolygon
+        );
+
+        setEditedValues({});
+        setEditingProperties(false);
+        setEditingKey(null);
+        setIsPropertiesOpen(false);
+      }
+    }
+  }
 
   let propertiesContents = "";
 
@@ -1190,6 +1189,7 @@ export default function EditMap() {
           name="value"
           style={{ width: "100px", marginLeft: "5px" }}
           onChange={handleKeyValueChange}
+          onKeyDown={handleKeyValueSubmit}
         />
       </div>
     );
