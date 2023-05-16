@@ -17,17 +17,17 @@ import DeleteModal from "../modals/DeleteModal";
 import ExportModal from "../modals/ExportModal";
 import ForkModal from "../modals/ForkModal";
 import { useNavigate } from "react-router-dom";
-import { useContext, useEffect } from 'react'
+import { useContext, useEffect } from "react";
 import GlobalStoreContext from "../../store";
 
 /*
 This screen lists all the maps that the logged in user owns and all the maps that have been shared with the user.
 */
 
-export default function HomeScreen() {
+export default function SharedScreen() {
   const { store } = useContext(GlobalStoreContext);
 
-  const [dropdown, setDropdown] = React.useState(10);
+  const [dropdown, setDropdown] = React.useState(20);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchFilter, setSearchFilter] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
@@ -35,13 +35,9 @@ export default function HomeScreen() {
   const [openFork, setOpenFork] = useState(false);
   const [exportName, setExportName] = useState("");
   const [forkName, setForkName] = useState("");
-
   const [shpFile, setShpFile] = useState(null);
   const [dbfFile, setDbfFile] = useState(null);
   const [geoJsonFile, setGeoJsonFile] = useState(null);
-  const [shpFileName, setShpFileName] = useState("");
-  const [dbfFileName, setDbfFileName] = useState("");
-  const [geoJsonFileName, setGeoJsonFileName] = useState("");
 
   const shpInputRef = React.useRef();
   const dbfInputRef = React.useRef();
@@ -49,13 +45,12 @@ export default function HomeScreen() {
   let navigate = useNavigate();
 
   useEffect(() => {
-    store.loadUserMapsNoGeoJson();
+    store.loadSharedMaps();
     // store.loadSharedMaps();
   }, []);
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
-    // console.log(event.target.value);
     if (event.target.value !== '') {
       setSearchFilter(true);
       // console.log("filter");
@@ -65,7 +60,6 @@ export default function HomeScreen() {
     }
   };
 
-
   const handleDropdown = (event) => {
     let n = event.target.value;
     setDropdown(n);
@@ -74,7 +68,6 @@ export default function HomeScreen() {
       navigate("/shared");
     } else {
       navigate("/home");
-
     }
   };
   const openDeleteModal = (show) => {
@@ -100,7 +93,7 @@ export default function HomeScreen() {
 
   const handleUploadDBF = () => {
     dbfInputRef.current.click();
-  }
+  };
 
   const handleUploadGeoJson = () => {
     geoJsonInputRef.current.click();
@@ -113,7 +106,6 @@ export default function HomeScreen() {
     reader.onload = function (buffer) {
       console.log("shp", buffer.target.result);
       setShpFile(buffer.target.result);
-      setShpFileName(event.target.files[0].name);
 
       if (event.target.files[0] && dbfFile !== null) {
         store.createNewMapSHPDBF(buffer.target.result, dbfFile);
@@ -129,7 +121,6 @@ export default function HomeScreen() {
     reader.onload = function (buffer) {
       console.log("dbf", buffer.target.result);
       setDbfFile(buffer.target.result);
-      setDbfFileName(event.target.files[0].name);
 
       if (event.target.files[0] && shpFile !== null) {
         store.createNewMapSHPDBF(shpFile, buffer.target.result);
@@ -139,62 +130,45 @@ export default function HomeScreen() {
   };
 
   const handleGeoJsonFileChange = (event) => {
-
     var reader = new FileReader();
     reader.onload = function (buffer) {
       console.log("geojson", buffer.target.result);
       console.log("type", typeof buffer.target.result);
       setGeoJsonFile(buffer.target.result);
-      setGeoJsonFileName(event.target.files[0].name);
       store.createNewMapGeoJson(buffer.target.result);
     };
 
     reader.readAsArrayBuffer(event.target.files[0]);
   };
 
-
   let mapcards = "";
-
-  if (store.userMaps) {
+  if (store.sharedMaps) {
 
     if (searchFilter === true) {
       mapcards = (
         <List id="mapcards">
-          {store.userMaps
-            .filter(
-              (map) =>
-                map.name
-                  .split(" ")
-                  .some(
-                    (i) => !i.toLowerCase().indexOf(searchTerm.toLowerCase())
-                  ) ||
-                map.keywords.some(
-                  (keyword) =>
-                    !keyword.toLowerCase().indexOf(searchTerm.toLowerCase())
-                )
-            )
-            .map((map) => (
-              <MapCard
-                id={map._id}
-                mapName={map.name}
-                ownerUsername={map.ownerUsername}
-                published={map.published.isPublished}
-                setOpenDelete={openDeleteModal}
-                setOpenExport={openExportModal}
-                setOpenFork={openForkModal}
-                setExportName={exportNameSet}
-                setForkName={forkNameSet}
-                dropdown={dropdown}
-                key={map._id}
-                thumbnail={map.thumbnail}
-              />
-            ))}
+          {store.sharedMaps.filter((map) => map.name.split(" ").some(i => !i.indexOf(searchTerm)) || map.keywords.some(keyword => !keyword.indexOf(searchTerm))).map((map) => (
+            <MapCard
+              id={map._id}
+              mapName={map.name}
+              ownerUsername={map.ownerUsername}
+              published={map.published.isPublished}
+              setOpenDelete={openDeleteModal}
+              setOpenExport={openExportModal}
+              setOpenFork={openForkModal}
+              setExportName={exportNameSet}
+              setForkName={forkNameSet}
+              dropdown={dropdown}
+              key={map._id}
+              thumbnail={map.thumbnail}
+            />
+          ))}
         </List>
       );
     } else {
       mapcards = (
         <List id="mapcards">
-          {store.userMaps.map((map) => (
+          {store.sharedMaps.map((map) => (
             <MapCard
               id={map._id}
               mapName={map.name}
@@ -213,7 +187,27 @@ export default function HomeScreen() {
         </List>
       );
     }
-
+    // console.log("sharedmaps loading")
+    // mapcards = (
+    //   <List id="mapcards">
+    //     {store.sharedMaps.map((map) => (
+    //       <MapCard
+    //         id={map._id}
+    //         mapName={map.name}
+    //         ownerUsername={map.ownerUsername}
+    //         published={map.published.isPublished}
+    //         setOpenDelete={openDeleteModal}
+    //         setOpenExport={openExportModal}
+    //         setOpenFork={openForkModal}
+    //         setExportName={exportNameSet}
+    //         setForkName={forkNameSet}
+    //         dropdown={dropdown}
+    //         key={map._id}
+    //         thumbnail={map.thumbnail}
+    //       />
+    //     ))}
+    //   </List>
+    // );
   }
 
   let searchResult = ""
@@ -262,8 +256,7 @@ export default function HomeScreen() {
                     }}
                     onClick={handleUploadSHP}
                   >
-                    SHP<br />
-                    {shpFileName}
+                    SHP
                   </Button>
                   <input
                     type="file"
@@ -286,8 +279,7 @@ export default function HomeScreen() {
                     }}
                     onClick={handleUploadDBF}
                   >
-                    DBF<br />
-                    {dbfFileName}
+                    DBF
                   </Button>
                   <input
                     type="file"
@@ -310,8 +302,7 @@ export default function HomeScreen() {
                     }}
                     onClick={handleUploadGeoJson}
                   >
-                    GeoJson<br />
-                    {geoJsonFileName}
+                    GeoJson
                   </Button>
                   <input
                     type="file"
@@ -333,7 +324,6 @@ export default function HomeScreen() {
         </Card>
       </div>
       <br></br>
-
       <div
         id="home-dropdown"
         style={{
@@ -376,12 +366,10 @@ export default function HomeScreen() {
           }}
         />
       </div>
-
       <br></br>
       {searchResult}
       {/* mapcards */}
       <div>{mapcards}</div>
-
       <DeleteModal open={openDelete} setOpen={setOpenDelete} />
       <ExportModal
         open={openExport}

@@ -31,13 +31,13 @@ export default function ExportModal(props) {
   }
 
   function handleExportSHPDBF() {
-    console.log("test", store.mapIdMarkedForExport);
+    console.log("shpdbf", store.mapIdMarkedForExport);
     store.exportToSHPDBF();
     handleClose();
   }
 
   function handleExportGeoJson() {
-    console.log("yes", store.mapIdMarkedForExport);
+    console.log("geojson", store.mapIdMarkedForExport);
     store.exportToGeoJSON();
     handleClose();
   }
@@ -68,7 +68,7 @@ export default function ExportModal(props) {
             X
           </Button>
           <Typography id="modal-modal-title" variant="h6" component="h2">
-            Which format do you want to Export the “North America” Map?
+            Which format do you want to export the “{props.name}” Map?
           </Typography>
           <Button
             variant="contained"

@@ -58,7 +58,7 @@ async function signup(req, res) {
 
         res
           .status(400)
-          .send(JSON.stringify({ error: true, message: "user exists" }));
+          .send(JSON.stringify({ error: true, errorMessage: "user exists" }));
       } else {
         const saltRounds = 10;
         const salt = await bcrypt.genSalt(saltRounds);
@@ -102,6 +102,7 @@ async function login(req, res) {
       username: username,
     });
     if (!savedUser) {
+      console.log("error: cannot find user")
       return res.status(400).json({ errorMessage: "Can not find user" });
     }
     const passwordCorrect = await bcrypt.compare(
@@ -109,6 +110,7 @@ async function login(req, res) {
       savedUser.passwordHash
     );
     if (!passwordCorrect) {
+      console.log("error: Wrong username or password");
       return res.status(401).json({
         errorMessage: "Wrong username or password.",
       });
@@ -184,14 +186,14 @@ function sendRecoveryEmail(email, token) {
   });
 
   const mailOptions = {
-    from: "shapeshifter416@outlook.com",
+    from: "ShapeShifter-416@outlook.com",
     to: `${email}`,
-    subject: "Link To Reset Password",
+    subject: "Reset Password Verification Code",
     text:
       "You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n" +
       "Your verification code is:\n\n" +
-      // `http://localhost:3000/resetpassword?email=${email}&token=${token}\n\n` +
-      token+"\n\n"+
+      token +
+      "\n\n" +
       "If you did not request this, please ignore this email and your password will remain unchanged.\n",
   };
   console.log("sending mail");
@@ -263,6 +265,68 @@ async function updatePassword(req, res) {
   });
 }
 
+async function getUserByEmail(req, res){
+  try {
+    const { email, mapid } = req.query;
+    const savedUser = await User.findOne({
+      email: email,
+    });
+    if (!savedUser) {
+      console.log("error: cannot find user");
+      return res.status(200).json({ success: false });
+    }
+    else{
+      let i = savedUser.sharedWithMe.includes(mapid);
+      if (!i) {
+        savedUser.sharedWithMe.push(mapid);
+        sendCollaboratorEmail(email);
+      }
+      console.log(">>CM: "+i)
+      savedUser.save();
+      return res
+        .status(200)
+        .json({
+          success: true,})
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send();
+  }
+}
+
+function sendCollaboratorEmail(email) {
+  const transporter = nodemailer.createTransport({
+    host: "smtp-mail.outlook.com", // hostname
+    secureConnection: false, // TLS requires secureConnection to be false
+    port: 587, // port for secure SMTP
+    tls: {
+      ciphers: "SSLv3",
+    },
+    auth: {
+      user: `${process.env.EMAIL_ADDRESS}`,
+      pass: `${process.env.EMAIL_PASSWORD}`,
+    },
+  });
+
+  const mailOptions = {
+    from: "ShapeShifter-416@outlook.com",
+    to: `${email}`,
+    subject: "Map Shared With You",
+    text: "Someone has invited you to edit the map",
+  };
+  console.log("sending mail");
+
+  transporter.sendMail(mailOptions, (err, response) => {
+    if (err) {
+      console.error("there was an error: ", err);
+    } else {
+      console.log("here is the res: ", response);
+      res.status(200).json("recovery email sent");
+    }
+  });
+}
+
+
 async function logout(req, res) {
   console.log("logout!!!");
   auth.verify(req, res, async function () {
@@ -290,5 +354,6 @@ module.exports = {
   sendRecoveryEmail,
   verifyPassword,
   updatePassword,
+  getUserByEmail,
   logout,
 };

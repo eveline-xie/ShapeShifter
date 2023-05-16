@@ -13,8 +13,9 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { useNavigate } from 'react-router-dom'
-import { useContext, useState } from "react";
+import { useState, useContext, useEffect } from "react";
 import AuthContext from "../auth";
+import GlobalStoreContext from "../store";
 
 /*
    This navbar is a functional React component that
@@ -25,11 +26,21 @@ const settings = ['Logout'];
 
 function NavBar() {
   const { auth } = useContext(AuthContext);
+  const { store } = useContext(GlobalStoreContext);
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [username, setUsername] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const navigate = useNavigate();
-
+  useEffect(() => {
+    if (auth.user) {
+      setUsername(auth.user.username);
+    }
+    if (auth.error) {
+      setErrorMessage(auth.errMessage);
+    }
+  });
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -48,31 +59,47 @@ function NavBar() {
   const handleSwitchPage = (event, page) => {
     console.log(window.location.pathname);
     if (page == "Login") {
+      auth.noError();
       navigate('/login');
     }
     else if (page == "Join") {
+      auth.noError();
       navigate('/signup');
     }
     else if (page == "SplashorHome") {
       if (auth.loggedIn) {
-        navigate('/home');
+        auth.noError();
+        if (window.location.pathname.includes('/editmap')) {
+          store.updateThumbnailOfMap(store.currentMap._id, '/home');
+        }
+        else {
+          navigate('/home');
+        }
       }
       else {
         navigate('');
       }
     }
     else if (page == "Community") {
+      auth.noError();
       navigate('/community');
     }
     else if (page == "Home") {
+      auth.noError();
       navigate('/home');
     }
   }
 
-  const handleLogout = () =>{
+  const handleLogout = () => {
     handleCloseUserMenu();
-    auth.logoutUser();
-    navigate("/");
+    if (window.location.pathname.includes('/editmap')) {
+      store.updateThumbnailOfMap(store.currentMap._id, '/');
+    }
+    else {
+      auth.logoutUser();
+      auth.noError();
+      navigate("/");
+    }
   }
 
   let buttons =
@@ -96,42 +123,42 @@ function NavBar() {
   if (auth.loggedIn) {
     buttons = '';
     pfp = <div>
-    <Box sx={{ flexGrow: 0 }} >
-      <Tooltip title="Open settings">
-        <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-          <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-        </IconButton>
-      </Tooltip>
-      <Menu
-        sx={{ mt: '45px' }}
-        id="menu-appbar"
-        anchorEl={anchorElUser}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        keepMounted
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        open={Boolean(anchorElUser)}
-        onClose={handleCloseUserMenu}
-      >
-        {settings.map((setting) => (
-          <MenuItem key={setting} onClick={handleLogout}>
-            <Typography textAlign="center">{setting}</Typography>
-          </MenuItem>
-        ))}
-      </Menu>
-    </Box>
-  </div>;
+      <Box sx={{ flexGrow: 0 }} >
+        <Tooltip title="Open settings">
+          <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+            <Avatar sx={{ bgcolor: "#AEAFFF" }}>{username[0]}</Avatar>
+          </IconButton>
+        </Tooltip>
+        <Menu
+          sx={{ mt: '45px' }}
+          id="menu-appbar"
+          anchorEl={anchorElUser}
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+          keepMounted
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+          open={Boolean(anchorElUser)}
+          onClose={handleCloseUserMenu}
+        >
+          {settings.map((setting) => (
+            <MenuItem key={setting} onClick={handleLogout}>
+              <Typography textAlign="center">{setting}</Typography>
+            </MenuItem>
+          ))}
+        </Menu>
+      </Box>
+    </div>;
   }
 
   let homeCommunity = ""
-  if (window.location.pathname == "/home") {
+  if (window.location.pathname == "/home" || window.location.pathname == "/shared") {
     homeCommunity =
-    <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+      <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
         <Button
           key={"Community"}
           onClick={(event) => handleSwitchPage(event, "Community")}
@@ -139,11 +166,11 @@ function NavBar() {
         >
           Community
         </Button>
-    </Box>
+      </Box>
   }
   else if (window.location.pathname == "/community") {
     homeCommunity =
-    <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+      <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
         <Button
           key={"Home"}
           onClick={(event) => handleSwitchPage(event, "Home")}
@@ -151,7 +178,7 @@ function NavBar() {
         >
           Home
         </Button>
-    </Box>
+      </Box>
   }
 
   return (

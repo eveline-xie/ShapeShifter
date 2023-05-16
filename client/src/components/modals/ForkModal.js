@@ -5,6 +5,8 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
+import { useNavigate } from "react-router-dom";
+
 
 const style = {
   position: "absolute",
@@ -25,9 +27,13 @@ const style = {
 
 export default function ForkModal(props) {
   // const { store } = useContext(GlobalStoreContext);
+  let navigate = useNavigate();
 
   function handleClose() {
     props.setOpen(false);
+    if (window.location.pathname == '/shared'){
+      navigate("/home");
+    }
   }
 
   return (
@@ -56,7 +62,7 @@ export default function ForkModal(props) {
             X
           </Button>
           <Typography id="modal-modal-title" variant="h6" component="h2">
-            “Copy of North America” has been added to your home page.
+            “Copy of {props.name}” has been added to your home page.
           </Typography>
         </Box>
       </Modal>
