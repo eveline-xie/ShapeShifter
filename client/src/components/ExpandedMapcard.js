@@ -329,6 +329,7 @@ export default function ExpandedMapcard(props) {
       <Grid>
         {keywords.map((k) => (
           <Button
+            disabled
             variant="contained"
             style={{
               borderRadius: 50,
