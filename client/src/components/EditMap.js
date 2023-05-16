@@ -1706,7 +1706,7 @@ export default function EditMap() {
                     <ReceiptLong />
                   </IconButton>
                   Shows the properties of a selected subregion. You can
-                  doubleclick a property to edit it.
+                  doubleclick a property to edit it. Click outside after typing for it to take effect.
                   <br></br>
                   <IconButton color="inherit">
                     <PostAddIcon />
