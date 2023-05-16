@@ -149,6 +149,7 @@ export default function MapCard(props) {
     editButton="";
     publishedButton = (
       <Button
+        disabled
         variant="contained"
         sx={{ maxWidth: 100 }}
         style={{
