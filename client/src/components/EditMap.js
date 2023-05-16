@@ -1148,7 +1148,16 @@ export default function EditMap() {
               />
             ) : (
               <span onDoubleClick={() => handleDbClickValue(key, value)}>
-                {value}
+                {value ? (
+                  value
+                ) : (
+                  <span
+                    onDoubleClick={() => handleDbClickValue(key, null)}
+                  // style={{ backgroundColor: 'gray' }}
+                  >
+                    /
+                  </span>
+                )}
               </span>
             )}
           </div>
