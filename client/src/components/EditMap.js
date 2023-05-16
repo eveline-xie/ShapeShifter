@@ -1252,6 +1252,7 @@ export default function EditMap() {
                 <span>
                   <IconButton
                     disabled={!renameButtonEnabled}
+
                     size="large"
                     edge="start"
                     color="inherit"
@@ -1268,6 +1269,7 @@ export default function EditMap() {
               <Tooltip title="Change Color">
                 <span>
                   <IconButton
+
                     disabled={!colorButtonEnabled}
                     size="large"
                     edge="start"
