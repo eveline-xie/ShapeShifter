@@ -46,8 +46,8 @@ export const GlobalStoreActionType = {
 const tps = new jsTPS();
 
 const socket = new io(
-  "http://localhost:5000"
-  // "https://shapeshifter-api.onrender.com"
+  //"http://localhost:5000"
+   "https://shapeshifter-api.onrender.com"
   , {
     autoConnect: false,
   }
@@ -688,14 +688,14 @@ function GlobalStoreContextProvider(props) {
     tps.addTransaction(transaction);
   }
 
-  store.compressMap = async function () {
+  store.compressMap = async function (compressionInputValue) {
     console.log("map to compress", store.currentMap);
     let top = topoServer.topology({ foo: store.currentMap.geoJsonMap });
     let top2 = topoSimplify.presimplify(top);
-    let top3 = topoSimplify.simplify(top2, store.currentMap.compressionLevel + .01);
+    let top3 = topoSimplify.simplify(top2, compressionInputValue);
     let newmap = topoClient.feature(top3, "foo");
     console.log("emitting compress");
-    socket.emit("compress-map", store.currentMap._id, newmap, store.currentMap.compressionLevel + .01);
+    socket.emit("compress-map", store.currentMap._id, newmap, compressionInputValue);
   }
 
   socket.on("compress-map-response", (id, data) => {

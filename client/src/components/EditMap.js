@@ -106,7 +106,7 @@ export default function EditMap() {
   const [isInfoOpen, setIsInfoOpen] = useState(false);
   const [isCompressOpen, setIsCompressOpen] = useState(false);
 
-  const [comporessionInputValue, setComporessionInputValue] = useState('');
+  const [compressionInputValue, setCompressionInputValue] = useState('');
   const [isCompressionLevelSubmit, setIsCompressionLevelSubmit] = useState(false);
   const [compressError, setCompressError] = useState('');
 
@@ -830,54 +830,28 @@ export default function EditMap() {
   const handleCompressMap = (e) => {
     console.log("current map: ");
     console.log(store.currentMap.geoJsonMap);
+    console.log("compression level to set", (compressionInputValue));
     setIsCompressOpen(false);
-    store.compressMap();
-    // const feature = simplify(store.currentMap.geoJsonMap, 0.1);
-    // //const feature = turf.feature(store.currentMap.geoJsonMap);
-    // console.log(feature);
-
-    // console.log("leaflet map: ");
-    // console.log(map);
-    // //console.log(feature)
-    // // Simplify the feature using the Turf simplify() function
-    // //const simplified = turf.simplify(feature, 0.01);
-    // //console.log(simplified)
-    // //const simplifiedFeature = turf.featureCollection(simplified).features.geometry.geometry;
-    // //console.log(simplifiedFeature)
-    // //L.geoJSON().clearLayers();
-
-    // // map.removeLayer(L.geoJSON(store.currentMap.geoJsonMap));
-    // map.eachLayer(function (layer) {
-    //   if (layer instanceof L.GeoJSON) {
-    //     layer.remove();
-    //   }
-    // });
-
-    // var simplifiedGeojsonMapLayer = L.geoJson(feature.features, {
-    //   onEachFeature: onEachRegion,
-    // });
-    // simplifiedGeojsonMapLayer.eachLayer(function (layer) {
-    //   layer.addTo(map);
-    // });
-
-    // store.currentMap.geoJsonMap = feature;
-    // console.log("current map: ");
-    // console.log(store.currentMap.geoJsonMap);
-
+    store.compressMap(parseFloat(compressionInputValue));
     setIsCompressionLevelSubmit(false);
     setIsCompressOpen(false);
+    setCompressionInputValue('');
 
   };
   
   const handleCompressionInputChange = (event) => {
-    setComporessionInputValue(event.target.value);
+    setCompressionInputValue(event.target.value);
     setCompressError('');
   };
 
   const handleSubmitCompressionLevel = () => {
-    console.log(comporessionInputValue);
-    if (parseInt(comporessionInputValue) < store.currentMap.compressionLevel) {
-      
+    console.log("input level", parseFloat(compressionInputValue));
+    console.log("current level", store.currentMap.compressionLevel);
+    if (isNaN(compressionInputValue)) {
+      console.log('Error: Please provide a number.');
+      setCompressError('Error: Please provide a number.');
+    }
+    else if (parseFloat(compressionInputValue) <= store.currentMap.compressionLevel) {
       console.log('Error: Compression level is too low.');
       setCompressError('Error: Compression level is too low.');
     } else {
@@ -885,7 +859,6 @@ export default function EditMap() {
       setCompressError('');
       console.log('Confirmation modal');
     }
-    setComporessionInputValue('');
   };
   
 
@@ -1010,7 +983,7 @@ export default function EditMap() {
 
   const handleCloseCompress = () => {
     setIsCompressOpen(false);
-    setComporessionInputValue('');
+    setCompressionInputValue('');
     setCompressError('');
   };
   const handleCloseCompress2 = () => {
@@ -1370,7 +1343,7 @@ export default function EditMap() {
                   left: "50%",
                   transform: "translate(-50%, -50%)",
                   width: 380,
-                  height: 200,
+                  height: 220,
                   backgroundColor: "#145374",
                   color: "#FFE484",
                   border: "2px solid #000",
@@ -1408,18 +1381,19 @@ export default function EditMap() {
                     id="modal-modal-title"
                     variant="h6"
                     component="h2"
-                    style={{ padding: "5px", marginLeft: "50px", marginBottom: "10px" }}
+                    style={{ padding: "5px", marginBottom: "10px", textAlign: 'center'}}
                   >
-                    Enter the compression level
+                    Enter Compression Level <br/>
+                    Current level: {store.currentMap.compressionLevel}
                   </Typography>
 
                   <div style={{ display: 'flex', justifyContent: 'center' }}>
                     <TextField
                       id="compression-textfield"
-                      label="compression level number"
+                      label="Compression Level"
                       variant="filled"
                       style={{ backgroundColor: 'white' }}
-                      value={comporessionInputValue}
+                      value={compressionInputValue}
                       onChange={handleCompressionInputChange}
                     />
 
@@ -1459,7 +1433,7 @@ export default function EditMap() {
                   left: "50%",
                   transform: "translate(-50%, -50%)",
                   width: 380,
-                  height: 200,
+                  height: 220,
                   backgroundColor: "#145374",
                   color: "#FFE484",
                   border: "2px solid #000",
@@ -1497,11 +1471,11 @@ export default function EditMap() {
                     id="modal-modal-title"
                     variant="h6"
                     component="h2"
-                    style={{ padding: "5px", margin: "10px" }}
+                    style={{ padding: "5px", margin: "10px", textAlign: 'center' }}
                   >
-                    Are you sure you want to Compress, this cannot be undone.
+                    Are you sure you want to Compress? This cannot be undone.
                   </Typography>
-
+                  <div style={{ textAlign: 'center' }}>
                   <Button
                     variant="contained"
                     sx={{ maxWidth: 100 }}
@@ -1532,6 +1506,7 @@ export default function EditMap() {
                   >
                     Cancel
                   </Button>
+                  </div>
                 </div>
               </Modal>
 
