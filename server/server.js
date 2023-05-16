@@ -16,8 +16,8 @@ const socketFunctions = require('./socket_functions/socket_functions');
 app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
+    //origin: "http://localhost:3000",
     origin: "https://shapershifter.onrender.com",
-    // origin: "http://localhost:3000",
     credentials: true,
   })
 );

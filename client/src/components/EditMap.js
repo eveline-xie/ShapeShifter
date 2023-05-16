@@ -329,6 +329,11 @@ export default function EditMap() {
           setCurrentPolygon(layer.toGeoJSON());
           setCurrentLayer(layer);
         }
+
+        setEditedValues({});
+        setEditingProperties(false);
+        setEditingKey(null);
+        setIsPropertiesOpen(false);
       }
     });
   }
@@ -625,9 +630,11 @@ export default function EditMap() {
         let polygonHalves = turf.difference(selectedPolygon, thickLinePolygon);
         console.log("difference is", polygonHalves);
 
+        console.log("selected poly", selectedPolygon);
+        console.log("polygon halves", polygonHalves);
+        console.log(selectedPolygon == polygonHalves);
         if (
-          selectedPolygon.geometry.coordinates.length ==
-          polygonHalves.geometry.coordinates.length
+          polygonHalves.geometry.type == "Polygon"
         ) {
           console.log("didnt split anything");
           setRenameButtonEnabled(true);
@@ -729,77 +736,97 @@ export default function EditMap() {
           }
           console.log("first half", firstHalfCoords);
           console.log("secondhalf", secondHalfCoords);
-          var firstHalfPolys;
-          var secondHalfPolys;
-          if (firstHalfCoords.length == 1) {
-            firstHalfPolys = turf.polygon(firstHalfCoords[0]);
-          } else {
-            firstHalfPolys = turf.multiPolygon(firstHalfCoords);
-          }
-          if (secondHalfCoords.length == 1) {
-            secondHalfPolys = turf.polygon(secondHalfCoords[0]);
-          } else {
-            secondHalfPolys = turf.multiPolygon(secondHalfCoords);
-          }
+          if (firstHalfCoords.length == 0 || secondHalfCoords.length == 0) {
+            console.log("didnt split anything");
+            setRenameButtonEnabled(true);
+            setColorButtonEnabled(true);
+            //setPropertyButtonEnabled(true);
+            setDeleteButtonEnabled(true);
+            setSplitButtonEnabled(true);
+            setPropertiesButtonEnabled(true);
 
-          if (selectedPolygon.properties.hasOwnProperty("NAME_5")) {
-            //currentLayer.feature.properties.NAME_5 = regionName.trim();
-            //trim gets rid of the '/n' which apparently is there even though console logging regionName does not have '/n'
-            firstHalfPolys.properties = {NAME_5: selectedPolygon.properties.NAME_5};
-            secondHalfPolys.properties = {NAME_5: selectedPolygon.properties.NAME_5 + "2"};
-          }
-          else if (selectedPolygon.properties.hasOwnProperty('NAME_4')) {
-            firstHalfPolys.properties = { NAME_4: selectedPolygon.properties.NAME_4 }
-            secondHalfPolys.properties = { NAME_4: selectedPolygon.properties.NAME_4 + "2" }
-          }
-          else if (selectedPolygon.properties.hasOwnProperty('NAME_3')) {
-            firstHalfPolys.properties = { NAME_3: selectedPolygon.properties.NAME_3 }
-            secondHalfPolys.properties = { NAME_3: selectedPolygon.properties.NAME_3 + "2" }
-          }
-          else if (selectedPolygon.properties.hasOwnProperty('NAME_2')) {
-            firstHalfPolys.properties = { NAME_2: selectedPolygon.properties.NAME_2 }
-            secondHalfPolys.properties = { NAME_2: selectedPolygon.properties.NAME_2 + "2" }
-          }
-          else if (selectedPolygon.properties.hasOwnProperty('NAME_1')) {
-            firstHalfPolys.properties = { NAME_1: selectedPolygon.properties.NAME_1 }
-            secondHalfPolys.properties = { NAME_1: selectedPolygon.properties.NAME_1 + "2" }
-          }
-          else if (selectedPolygon.properties.hasOwnProperty('NAME_0')) {
-            firstHalfPolys.properties = { NAME_0: selectedPolygon.properties.NAME_0 }
-            secondHalfPolys.properties = { NAME_0: selectedPolygon.properties.NAME_0 + "2" }
-          }
-          else if (selectedPolygon.properties.hasOwnProperty('admin')) {
-            firstHalfPolys.properties = { admin: selectedPolygon.properties.admin }
-            secondHalfPolys.properties = { admin: selectedPolygon.properties.admin + "2" }
+            setAddButtonEnabled(false);
+            setMergeButtonEnabled(false);
+            setCompressButtonEnabled(false);
+
+            setUndoButtonEnabled(true);
+            setRedoButtonEnabled(true);
+
+            setSplitEnabled(false);
           }
           else {
-            firstHalfPolys.properties = { name: 'Untitled' }
-            secondHalfPolys.properties = { name: 'Untitled' }
+            var firstHalfPolys;
+            var secondHalfPolys;
+            if (firstHalfCoords.length == 1) {
+              firstHalfPolys = turf.polygon(firstHalfCoords[0]);
+            } else {
+              firstHalfPolys = turf.multiPolygon(firstHalfCoords);
+            }
+            if (secondHalfCoords.length == 1) {
+              secondHalfPolys = turf.polygon(secondHalfCoords[0]);
+            } else {
+              secondHalfPolys = turf.multiPolygon(secondHalfCoords);
+            }
+
+            if (selectedPolygon.properties.hasOwnProperty("NAME_5")) {
+              //currentLayer.feature.properties.NAME_5 = regionName.trim();
+              //trim gets rid of the '/n' which apparently is there even though console logging regionName does not have '/n'
+              firstHalfPolys.properties = { NAME_5: selectedPolygon.properties.NAME_5 };
+              secondHalfPolys.properties = { NAME_5: selectedPolygon.properties.NAME_5 + "2" };
+            }
+            else if (selectedPolygon.properties.hasOwnProperty('NAME_4')) {
+              firstHalfPolys.properties = { NAME_4: selectedPolygon.properties.NAME_4 }
+              secondHalfPolys.properties = { NAME_4: selectedPolygon.properties.NAME_4 + "2" }
+            }
+            else if (selectedPolygon.properties.hasOwnProperty('NAME_3')) {
+              firstHalfPolys.properties = { NAME_3: selectedPolygon.properties.NAME_3 }
+              secondHalfPolys.properties = { NAME_3: selectedPolygon.properties.NAME_3 + "2" }
+            }
+            else if (selectedPolygon.properties.hasOwnProperty('NAME_2')) {
+              firstHalfPolys.properties = { NAME_2: selectedPolygon.properties.NAME_2 }
+              secondHalfPolys.properties = { NAME_2: selectedPolygon.properties.NAME_2 + "2" }
+            }
+            else if (selectedPolygon.properties.hasOwnProperty('NAME_1')) {
+              firstHalfPolys.properties = { NAME_1: selectedPolygon.properties.NAME_1 }
+              secondHalfPolys.properties = { NAME_1: selectedPolygon.properties.NAME_1 + "2" }
+            }
+            else if (selectedPolygon.properties.hasOwnProperty('NAME_0')) {
+              firstHalfPolys.properties = { NAME_0: selectedPolygon.properties.NAME_0 }
+              secondHalfPolys.properties = { NAME_0: selectedPolygon.properties.NAME_0 + "2" }
+            }
+            else if (selectedPolygon.properties.hasOwnProperty('admin')) {
+              firstHalfPolys.properties = { admin: selectedPolygon.properties.admin }
+              secondHalfPolys.properties = { admin: selectedPolygon.properties.admin + "2" }
+            }
+            else {
+              firstHalfPolys.properties = { name: 'Untitled' }
+              secondHalfPolys.properties = { name: 'Untitled' }
+            }
+
+            console.log("first half polygon", firstHalfPolys);
+            console.log("second half polys", secondHalfPolys);
+
+            setSplitEnabled(false);
+
+            setRenameButtonEnabled(false);
+            setColorButtonEnabled(false);
+            //setPropertyButtonEnabled(false);
+            setDeleteButtonEnabled(false);
+            setSplitButtonEnabled(false);
+            setPropertiesButtonEnabled(false);
+
+            setAddButtonEnabled(true);
+            setMergeButtonEnabled(true);
+            setCompressButtonEnabled(true);
+
+            setUndoButtonEnabled(true);
+            setRedoButtonEnabled(true);
+
+            store.addSplitPolygonsOfMapTransaction(selectedPolygon, [
+              firstHalfPolys,
+              secondHalfPolys,
+            ]);
           }
-
-          console.log("first half polygon", firstHalfPolys);
-          console.log("second half polys", secondHalfPolys);
-
-          setSplitEnabled(false);
-
-          setRenameButtonEnabled(false);
-          setColorButtonEnabled(false);
-          //setPropertyButtonEnabled(false);
-          setDeleteButtonEnabled(false);
-          setSplitButtonEnabled(false);
-          setPropertiesButtonEnabled(false);
-
-          setAddButtonEnabled(true);
-          setMergeButtonEnabled(true);
-          setCompressButtonEnabled(true);
-
-          setUndoButtonEnabled(true);
-          setRedoButtonEnabled(true);
-
-          store.addSplitPolygonsOfMapTransaction(selectedPolygon, [
-            firstHalfPolys,
-            secondHalfPolys,
-          ]);
         }
       }
     }
@@ -838,7 +865,7 @@ export default function EditMap() {
     setCompressionInputValue('');
 
   };
-  
+
   const handleCompressionInputChange = (event) => {
     setCompressionInputValue(event.target.value);
     setCompressError('');
@@ -860,7 +887,7 @@ export default function EditMap() {
       console.log('Confirmation modal');
     }
   };
-  
+
 
   const handleEnableMerge = () => {
     console.log("merge enabled:", !mergeEnabled);
@@ -1381,9 +1408,9 @@ export default function EditMap() {
                     id="modal-modal-title"
                     variant="h6"
                     component="h2"
-                    style={{ padding: "5px", marginBottom: "10px", textAlign: 'center'}}
+                    style={{ padding: "5px", marginBottom: "10px", textAlign: 'center' }}
                   >
-                    Enter Compression Level <br/>
+                    Enter Compression Level <br />
                     Current level: {store.currentMap.compressionLevel}
                   </Typography>
 
@@ -1414,13 +1441,13 @@ export default function EditMap() {
                     </Button>
                   </div>
 
-                    <div style={{ display: 'flex', justifyContent: 'center', color: 'red', marginTop: '10px'}}>
+                  <div style={{ display: 'flex', justifyContent: 'center', color: 'red', marginTop: '10px' }}>
                     {compressError}
-                    </div>
-                    
-                  
+                  </div>
 
-                 
+
+
+
                 </div>
               </Modal>
 
@@ -1476,36 +1503,36 @@ export default function EditMap() {
                     Are you sure you want to Compress? This cannot be undone.
                   </Typography>
                   <div style={{ textAlign: 'center' }}>
-                  <Button
-                    variant="contained"
-                    sx={{ maxWidth: 100 }}
-                    style={{
-                      borderRadius: 50,
-                      backgroundColor: "#AEAFFF",
-                      padding: "7px 34px",
-                      margin: "10px 10px",
-                      fontSize: "13px",
-                      color: "#000000",
-                    }}
-                    onClick={handleCompressMap}
-                  >
-                    Confirm
-                  </Button>
-                  <Button
-                    variant="contained"
-                    sx={{ maxWidth: 100 }}
-                    style={{
-                      borderRadius: 50,
-                      backgroundColor: "#FFE484",
-                      padding: "7px 34px",
-                      margin: "10px 10px",
-                      fontSize: "13px",
-                      color: "#000000",
-                    }}
-                    onClick={handleCloseCompress2}
-                  >
-                    Cancel
-                  </Button>
+                    <Button
+                      variant="contained"
+                      sx={{ maxWidth: 100 }}
+                      style={{
+                        borderRadius: 50,
+                        backgroundColor: "#AEAFFF",
+                        padding: "7px 34px",
+                        margin: "10px 10px",
+                        fontSize: "13px",
+                        color: "#000000",
+                      }}
+                      onClick={handleCompressMap}
+                    >
+                      Confirm
+                    </Button>
+                    <Button
+                      variant="contained"
+                      sx={{ maxWidth: 100 }}
+                      style={{
+                        borderRadius: 50,
+                        backgroundColor: "#FFE484",
+                        padding: "7px 34px",
+                        margin: "10px 10px",
+                        fontSize: "13px",
+                        color: "#000000",
+                      }}
+                      onClick={handleCloseCompress2}
+                    >
+                      Cancel
+                    </Button>
                   </div>
                 </div>
               </Modal>
