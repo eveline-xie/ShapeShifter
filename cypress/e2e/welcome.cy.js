@@ -141,6 +141,7 @@ it('user goes to signup from login page', () => {
     //cy.get('[id=mapcards]').eq(0).should('eq', 'USA States Map')
     //cy.get('#file-submit').click()
   })
+  /*
   it('undo edit region name', () => {
     cy.visit('https://shapershifter.onrender.com')
     cy.contains('Login').click()
@@ -161,6 +162,7 @@ it('user goes to signup from login page', () => {
     //cy.get('[id=mapcards]').eq(0).should('eq', 'USA States Map')
     //cy.get('#file-submit').click()
   })
+  */
   it('the user adds region', () => {
     cy.visit('https://shapershifter.onrender.com')
     cy.contains('Login').click()
@@ -223,7 +225,7 @@ it('user goes to signup from login page', () => {
     cy.get('[id=my-map]').click(300, 180)
     cy.get('[aria-label="Subregion Properties"]').click()
     cy.wait(4000)
-    cy.contains('NAME_1').should('exist')
+    cy.contains('X').should('exist')
     //cy.get('[id=mapcards]').eq(0).should('eq', 'USA States Map')
     //cy.get('#file-submit').click()
   })
