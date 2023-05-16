@@ -1771,14 +1771,14 @@ export default function EditMap() {
                     <ReceiptLong />
                   </IconButton>
                   Shows the properties of a selected subregion. You can
-                  doubleclick a property to edit it.
+                  doubleclick a property to edit it. Enter to submit your changes.
                   <br></br>
                   <IconButton color="inherit">
                     <PostAddIcon />
                   </IconButton>
                   Add custom properties to a selected subregion. This button is
-                  in the Subregion Properties popup. You must enter a value in
-                  both inputs. Enter to submit the change.
+                  in the Subregion Properties popup. Properties consist of a key:value pair. Both entries are required. Enter to submit after you are done typing. 
+                  The input for value will appear after you have submitted the key.
                 </Typography>
               </div>
             </Modal>
