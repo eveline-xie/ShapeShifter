@@ -11,6 +11,7 @@ import {
   AppBar,
   Tooltip,
   SliderMarkLabel,
+  TextField,
 } from "@mui/material";
 import UndoIcon from "@mui/icons-material/Undo";
 import RedoIcon from "@mui/icons-material/Redo";
@@ -104,6 +105,10 @@ export default function EditMap() {
   const [isPropertiesOpen, setIsPropertiesOpen] = useState(false);
   const [isInfoOpen, setIsInfoOpen] = useState(false);
   const [isCompressOpen, setIsCompressOpen] = useState(false);
+
+  const [comporessionInputValue, setComporessionInputValue] = useState('');
+  const [isCompressionLevelSubmit, setIsCompressionLevelSubmit] = useState(false);
+  const [compressError, setCompressError] = useState('');
 
   useEffect(() => {
     console.log("reloading map");
@@ -878,19 +883,31 @@ export default function EditMap() {
     console.log("current map: ");
     console.log(store.currentMap.geoJsonMap);
 
+    setIsCompressionLevelSubmit(false);
     setIsCompressOpen(false);
 
   };
-  /*
-  const handleInfo = (e) => {
-    // var text = document.getElementById("infoText");
-    // if (text.style.display == "none") {
-    //   text.style.display = "block";
-    // } else {
-    //   text.style.display = "none";
-    // }
-  }
-*/
+  
+  const handleCompressionInputChange = (event) => {
+    setComporessionInputValue(event.target.value);
+    setCompressError('');
+  };
+
+  const handleSubmitCompressionLevel = () => {
+    console.log(comporessionInputValue);
+    if (parseInt(comporessionInputValue) < store.currentMap.compressionLevel) {
+      
+      console.log('Error: Compression level is too low.');
+      setCompressError('Error: Compression level is too low.');
+    } else {
+      setIsCompressionLevelSubmit(true);
+      setCompressError('');
+      console.log('Confirmation modal');
+    }
+    setComporessionInputValue('');
+  };
+  
+
   const handleEnableMerge = () => {
     console.log("merge enabled:", !mergeEnabled);
     if (mergeEnabled) {
@@ -1011,6 +1028,12 @@ export default function EditMap() {
   };
 
   const handleCloseCompress = () => {
+    setIsCompressOpen(false);
+    setComporessionInputValue('');
+    setCompressError('');
+  };
+  const handleCloseCompress2 = () => {
+    setIsCompressionLevelSubmit(false);
     setIsCompressOpen(false);
   };
 
@@ -1144,9 +1167,9 @@ export default function EditMap() {
                 ) : (
                   <span
                     onDoubleClick={() => handleDbClickValue(key, null)}
-                    // style={{ backgroundColor: 'gray' }}
+                  // style={{ backgroundColor: 'gray' }}
                   >
-                     /
+                    /
                   </span>
                 )}
               </span>
@@ -1404,6 +1427,95 @@ export default function EditMap() {
                     id="modal-modal-title"
                     variant="h6"
                     component="h2"
+                    style={{ padding: "5px", marginLeft: "50px", marginBottom: "10px" }}
+                  >
+                    Enter the compression level
+                  </Typography>
+
+                  <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <TextField
+                      id="compression-textfield"
+                      label="compression level number"
+                      variant="filled"
+                      style={{ backgroundColor: 'white' }}
+                      value={comporessionInputValue}
+                      onChange={handleCompressionInputChange}
+                    />
+
+                    <Button
+                      variant="contained"
+                      sx={{ maxWidth: 100 }}
+                      style={{
+                        borderRadius: 50,
+                        backgroundColor: "#AEAFFF",
+                        padding: "7px 34px",
+                        margin: "10px 10px",
+                        fontSize: "13px",
+                        color: "#000000",
+                      }}
+                      onClick={handleSubmitCompressionLevel}
+                    >
+                      Submit
+                    </Button>
+                  </div>
+
+                    <div style={{ display: 'flex', justifyContent: 'center', color: 'red', marginTop: '10px'}}>
+                    {compressError}
+                    </div>
+                    
+                  
+
+                 
+                </div>
+              </Modal>
+
+              <Modal
+                open={isCompressionLevelSubmit}
+                onClose={handleCloseCompress2}
+                style={{
+                  position: "absolute",
+                  top: "40%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  width: 380,
+                  height: 200,
+                  backgroundColor: "#145374",
+                  color: "#FFE484",
+                  border: "2px solid #000",
+                  boxShadow: 24,
+                  borderRadius: 10,
+                  p: 4,
+                  overflowY: "auto",
+                }}
+              >
+                <div>
+                  <div>
+                    <Button
+                      variant="contained"
+                      sx={{ maxWidth: 100 }}
+                      style={{
+                        borderRadius: 50,
+                        backgroundColor: "#FFE484",
+                        padding: "7px 34px",
+                        margin: "10px 10px",
+                        fontSize: "10px",
+                        color: "#000000",
+                        size: "small",
+                        position: "absolute",
+                        right: "0%",
+                      }}
+                      onClick={handleCloseCompress2}
+                    >
+                      X
+                    </Button>
+                  </div>
+
+                  <br></br>
+                  <br></br>
+                  <Typography
+                    id="modal-modal-title"
+                    variant="h6"
+                    component="h2"
                     style={{ padding: "5px", margin: "10px" }}
                   >
                     Are you sure you want to Compress, this cannot be undone.
@@ -1435,7 +1547,7 @@ export default function EditMap() {
                       fontSize: "13px",
                       color: "#000000",
                     }}
-                    onClick={handleCloseCompress}
+                    onClick={handleCloseCompress2}
                   >
                     Cancel
                   </Button>
