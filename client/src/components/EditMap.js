@@ -159,6 +159,7 @@ export default function EditMap() {
     setMergeButtonEnabled(true);
     setCompressButtonEnabled(true);
 
+    setIsPropertiesOpen(false);
     return () => {
       // Remove the map
       newmap.remove();
@@ -1035,42 +1036,44 @@ export default function EditMap() {
     setEditedValues({ [editingKey]: value });
   };
 
-  const handleBlur = () => {
-    console.log(editedValues[editingKey]);
-    // var found = false;
-    // const propertiesDictionaryArray = [];
-    // for (const key in currentPolygon.properties) {
-    //   propertiesDictionaryArray.push({ [key]: currentPolygon.properties[key] });
-    // }
-    // console.log(propertiesDictionaryArray);
+  const handleBlur = (e) => {
+    if (e.key == 'Enter') {
+      console.log("value", editedValues[editingKey]);
+      // var found = false;
+      // const propertiesDictionaryArray = [];
+      // for (const key in currentPolygon.properties) {
+      //   propertiesDictionaryArray.push({ [key]: currentPolygon.properties[key] });
+      // }
+      // console.log(propertiesDictionaryArray);
 
-    let modifiedPropertiesPolygon = JSON.parse(JSON.stringify(currentPolygon));
+      let modifiedPropertiesPolygon = JSON.parse(JSON.stringify(currentPolygon));
 
-    for (const key in modifiedPropertiesPolygon.properties) {
-      if (key === editingKey) {
-        // console.log("hhhhh:"+modifiedPropertiesPolygon.properties[editingKey] );
-        //found = true;
-        modifiedPropertiesPolygon.properties[editingKey] =
-          editedValues[editingKey];
+      for (const key in modifiedPropertiesPolygon.properties) {
+        if (key === editingKey) {
+          // console.log("hhhhh:"+modifiedPropertiesPolygon.properties[editingKey] );
+          //found = true;
+          modifiedPropertiesPolygon.properties[editingKey] =
+            editedValues[editingKey];
+          store.addUpdatePolygonToMapTransaction(
+            currentPolygon,
+            modifiedPropertiesPolygon
+          );
+        }
       }
+      /*   if (found ===false){
+        modifiedPropertiesPolygon.properties[editingKey] = editedValues[editingKey];
+      }
+      */
+
+      //console.log("current:" + JSON.stringify(currentPolygon));
+      //console.log("modified" + JSON.stringify(modifiedPropertiesPolygon));
+
+
+      setEditedValues({});
+      setEditingProperties(false);
+      setEditingKey(null);
+      setIsPropertiesOpen(false);
     }
-    /*   if (found ===false){
-      modifiedPropertiesPolygon.properties[editingKey] = editedValues[editingKey];
-    }
-    */
-
-    //console.log("current:" + JSON.stringify(currentPolygon));
-    //console.log("modified" + JSON.stringify(modifiedPropertiesPolygon));
-
-    store.addUpdatePolygonToMapTransaction(
-      currentPolygon,
-      modifiedPropertiesPolygon
-    );
-
-    setEditingKey(null);
-    setEditedValues({});
-    setEditingProperties(false);
-    setIsPropertiesOpen(false);
   };
 
   const handleHelpIconClick = () => {
@@ -1135,7 +1138,7 @@ export default function EditMap() {
                 type="text"
                 value={editedValues[key] || ""}
                 onChange={handleValueChange}
-                onBlur={handleBlur}
+                onKeyDown={handleBlur}
                 autoFocus
               />
             ) : (
@@ -1159,7 +1162,7 @@ export default function EditMap() {
         ))}
       </div>
     );
-  } 
+  }
   else if (editingProperties && editingKey) {
     propertiesContents = currentPolygon && (
       <div style={{ paddingTop: "50px", paddingLeft: "10px" }}>
@@ -1171,7 +1174,6 @@ export default function EditMap() {
                 type="text"
                 value={editedValues[key] || ""}
                 onChange={handleValueChange}
-                onBlur={handleBlur}
                 autoFocus
               />
             ) : (
@@ -1205,7 +1207,6 @@ export default function EditMap() {
                 type="text"
                 value={editedValues[key] || ""}
                 onChange={handleValueChange}
-                onBlur={handleBlur}
                 autoFocus
               />
             ) : (
